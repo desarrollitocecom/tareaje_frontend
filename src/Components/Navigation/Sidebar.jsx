@@ -5,6 +5,8 @@ import { Typography, Avatar, Popover, Button, Box } from "@mui/material";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleIcon from '@mui/icons-material/People';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 
 import Logo from "../../assets/logos/logo_sjl.png";
 
@@ -41,14 +43,14 @@ const Sidebar = ({ toggled, setToggled }) => {
     {
       id: 2,
       label: "Asistencia Personal",
-      icon: DashboardIcon,
+      icon: PeopleIcon,
       link: "/AsistenciaPersonal",
       target: "_self",
     },
     {
       id: 3,
       label: "Seguimiento de Asistencias",
-      icon: DashboardIcon,
+      icon: AssessmentIcon,
       link: "/SeguiminetoAsistencia",
       target: "_self",
     },
@@ -89,21 +91,20 @@ const Sidebar = ({ toggled, setToggled }) => {
           </div>
 
           {/* Pie de página con la información del usuario */}
-          <div 
-            className="flex items-center justify-center p-4 border-t w-full"
-            style={{ flexDirection: Collapsed ? 'column' : 'row' }} 
+          <div
+            className="flex items-center justify-center p-4 border-t w-full cursor-pointer"
+            style={{ flexDirection: Collapsed ? 'column' : 'row' }}
+            onClick={handlePopoverOpen}
           >
-            <Avatar 
-              src={userSession.user.image} 
-              alt={userSession.user.name} 
-              
-              sx={{ 
-                width: Collapsed ? 30 : 50, 
-                height: Collapsed ? 30 : 50, 
-                transition: 'width 0.5s, height 0.5s' 
+            <Avatar
+              src={userSession.user.image}
+              alt={userSession.user.name}
+
+              sx={{
+                width: Collapsed ? 30 : 50,
+                height: Collapsed ? 30 : 50,
+                transition: 'width 0.5s, height 0.5s'
               }}
-              onClick={handlePopoverOpen}
-              style={{ cursor: 'pointer' }}
             />
             {!Collapsed && (
               <Box ml={2} flexGrow={1}>
@@ -123,38 +124,33 @@ const Sidebar = ({ toggled, setToggled }) => {
             anchorEl={anchorEl}
             onClose={handlePopoverClose}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
               vertical: 'top',
               horizontal: 'center',
             }}
-            PaperProps={{
-              sx: { width: '220px', marginLeft: '-12px' },
-            }}
           >
             <Box p={2} display="flex" flexDirection="column" alignItems="center">
-              <Avatar 
-                src={userSession.user.image} 
-                alt={userSession.user.name} 
-                sx={{ width: 50, height: 50, mb: 1 }} 
-                
+              <Avatar
+                src={userSession.user.image}
+                alt={userSession.user.name}
+                sx={{ width: 50, height: 50, mb: 1 }}
+
               />
-              <Typography variant="body1" fontWeight="bold">
+              <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
                 {userSession.user.name}
               </Typography>
-              <Typography variant="body2" color="textSecondary" mb={1}>
+              <Typography sx={{ fontSize: '0.8rem', color: 'textSecondary', mb: 1 }}>
                 {userSession.user.email}
               </Typography>
               <Button
                 variant="contained"
+                sx={{ fontSize: 12, fontWeight: 'bold', textTransform: 'capitalize', padding: '8px 16px' }}
                 color="success"
                 startIcon={<LogoutIcon />}
                 onClick={handlePopoverClose}
               >
                 Cerrar Sesión
               </Button>
+
             </Box>
           </Popover>
         </div>
