@@ -6,6 +6,8 @@ import { Fragment, useState } from 'react';
 import { Typography } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import LogoutIcon from '@mui/icons-material/Logout';
+import storage from '@mui/icons-material/Storage';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const [Collapsed, setCollapsed] = useState(false)
@@ -16,6 +18,20 @@ const Sidebar = ({ toggled, setToggled }) => {
       label: 'Inicio',
       icon: DashboardIcon,
       link: '/',
+      target: '_self'
+    },
+    {
+      id: 7,
+      label: 'Base de datos',
+      icon: storage,
+      link: '/personal',
+      target: '_self'
+    },
+    {
+      id: 8,
+      label: 'Cerrar sesion',
+      icon: LogoutIcon,
+      link: '/Error',
       target: '_self'
     },
   ]
