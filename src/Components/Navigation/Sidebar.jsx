@@ -1,16 +1,20 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Sidebar as ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Typography, Avatar, Popover, Button, Box } from "@mui/material";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import React from 'react'
+import { Link } from 'react-router-dom';
+import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import Logo from "../../assets/logos/logo_sjl.png"
+import { Fragment, useState } from 'react';
+import { Avatar, Box, Button, Popover, Typography } from '@mui/material';
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
-
-import Logo from "../../assets/logos/logo_sjl.png";
+import storage from '@mui/icons-material/Storage';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Redux/Slices/AuthSlice';
 
 const Sidebar = ({ toggled, setToggled }) => {
+  const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -54,7 +58,16 @@ const Sidebar = ({ toggled, setToggled }) => {
       link: "/SeguiminetoAsistencia",
       target: "_self",
     },
-  ];
+    {
+      id: 4,
+      label: 'Base de datos',
+      icon: storage,
+      link: '/personal',
+      target: '_self'
+    },
+  ]
+
+  
 
   return (
     <div className="relative h-full w-max bg-slate-500 z-[1200]">
@@ -146,7 +159,7 @@ const Sidebar = ({ toggled, setToggled }) => {
                 sx={{ fontSize: 12, fontWeight: 'bold', textTransform: 'capitalize', padding: '8px 16px' }}
                 color="success"
                 startIcon={<LogoutIcon />}
-                onClick={handlePopoverClose}
+                onClick={() => dispatch(logout())}
               >
                 Cerrar Sesión
               </Button>
