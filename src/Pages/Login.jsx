@@ -1,15 +1,18 @@
 import React from 'react';
-import { Formik, Form} from 'formik';
-import { useNavigate } from 'react-router-dom'; 
+import { Formik, Form } from 'formik';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../Redux/Slices/AuthSlice';
-import fondo_sjl from '../assets/logos/fondo_sjl.png';
+import fondo_sjl_top from '../assets/logos/fondo_sjl_top.png';
+import fondo_sjl_bottom from '../assets/logos/fondo_sjl_bottom.png';
 import logo from '../assets/logos/logo_sjl.png';
-import fono from '../assets/logos/telefono.jpeg';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Login = () => {
-  const navigate = useNavigate(); 
+  const MySwal = withReactContent(Swal)
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const validate = (values) => {
@@ -32,25 +35,33 @@ const Login = () => {
       resetForm();
       navigate('/');
     } else {
-      alert('Datos incorrectos');
+      MySwal.fire({
+        title: 'Credenciales incorrectas',
+        toast: true,
+        icon: 'error',
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      })
     }
   };
 
   return (
     <div className="flex items-center justify-center h-screen bg-cover bg-center relative">
-      <div className="hidden md:flex absolute w-full h-full bg-cover bg-center opacity-50"
-        style={{ backgroundImage: `url(${fondo_sjl})` }}>
+      <div className="flex absolute top-0 left-0 w-1/3 md:w-80 lg:w-96 aspect-square bg-left-top opacity-70 bg-no-repeat bg-cover"
+        style={{ backgroundImage: `url(${fondo_sjl_top})` }}>
       </div>
-      <div className="flex md:hidden absolute w-full h-full bg-cover bg-center opacity-50"
-        style={{ backgroundImage: `url(${fono})` }}>
+      <div className="flex absolute bottom-0 right-0 w-1/3 md:w-80 lg:w-96 aspect-square bg-right-bottom opacity-70 bg-no-repeat bg-cover"
+        style={{ backgroundImage: `url(${fondo_sjl_bottom})` }}>
       </div>
-      <div className="absolute m-20 top-12 transform -translate-y-1/2">
+      <Container maxWidth="xs">
+        <div className="w-full flex items-center justify-center relative">
           <img
             src={logo}
             alt="logo"
-            className="hidden md:flex w-full h-auto mx-auto opacity-90" />
-      </div>
-      <Container maxWidth="xs">
+            className="flex w-72 md:w-96 h-auto absolute top-[-150px] md:top-[-180px]" />
+        </div>
         <Paper elevation={3} sx={{ padding: 3, borderRadius: 5 }}>
           <Formik
             initialValues={{ username: '', password: '' }}
