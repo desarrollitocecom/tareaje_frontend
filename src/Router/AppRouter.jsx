@@ -37,6 +37,20 @@ const AppRouter = () => {
           element: <PrivateRouter element={<SeguimientoAsistencia />} />,
         },
         {
+          path: "/buscar",
+          element: <PrivateRouter element={<Outlet />} />,
+          children: [
+            {
+              path: "/buscar",
+              element: <PrivateRouter element={<Outlet />} />,
+            },
+            {
+              path: "/buscar/:id",
+              element: <PrivateRouter element={<Outlet />} />,
+            }
+          ]
+        },
+        {
           path: "/error",
           element: <PrivateRouter element={<Error403 />} />,
         },

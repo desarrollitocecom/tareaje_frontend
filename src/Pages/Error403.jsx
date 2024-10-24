@@ -3,7 +3,7 @@ import Error from '../assets/logos/Error.png';
 
 const Error403 = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-green-500 text-white px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-green-500 text-white px-4 w-full">
       <h1 className="text-6xl md:text-8xl font-bold">403</h1>
       <p className="text-lg md:text-2xl mt-4 text-center">No tienes permiso para acceder a este recurso.</p>
       <div className="flex flex-col items-center justify-center mt-8">

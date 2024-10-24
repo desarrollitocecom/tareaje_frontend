@@ -12,6 +12,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import storage from '@mui/icons-material/Storage';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../Redux/Slices/AuthSlice';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
@@ -46,20 +47,27 @@ const Sidebar = ({ toggled, setToggled }) => {
     },
     {
       id: 2,
+      label: "Buscar Personal",
+      icon: SearchIcon,
+      link: "/buscar",
+      target: "_self",
+    },
+    {
+      id: 3,
       label: "Asistencia Personal",
       icon: PeopleIcon,
       link: "/AsistenciaPersonal",
       target: "_self",
     },
     {
-      id: 3,
+      id: 4,
       label: "Seguimiento de Asistencias",
       icon: AssessmentIcon,
       link: "/SeguiminetoAsistencia",
       target: "_self",
     },
     {
-      id: 4,
+      id: 5,
       label: 'Base de datos',
       icon: storage,
       link: '/personal',
