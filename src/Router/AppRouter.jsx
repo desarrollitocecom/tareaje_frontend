@@ -9,6 +9,7 @@ import SeguimientoAsistencia from "../Pages/SeguimientoAsitencia";
 import Login from '../Pages/Login';
 import Error403 from '../Pages/Error403';
 import PersonalBD from '../Pages/PersonalBD';
+import PersonaIdentificado from '../Pages/PersonaIdentificado';
 
 const AppRouter = () => {
   const router = createBrowserRouter([
@@ -46,7 +47,7 @@ const AppRouter = () => {
             },
             {
               path: "/buscar/:id",
-              element: <PrivateRouter element={<Outlet />} />,
+              element: <PrivateRouter element={<PersonaIdentificado />} />,
             }
           ]
         },
