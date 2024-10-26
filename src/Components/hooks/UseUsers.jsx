@@ -11,53 +11,34 @@ const useData = () => {
   const [turnos, setTurnos] = useState([]);
   */
 
-  // Endpoints 
- // const endpointAsistencia = 'https://api.example.com/asistencia';
+  // Endpoint para login
+  const endpointLogin = 'https://api.example.com/user';
 
-  /*
-  const endpointCargos = 'https://api.example.com/cargos';
-  const endpointTurnos = 'https://api.example.com/turnos';
-  */
-
-
-  // Obtener datos de asistencia
-  /*
-  useEffect(() => {
-    fetch(endpointAsistencia)
+  
+  const login = (username, password) => {
+    fetch(endpointLogin, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password }), 
+    })
       .then((response) => response.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        if (data.success) {
+          setIsAuthenticated(true); 
+        } else {
+          setIsAuthenticated(false);
+          setError('Credenciales incorrectas o usuario no registrado');
+        }
+      })
       .catch((error) => {
-        console.error('Error al obtener datos de asistencia:', error);
+        console.error('Error al iniciar sesión:', error);
+        setError('Ocurrió un error al intentar iniciar sesión');
       });
-  }, []);
-  */
+  };
 
-  // Obtener cargos desde la base de datos
-  /*
-  useEffect(() => {
-    fetch(endpointCargos)
-      .then((response) => response.json())
-      .then((data) => setCargos(data))
-      .catch((error) => {
-        console.error('Error al obtener los cargos:', error);
-      });
-  }, []);
-  */
-
-  // Obtener turnos desde la base de datos
-
-  /*
-  useEffect(() => {
-    fetch(endpointTurnos)
-      .then((response) => response.json())
-      .then((data) => setTurnos(data))
-      .catch((error) => {
-        console.error('Error al obtener los turnos:', error);
-      });
-  }, []);
-  */
-
-  return { data, cargos, turnos };
+  return { isAuthenticated, error, login };
 };
 
 export default useData;

@@ -1,0 +1,3125 @@
+{
+    "message": "Usuarios encontrados",
+    "data": [
+        {
+            "id": "40ff12f0-25ed-4407-8374-d0ad737cd403",
+            "member": "9acd12ab03601dea",
+            "nombres": "JOSÉ LUIS",
+            "apellidos": "ROMERO ARCOS",
+            "telefono": 993467247,
+            "dni": 9245124,
+            "superior": "TITAN LÓPEZ VIERA",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T19:54:03.306Z",
+            "updatedAt": "2024-10-18T19:54:14.338Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "5c1b65d0-62e9-4da2-9277-03ca648209e1",
+            "member": "79df1bbfc7c77819",
+            "nombres": "Abigail dorcas",
+            "apellidos": "Vargas zevallos",
+            "telefono": 998181371,
+            "dni": 76578590,
+            "superior": "Pinto rivero Carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-19T19:31:52.515Z",
+            "updatedAt": "2024-10-21T14:01:26.961Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "be5c5cdb-97cf-4200-aac9-92ca919842a1",
+            "member": "c9522dfcf2efc4d7",
+            "nombres": "JULISA",
+            "apellidos": "DE LA CRUZ",
+            "telefono": 916838867,
+            "dni": 74723080,
+            "superior": "RODRÍGUEZ",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-19T11:55:50.386Z",
+            "updatedAt": "2024-10-19T13:25:56.692Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "40b51930-8c5c-4f53-907b-abb3f7f68b25",
+            "member": "06f7ae75fe0b27cd",
+            "nombres": "Apolinario",
+            "apellidos": "Alvino",
+            "telefono": 960561265,
+            "dni": 77232389,
+            "superior": "Jose Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:16:15.989Z",
+            "updatedAt": "2024-10-09T16:22:02.144Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a0a6f805-7fda-4b4f-9279-fdc4a8afe7d9",
+            "member": "2db99fcbd593303e",
+            "nombres": "fernando",
+            "apellidos": "Ramos Quispe",
+            "telefono": 908704102,
+            "dni": 70863307,
+            "superior": "Soria Galarza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:50:21.837Z",
+            "updatedAt": "2024-10-18T14:52:51.426Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "abb81523-b6a1-44e5-8ec0-ceb3228cdbda",
+            "member": "211c9be5b6384451",
+            "nombres": "Juan jorge",
+            "apellidos": "Santibáñez Herrera",
+            "telefono": 947259850,
+            "dni": 9243064,
+            "superior": "JESON viera López",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-19T05:03:35.054Z",
+            "updatedAt": "2024-10-19T13:25:57.024Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "4fd33bb2-d50b-4634-aac5-f946fa868a84",
+            "member": "8b871f45b1493e99",
+            "nombres": "jhoana",
+            "apellidos": "salazar canales",
+            "telefono": 933254792,
+            "dni": 44978380,
+            "superior": "Carlos pinto riveros",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-19T19:35:28.999Z",
+            "updatedAt": "2024-10-21T14:01:32.807Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "2b26ca73-8e4b-4eb9-b728-641d22bce40a",
+            "member": "7c5e4a400a7c5c14",
+            "nombres": "Betsy jhudith",
+            "apellidos": "Palomo Huatuco",
+            "telefono": 978775277,
+            "dni": 72791093,
+            "superior": "José Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-14T15:14:57.984Z",
+            "updatedAt": "2024-10-14T15:15:39.405Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "c6dd402a-dfb7-46ce-b8bf-03db75c72ee0",
+            "member": "b50f26961b0c26f3",
+            "nombres": "Erick",
+            "apellidos": "Pajares",
+            "telefono": 998994999,
+            "dni": 46387514,
+            "superior": "fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-14T23:22:41.687Z",
+            "updatedAt": "2024-10-14T23:23:48.428Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "30c3a185-8de3-4003-bb3f-272a3bccab65",
+            "member": "433c1596d3541626",
+            "nombres": "Mark",
+            "apellidos": "Martínez Villegas",
+            "telefono": 916445224,
+            "dni": 70897850,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:18:51.000Z",
+            "updatedAt": "2024-10-09T13:21:56.349Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "82935354-230a-4e1c-b3e8-4d8a0e2e595d",
+            "member": "bda1ed14b4305859",
+            "nombres": "Diego Jesus",
+            "apellidos": "Matute Espinoza",
+            "telefono": 956752542,
+            "dni": 73258904,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-15T15:21:13.971Z",
+            "updatedAt": "2024-10-15T15:22:14.679Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "b6368b6f-bd25-4ed1-8b6d-bd9efb17301f",
+            "member": "13877a40a928d7fa",
+            "nombres": "LUIS ANTONIO",
+            "apellidos": "cortez Carhuanina",
+            "telefono": 998848257,
+            "dni": 70269605,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-15T15:25:14.769Z",
+            "updatedAt": "2024-10-15T15:25:34.221Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "1535a9b9-012a-4e64-ac49-ad2d8748fa2b",
+            "member": "1ac518d736a3bf63",
+            "nombres": "SANDOR ELI",
+            "apellidos": "JIMENEZ OROSTEGUI",
+            "telefono": 934732498,
+            "dni": 60573883,
+            "superior": "ARGANDOÑA VALENCIA KEVIN",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:42:23.768Z",
+            "updatedAt": "2024-10-18T19:42:54.723Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "93f7b6c5-c432-4106-a89d-a6c4d0208a93",
+            "member": "b71eed1a62a066d5",
+            "nombres": "Luis Piero",
+            "apellidos": "Casanova Gómez",
+            "telefono": 981542779,
+            "dni": 76276278,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T11:36:20.023Z",
+            "updatedAt": "2024-10-18T11:36:51.344Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "216c4498-1967-4a0b-abce-6069c99d6a6f",
+            "member": "7689f007233d668c",
+            "nombres": "Azusena Yadhira",
+            "apellidos": "Salluca Condori",
+            "telefono": 924325548,
+            "dni": 76808994,
+            "superior": "Huayhua Fuentes Gianmarco",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T13:42:38.986Z",
+            "updatedAt": "2024-10-18T13:43:25.486Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "99fc91cb-d732-4f3c-9cd2-a4ffbc5a63fa",
+            "member": "87476b4086d7c7ad",
+            "nombres": "Eliana del carmen",
+            "apellidos": "chavez huaman",
+            "telefono": 934191801,
+            "dni": 10554313,
+            "superior": "Gonzalez Arica Miguel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T13:39:36.880Z",
+            "updatedAt": "2024-10-18T13:43:25.750Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "132e77e4-a73a-4672-bcd3-fbc63564ebee",
+            "member": "c06861fdb3441727",
+            "nombres": "RONALD AUGUSTO",
+            "apellidos": "ARMAS MAGIN",
+            "telefono": 987312178,
+            "dni": 74060009,
+            "superior": "MIGUEL GONZALES ARICA",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T13:52:53.518Z",
+            "updatedAt": "2024-10-18T13:53:00.592Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "2dd19a2d-709e-4c8a-a5f0-e6e8ef67e9c5",
+            "member": "1d5c405969dfac12",
+            "nombres": "CAJALEON",
+            "apellidos": "HUARACCALLO",
+            "telefono": 941414021,
+            "dni": 77131929,
+            "superior": "Santo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:18:21.214Z",
+            "updatedAt": "2024-10-18T14:18:36.251Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "d6ebda8b-f08d-4118-8d87-a9e3b3bb974d",
+            "member": "885e3f790399ed9f",
+            "nombres": "James Brayams",
+            "apellidos": "Contreras Ñaupa",
+            "telefono": 936309481,
+            "dni": 71261019,
+            "superior": "Brayan",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-04T19:12:50.006Z",
+            "updatedAt": "2024-10-08T04:50:34.591Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "f616cbde-b322-43c5-9126-981ddf04a199",
+            "member": "10652f7f213f5148",
+            "nombres": "fiorella",
+            "apellidos": "maguiña ortiz",
+            "telefono": 902685349,
+            "dni": 60574937,
+            "superior": "Santos",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:19:00.805Z",
+            "updatedAt": "2024-10-18T14:19:37.514Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "bc1aa767-85f9-47a1-bfc5-03ff12a6984c",
+            "member": "2632f292037f399a",
+            "nombres": "Rosalinda",
+            "apellidos": "Hinostroza huanca",
+            "telefono": 912703948,
+            "dni": 60825161,
+            "superior": "Salcedo flores Ronald",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:25:04.247Z",
+            "updatedAt": "2024-10-18T14:25:13.324Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "e64e9f8e-d865-49a7-bff2-97005ce4fed7",
+            "member": "88f1d31f6b4378d4",
+            "nombres": "LIBIA ROSA",
+            "apellidos": "TRIEMSTRA MORAN",
+            "telefono": 904469046,
+            "dni": 72791268,
+            "superior": "CIPRIANO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:35:25.729Z",
+            "updatedAt": "2024-10-18T14:35:38.202Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "77de299d-5d7c-483d-a870-7714933e20a6",
+            "member": "39d3a7659ff45975",
+            "nombres": "Yolaisi",
+            "apellidos": "Casilla",
+            "telefono": 922569108,
+            "dni": 48292251,
+            "superior": "Pinto Rivero Carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:48:14.530Z",
+            "updatedAt": "2024-10-18T19:48:29.404Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "759a04d0-3128-4abb-ad59-532881d52967",
+            "member": "65b044c18a97bf1c",
+            "nombres": "yuvianet",
+            "apellidos": "Huamán",
+            "telefono": 907340653,
+            "dni": 62067069,
+            "superior": "Pinto Riveros carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:47:11.226Z",
+            "updatedAt": "2024-10-18T19:48:29.956Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "20e0c893-c71f-4245-b520-c0991bccd9ac",
+            "member": "8f81eacdae5266c3",
+            "nombres": "Fernando Leonardo",
+            "apellidos": "Arellan Sáenz",
+            "telefono": 980256841,
+            "dni": 42425065,
+            "superior": "Pinto",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T19:48:02.558Z",
+            "updatedAt": "2024-10-18T19:48:31.316Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3801d198-7b31-4d67-80d2-e78d34eb8c08",
+            "member": "b31b4fa436f19022",
+            "nombres": "Katherine thalia",
+            "apellidos": "Rebaza Pasmiño",
+            "telefono": 928598316,
+            "dni": 70919522,
+            "superior": "Carlos pinto rivero",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:48.736Z",
+            "updatedAt": "2024-10-18T19:48:31.868Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "de0b068a-2bcb-4722-bd2d-b048be64770e",
+            "member": "b68c3503a95080a8",
+            "nombres": "Arnaldo Augusto",
+            "apellidos": "Alvarado Apaestegui",
+            "telefono": 972412400,
+            "dni": 73097724,
+            "superior": "Carlos pinto rivero",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:47.553Z",
+            "updatedAt": "2024-10-18T19:48:32.565Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "f6dc126c-5059-4540-9867-27b98d134635",
+            "member": "dc524f1532cbc9d3",
+            "nombres": "Lucero",
+            "apellidos": "Vargas Berrocal",
+            "telefono": 930354589,
+            "dni": 76804930,
+            "superior": "Carlos Pinto Rivero",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:36.027Z",
+            "updatedAt": "2024-10-18T19:48:33.853Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "ff8f3f81-2ee0-478b-88c9-10731e6383d7",
+            "member": "45cb7e6fd7a58ca8",
+            "nombres": "Alberto",
+            "apellidos": "Huaqui  Matos",
+            "telefono": 932835490,
+            "dni": 9554871,
+            "superior": "José Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:18:37.671Z",
+            "updatedAt": "2024-10-14T16:10:56.934Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "4e076b1e-f076-4f62-a12b-926c78f7adb5",
+            "member": "5a83d3e019ea7d4b",
+            "nombres": "Mario",
+            "apellidos": "flores bb\n\nflores sancho",
+            "telefono": 924155893,
+            "dni": 25405593,
+            "superior": "meza  tronco",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:49:42.568Z",
+            "updatedAt": "2024-10-18T19:50:23.388Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "448df215-9fec-41b9-97f3-0d6ddcc97067",
+            "member": "69ecdb58bd8ef784",
+            "nombres": "franz claudio",
+            "apellidos": "palomino sullca",
+            "telefono": 959904081,
+            "dni": 10671341,
+            "superior": "WILIAM pineda",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:50:21.370Z",
+            "updatedAt": "2024-10-18T19:50:23.851Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "304eb1a4-0d24-412b-badf-4cf5f178d29c",
+            "member": "cf69d520313256b2",
+            "nombres": "ninoska dayane",
+            "apellidos": "puclla cruz",
+            "telefono": 997055661,
+            "dni": 48038938,
+            "superior": "pinto Rivero",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T19:51:28.244Z",
+            "updatedAt": "2024-10-18T19:51:32.780Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "b0b98a1a-26c2-45e8-9b80-4052d258b018",
+            "member": "0ad861f5203e7514",
+            "nombres": "José luis",
+            "apellidos": "Cusihuallpa",
+            "telefono": 934186644,
+            "dni": 45058902,
+            "superior": "PINTO RIVEROS CARLOS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:51:41.970Z",
+            "updatedAt": "2024-10-18T19:51:47.685Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "5730a307-8e1a-4f7f-a914-016f9162b815",
+            "member": "920239471bce3d20",
+            "nombres": "jeaneth",
+            "apellidos": "Tarazona",
+            "telefono": 955284814,
+            "dni": 74220820,
+            "superior": "Jose fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:16:11.496Z",
+            "updatedAt": "2024-10-09T13:17:48.636Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "bc27aea9-0879-4d38-bcf1-e710d3984f23",
+            "member": "4a0492cce397d3ba",
+            "nombres": "Hugo Alejandro",
+            "apellidos": "Paredes",
+            "telefono": 984219863,
+            "dni": 70967386,
+            "superior": "superior",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:52:15.768Z",
+            "updatedAt": "2024-10-18T19:52:26.029Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "14f7318a-51f2-4ed4-bb01-20bbaf485f24",
+            "member": "9d848f97959c613a",
+            "nombres": "Yosselyn",
+            "apellidos": "Quispe Bendezu",
+            "telefono": 923444446,
+            "dni": 47722849,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:15:21.054Z",
+            "updatedAt": "2024-10-09T13:17:50.529Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0ec4760c-f584-4f8c-818b-3eaf90e28f6c",
+            "member": "70184a1e902eedf3",
+            "nombres": "Marco Antonio",
+            "apellidos": "Vilchez Grijalva",
+            "telefono": 966644106,
+            "dni": 40692833,
+            "superior": "José Fretell",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:16:12.838Z",
+            "updatedAt": "2024-10-09T13:17:57.239Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "15f36237-96ba-45c2-9983-eb187415035b",
+            "member": "51bd871556b13005",
+            "nombres": "ysabel",
+            "apellidos": "Guzmán",
+            "telefono": 986953117,
+            "dni": 17639144,
+            "superior": "fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:16:33.055Z",
+            "updatedAt": "2024-10-09T13:17:58.009Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "51a977cd-6597-4cc5-bc82-9ade5c1f5a62",
+            "member": "f4672c186d5e1ad4",
+            "nombres": "omayra Yadira",
+            "apellidos": "Silva Mendoza",
+            "telefono": 934351472,
+            "dni": 47512162,
+            "superior": "fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:15:03.957Z",
+            "updatedAt": "2024-10-09T13:18:00.582Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "7af7d813-cf0d-4dc1-844c-7f0ea51202c7",
+            "member": "30e8abc5800e2de1",
+            "nombres": "Héctor Israel",
+            "apellidos": "Félix de la Cruz",
+            "telefono": 955154719,
+            "dni": 19660614,
+            "superior": "JORGES Pedro",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:56:52.643Z",
+            "updatedAt": "2024-10-18T19:57:00.488Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "3ef309f5-58b8-4862-b094-e8f55f29e655",
+            "member": "83dac7da10cfb299",
+            "nombres": "Virgilio",
+            "apellidos": "MARQUINA PACHECO",
+            "telefono": 966307736,
+            "dni": 9553332,
+            "superior": "PINTO RIVEROS CARLOS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:57:12.267Z",
+            "updatedAt": "2024-10-18T19:57:16.323Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "60196a6a-095f-44f5-8215-7e606e91a764",
+            "member": "fd535bb02e98153d",
+            "nombres": "miguel",
+            "apellidos": "peraldo sinuyri",
+            "telefono": 966099462,
+            "dni": 42940068,
+            "superior": "Mendoza rizco antony",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:16:31.007Z",
+            "updatedAt": "2024-10-21T19:16:41.909Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "632b71d5-823b-4998-8354-7325329593c8",
+            "member": "03949e2bd39dedc9",
+            "nombres": "Walter",
+            "apellidos": "Espinoza Sotomayor",
+            "telefono": 954181422,
+            "dni": 7024509,
+            "superior": "secundaria",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:59:28.627Z",
+            "updatedAt": "2024-10-18T19:59:56.092Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "cafa87b2-5f01-49eb-bb2b-a2f2c559b14d",
+            "member": "3828938efef6354b",
+            "nombres": "rosa",
+            "apellidos": "ZARÁTE.  cordova",
+            "telefono": 988000843,
+            "dni": 7779729,
+            "superior": "López.   vera",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:01:49.546Z",
+            "updatedAt": "2024-10-18T20:02:10.668Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "e30fd333-e54f-4645-9e10-f5713198421d",
+            "member": "70da3f74f59bedbe",
+            "nombres": "JOHNNY JOHNNY",
+            "apellidos": "PEÑA CASTILLO",
+            "telefono": 957277261,
+            "dni": 40206564,
+            "superior": "WILLIAM PINEDA MORALES",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:03:01.042Z",
+            "updatedAt": "2024-10-18T20:03:15.315Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "98d5e768-6a84-4286-9375-b75efb3a6bd2",
+            "member": "82997304b4afa424",
+            "nombres": "Henry Gustavo",
+            "apellidos": "coronado Acosta",
+            "telefono": 993108733,
+            "dni": 47392346,
+            "superior": "cesar Arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:05:09.935Z",
+            "updatedAt": "2024-10-18T20:05:26.808Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b9a1d430-9269-45a8-9bb6-10a0cdcad32f",
+            "member": "52304d7dd6d4bf74",
+            "nombres": "Elvis Jose",
+            "apellidos": "Verde Plaza",
+            "telefono": 992626507,
+            "dni": 18146408,
+            "superior": "Cesar Areas",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:53:19.349Z",
+            "updatedAt": "2024-10-18T19:53:22.716Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "713b3d82-f8c3-46f6-bc61-23cf1e4e8c67",
+            "member": "c34ed2de67069acf",
+            "nombres": "Luis Francisco",
+            "apellidos": "Soria Godoy",
+            "telefono": 955592640,
+            "dni": 25710161,
+            "superior": "Arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:06:58.649Z",
+            "updatedAt": "2024-10-18T20:07:09.885Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "1aec9599-f1e4-4087-ab1e-9e2b28529722",
+            "member": "60afe57c455a7f84",
+            "nombres": "Andrés Manuel",
+            "apellidos": "Esquivel Ccochachi",
+            "telefono": 933654937,
+            "dni": 45190986,
+            "superior": "Arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:11:34.207Z",
+            "updatedAt": "2024-10-18T20:12:05.594Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "59a64118-28e6-467d-bf35-cb93b7d3564c",
+            "member": "3c09d96c3831a9ff",
+            "nombres": "sandra",
+            "apellidos": "espinoza saihua",
+            "telefono": 962258291,
+            "dni": 42383853,
+            "superior": "Miguel gonzales",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T20:13:30.124Z",
+            "updatedAt": "2024-10-18T20:14:04.691Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "6b3a55d1-d598-436b-bf1e-7e38f93a5286",
+            "member": "c1c88826842e398b",
+            "nombres": "ROCIO",
+            "apellidos": "SAENZ PISCO",
+            "telefono": 916390295,
+            "dni": 73906872,
+            "superior": "RIVEROS PINTO CARLOS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:15:11.477Z",
+            "updatedAt": "2024-10-18T20:15:31.570Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b8846808-a49c-4be1-8be3-7049a5433314",
+            "member": "20e538afb2c95585",
+            "nombres": "Luis Alberto",
+            "apellidos": "misaico Salvatierra",
+            "telefono": 926493468,
+            "dni": 41579682,
+            "superior": "cesar arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:20:41.814Z",
+            "updatedAt": "2024-10-18T20:20:55.793Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "956a8703-eb9a-4fed-a9e4-6e80f7b034e0",
+            "member": "f390272ffc2c7d08",
+            "nombres": "jose",
+            "apellidos": "rojas Vega",
+            "telefono": 955188246,
+            "dni": 41288073,
+            "superior": "cesar Arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:24:29.044Z",
+            "updatedAt": "2024-10-18T20:24:49.266Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b605eb87-da1c-48ac-8406-e32b6dcbf584",
+            "member": "6e31b99011964d07",
+            "nombres": "Ariel",
+            "apellidos": "Martínez Cordero",
+            "telefono": 990430872,
+            "dni": 74871027,
+            "superior": "Carlos Alva",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:26:33.939Z",
+            "updatedAt": "2024-10-18T20:26:48.257Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "e8b1f4a3-e658-4b26-b415-c09f6dadddc8",
+            "member": "8f46c15fd6540b20",
+            "nombres": "David",
+            "apellidos": "Mamani flores",
+            "telefono": 906670747,
+            "dni": 71397155,
+            "superior": "Lampa caseres Jean carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:36:23.141Z",
+            "updatedAt": "2024-10-18T20:36:26.139Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "e06dc223-7489-4f45-b4bd-f86580b91c79",
+            "member": "3bfc0182c4a42663",
+            "nombres": "Luis  Andrés",
+            "apellidos": "Herrera Revilla",
+            "telefono": 953111786,
+            "dni": 7617117,
+            "superior": "Carlos Alva",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:42:08.496Z",
+            "updatedAt": "2024-10-18T20:42:27.389Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a7bfb874-ff3d-4ed1-8239-c25872843c35",
+            "member": "f43164b48f9727d8",
+            "nombres": "Antony Jair",
+            "apellidos": "Nuñez",
+            "telefono": 991903141,
+            "dni": 75410181,
+            "superior": "cesar arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:53:56.205Z",
+            "updatedAt": "2024-10-18T19:54:01.707Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "dfc6e568-87e8-4e69-89c2-69cfb9ab1734",
+            "member": "5d78258cce8ae5c7",
+            "nombres": "AMALIO",
+            "apellidos": "VIVANCO",
+            "telefono": 921647459,
+            "dni": 42203694,
+            "superior": "SECUNDARIA",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:54:39.873Z",
+            "updatedAt": "2024-10-18T19:54:41.892Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "384c59be-00b3-445a-a87d-b46b70997280",
+            "member": "8fd40ef358fed25d",
+            "nombres": "germán Eduardo",
+            "apellidos": "felix mariño",
+            "telefono": 987911552,
+            "dni": 44140701,
+            "superior": "carlos alva",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T15:01:13.119Z",
+            "updatedAt": "2024-10-18T15:01:52.557Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "1f6b7485-8b25-4340-a62c-e70c62473c86",
+            "member": "4780a47e685c8e31",
+            "nombres": "Moisés",
+            "apellidos": "Panduro Azado",
+            "telefono": 966823735,
+            "dni": 44993453,
+            "superior": "Wilian Pineda morales",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T19:57:06.462Z",
+            "updatedAt": "2024-10-18T19:57:17.027Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "df6f4fef-323c-4437-81a5-47911ca59d1d",
+            "member": "f6b6a7196f5f1b0e",
+            "nombres": "belen",
+            "apellidos": "veloz",
+            "telefono": 974055341,
+            "dni": 71092270,
+            "superior": "Jose Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:18:06.293Z",
+            "updatedAt": "2024-10-14T15:31:55.879Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "777ddfc3-8a07-43d9-88d4-b859203841a0",
+            "member": "06d014c1ebc9cafe",
+            "nombres": "Sandy Evelyn",
+            "apellidos": "Palomino montoya",
+            "telefono": 913310508,
+            "dni": 44487990,
+            "superior": "santos",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:18:30.530Z",
+            "updatedAt": "2024-10-21T14:02:23.361Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "17461a48-a907-4a71-a4af-be7b78a22b76",
+            "member": "6c7a94882c057047",
+            "nombres": "saul",
+            "apellidos": "pardave",
+            "telefono": 991042064,
+            "dni": 41003034,
+            "superior": "unico",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-14T16:02:27.551Z",
+            "updatedAt": "2024-10-14T16:02:55.215Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "96f15ef4-405e-4be4-a98c-83ef599bea9c",
+            "member": "fb0f4a1bbdf1fb05",
+            "nombres": "JOVER ARON",
+            "apellidos": "CRUZ MATEO",
+            "telefono": 965230260,
+            "dni": 77336241,
+            "superior": "JOSE FRETEL",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:16:11.147Z",
+            "updatedAt": "2024-10-09T13:17:48.248Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a0664136-3a4d-4232-8988-153375557dfb",
+            "member": "00d56f9c926d2b7d",
+            "nombres": "fiorela",
+            "apellidos": "soriano",
+            "telefono": 913997574,
+            "dni": 75379601,
+            "superior": "Carlos  PINTO RIBERAS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:47:12.075Z",
+            "updatedAt": "2024-10-25T14:14:21.536Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "ca8820d5-8319-4252-9a42-eadec5656d2e",
+            "member": "6562f05eefaddd83",
+            "nombres": "marlene",
+            "apellidos": "añanca quispe",
+            "telefono": 982164728,
+            "dni": 47371235,
+            "superior": "jose fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:17:52.484Z",
+            "updatedAt": "2024-10-09T13:18:03.917Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a6fa0e4f-8776-4422-95c3-17a93251e7ed",
+            "member": "9bfa9a1bcad4ab15",
+            "nombres": "Anderson",
+            "apellidos": "Becerra casilla",
+            "telefono": 913487748,
+            "dni": 75170711,
+            "superior": "José Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:21:36.280Z",
+            "updatedAt": "2024-10-09T13:22:02.805Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3b159f41-2eb0-4466-a207-9f12ddd1450d",
+            "member": "7cb57694edc7862f",
+            "nombres": "Estefani",
+            "apellidos": "Huillcahuaman",
+            "telefono": 973024100,
+            "dni": 76067022,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-09T13:26:06.377Z",
+            "updatedAt": "2024-10-09T13:26:28.097Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "abf43255-75a4-49b9-a37c-cd215ad649d6",
+            "member": "de02d375fe9366d6",
+            "nombres": "Lorena",
+            "apellidos": "Nicho Lopez",
+            "telefono": 902792891,
+            "dni": 77469482,
+            "superior": "Miguel González Arica",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T13:39:48.288Z",
+            "updatedAt": "2024-10-18T13:43:26.068Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "1850a76a-ebe4-4ee0-9aa3-55dc2fe44214",
+            "member": "8739e2a8ecafee9b",
+            "nombres": "Jorge",
+            "apellidos": "polo Trinidad",
+            "telefono": 936070522,
+            "dni": 42018040,
+            "superior": "Gonzales Arica Miguel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T13:43:56.456Z",
+            "updatedAt": "2024-10-18T13:43:59.112Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "42a9ed01-c8b6-4258-9b0c-ab63dba1aa62",
+            "member": "a9a7c0e1b68b1ed1",
+            "nombres": "Eduardo",
+            "apellidos": "Robles Zavaleta",
+            "telefono": 926082234,
+            "dni": 17366907,
+            "superior": "miguel gonzales",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:11:42.777Z",
+            "updatedAt": "2024-10-18T14:13:27.856Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0620a109-27d4-40e6-96e1-41d7eb61cdff",
+            "member": "f62ec245be607b2c",
+            "nombres": "karla",
+            "apellidos": "aquino",
+            "telefono": 960925604,
+            "dni": 71258708,
+            "superior": "santos",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:19:45.149Z",
+            "updatedAt": "2024-10-18T14:20:07.446Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "6e9f39a5-e48c-491a-843a-6c1285ebd90c",
+            "member": "321cfc550146fa7e",
+            "nombres": "javert segundo",
+            "apellidos": "Rojas ibérico",
+            "telefono": 933458108,
+            "dni": 42948038,
+            "superior": "cesar",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:21:02.918Z",
+            "updatedAt": "2024-10-18T14:21:33.865Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ce0aa5fc-021e-4f9c-9dfa-78e9749a8169",
+            "member": "de74c965138fba1a",
+            "nombres": "lizbeth",
+            "apellidos": "huidobro",
+            "telefono": 932203518,
+            "dni": 72932925,
+            "superior": "Miguel Gonzalez",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:34:49.134Z",
+            "updatedAt": "2024-10-18T14:35:38.574Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "371a8592-364a-4aa0-969f-7aaee2fd0f61",
+            "member": "b46225000b975a69",
+            "nombres": "𝐬𝐨𝐟𝐢𝐚",
+            "apellidos": "𝐂á𝐜𝐞𝐫𝐞𝐬",
+            "telefono": 983018911,
+            "dni": 47310245,
+            "superior": "𝐜𝐥𝐚𝐫𝐚 cipriano",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T14:35:50.383Z",
+            "updatedAt": "2024-10-18T14:36:04.474Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ba4d1224-ce3a-4581-854e-d76e4d33b651",
+            "member": "ce59f89bc387f31a",
+            "nombres": "Renzo Ismael",
+            "apellidos": "Castro Palhua",
+            "telefono": 946623501,
+            "dni": 74585699,
+            "superior": "Rodriguez Sandoval",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:28:15.301Z",
+            "updatedAt": "2024-10-21T19:28:21.082Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0e8f907d-7b08-4bbd-a395-056a8c2a4690",
+            "member": "2ad1ce91cbf3dea4",
+            "nombres": "Roberth Williams",
+            "apellidos": "Chacón Chávez",
+            "telefono": 914426560,
+            "dni": 47539373,
+            "superior": "pinto",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:47:00.378Z",
+            "updatedAt": "2024-10-18T19:48:27.510Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "448b5cd2-4e11-4f75-a186-82543bb563e0",
+            "member": "1fb36e31552fbd8f",
+            "nombres": "Davis Anderson",
+            "apellidos": "Vilca Ccoyllo",
+            "telefono": 941718101,
+            "dni": 48105864,
+            "superior": "Pinto Rivero Carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:16.682Z",
+            "updatedAt": "2024-10-18T19:48:28.199Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "12b7c794-578b-4359-abfa-26982ba9fdf2",
+            "member": "2bb7957d35379b55",
+            "nombres": "Dennis Guillermo",
+            "apellidos": "Sanchez",
+            "telefono": 994386840,
+            "dni": 73500602,
+            "superior": "Carlos Pinto Riveros",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:44.985Z",
+            "updatedAt": "2024-10-18T19:48:28.827Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a254c7ed-110d-4219-a59b-7ac4066ec8cf",
+            "member": "68fbbca54b9d9bc8",
+            "nombres": "Eliazar",
+            "apellidos": "Gavilán Vasquez",
+            "telefono": 972673042,
+            "dni": 40786593,
+            "superior": "pinto",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:48:10.570Z",
+            "updatedAt": "2024-10-18T19:48:30.630Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a18a733e-14c4-4b37-a210-97ae16c602c4",
+            "member": "e0d8c095ccc97534",
+            "nombres": "Alexsander vicente",
+            "apellidos": "Aquino espinoza",
+            "telefono": 926196834,
+            "dni": 44769082,
+            "superior": "Pinto Riveros carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:48:19.581Z",
+            "updatedAt": "2024-10-18T19:48:34.536Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "7c2652e2-d907-4b52-b982-830e16939efc",
+            "member": "f41013edfccf475f",
+            "nombres": "pedro",
+            "apellidos": "Enciso lopez",
+            "telefono": 981510929,
+            "dni": 70852550,
+            "superior": "Carlos pinto rivera",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:46:48.010Z",
+            "updatedAt": "2024-10-18T19:48:35.396Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "7f22b311-815b-4b48-a6ff-1b3afa7a8764",
+            "member": "9d7e28f0e3a979dd",
+            "nombres": "Diana Carolina",
+            "apellidos": "Sánchez pisfil",
+            "telefono": 932261856,
+            "dni": 47216470,
+            "superior": "Antony mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:16:53.774Z",
+            "updatedAt": "2024-10-21T19:17:02.955Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "251d78d1-210b-4796-9855-8fad9dca60b5",
+            "member": "d461b02c83abec38",
+            "nombres": "YODI BANS",
+            "apellidos": "CABRERA CHAMPE",
+            "telefono": 907493319,
+            "dni": 43809841,
+            "superior": "CARLOS RIVEROS PINTO",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:50:20.320Z",
+            "updatedAt": "2024-10-18T19:50:24.413Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "34a87040-e9de-4ff4-a909-058a19686130",
+            "member": "7bfee8ac02823673",
+            "nombres": "Victor oswaldo",
+            "apellidos": "Encarnacion Barahona",
+            "telefono": 922413655,
+            "dni": 47275587,
+            "superior": "Carlos pinto rivera",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:50:32.454Z",
+            "updatedAt": "2024-10-18T19:50:42.527Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "ea4c2c0a-99ef-4720-86a2-6091cdaa6fdb",
+            "member": "71878bee0efd4549",
+            "nombres": "ciprian",
+            "apellidos": "figueroa pauvar",
+            "telefono": 928610934,
+            "dni": 8337248,
+            "superior": "carlos pinto rivera",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:51:22.458Z",
+            "updatedAt": "2024-10-18T19:51:32.022Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "88d00a01-e26d-483f-9c93-8f1d77e4f897",
+            "member": "fdebdb34ccdebb80",
+            "nombres": "luis angel",
+            "apellidos": "soto barreto",
+            "telefono": 902409791,
+            "dni": 48967943,
+            "superior": "anthony mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:30:44.995Z",
+            "updatedAt": "2024-10-21T19:30:53.292Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "94b7dd61-c199-4cd4-b373-886b2b840b0d",
+            "member": "1bcd1d183d0e893b",
+            "nombres": "Antonio Abrahan",
+            "apellidos": "Palomino Roque",
+            "telefono": 917344649,
+            "dni": 46750395,
+            "superior": "Cesar Arias Chanco",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:00:11.619Z",
+            "updatedAt": "2024-10-18T20:00:14.286Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "86c71301-2549-4dfe-8325-f7443bf3c0e2",
+            "member": "bd2350c66c960ddb",
+            "nombres": "Jose Alfredo",
+            "apellidos": "Avilés cajón",
+            "telefono": 903024359,
+            "dni": 60769230,
+            "superior": "Alex Zambrano",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:01:24.831Z",
+            "updatedAt": "2024-10-18T20:01:36.683Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "2088754f-d7fd-4d93-a69f-0f0dfd7d4e54",
+            "member": "d492025b738c39bb",
+            "nombres": "José Ronald",
+            "apellidos": "Núñez Flores",
+            "telefono": 921697008,
+            "dni": 42860004,
+            "superior": "Cesar Arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:02:46.189Z",
+            "updatedAt": "2024-10-18T20:03:16.378Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "34574b33-9c29-4298-a2bb-96e1e6905959",
+            "member": "b5d388cf1139f8bf",
+            "nombres": "Jesús Martín",
+            "apellidos": "Vignolo Maricelli",
+            "telefono": 976925045,
+            "dni": 10429577,
+            "superior": "Rivera",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:34:02.093Z",
+            "updatedAt": "2024-10-21T19:34:13.169Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "232f9e00-07ee-4867-a81f-c38f9e398a82",
+            "member": "fcfca38dd57fd2eb",
+            "nombres": "Gerardo José Manuel",
+            "apellidos": "Meléndez Alva",
+            "telefono": 936033423,
+            "dni": 73760361,
+            "superior": "Antony Mendoza Ritso",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:40:44.202Z",
+            "updatedAt": "2024-10-21T19:40:56.161Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "d11e8e4f-f0fd-4bfe-8323-2ced25d8fe51",
+            "member": "6fb5d841bd400570",
+            "nombres": "María",
+            "apellidos": "Quispe",
+            "telefono": 904528154,
+            "dni": 9452816,
+            "superior": "sup",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T05:16:00.239Z",
+            "updatedAt": "2024-10-22T13:10:01.280Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "87f12ddb-d02b-4e6a-a467-cab2af3876ab",
+            "member": "9d209ac740f177ca",
+            "nombres": "Augusto Daniel",
+            "apellidos": "morales Alva",
+            "telefono": 931354496,
+            "dni": 41411019,
+            "superior": "Willian Pineda",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:51:34.180Z",
+            "updatedAt": "2024-10-18T19:51:48.251Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "2e5c8661-bc16-40f0-b119-211cfb1e194e",
+            "member": "a117aab003169996",
+            "nombres": "Marcelina",
+            "apellidos": "Quispe Quispe",
+            "telefono": 993894936,
+            "dni": 40841145,
+            "superior": "PINTO RIVERO CARLOS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:51:42.291Z",
+            "updatedAt": "2024-10-18T19:51:48.883Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "ccfac410-dc50-46c2-a064-1c375b47a4e3",
+            "member": "57fc4374772f3453",
+            "nombres": "Jherbin Lubel",
+            "apellidos": "Valdivia Ortega",
+            "telefono": 999657858,
+            "dni": 74161913,
+            "superior": "Pinto Rivero",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:52:23.424Z",
+            "updatedAt": "2024-10-18T19:52:26.756Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "086fad11-d99e-4d7a-b2d2-c0f6c6817e2f",
+            "member": "23e7729a7d38ac15",
+            "nombres": "Sara judith",
+            "apellidos": "moreno leon",
+            "telefono": 940545454,
+            "dni": 31655773,
+            "superior": "CARLOS RIVERA PINTO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T19:52:56.694Z",
+            "updatedAt": "2024-10-18T19:53:01.466Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "306bae5b-aa50-4edf-89df-5c68a01908db",
+            "member": "4f27420b1ceb37b5",
+            "nombres": "RUFINO",
+            "apellidos": "Castro ORMEÑO",
+            "telefono": 929096873,
+            "dni": 6188285,
+            "superior": "pinto rivero",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T19:53:32.272Z",
+            "updatedAt": "2024-10-18T19:53:38.412Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "f665c8df-83ab-48de-8b82-ce97382743b5",
+            "member": "99a23c16b42b683d",
+            "nombres": "Mario Andres",
+            "apellidos": "Ñaupari Mauricio",
+            "telefono": 934497116,
+            "dni": 45547487,
+            "superior": "pedro ruis",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T20:05:41.404Z",
+            "updatedAt": "2024-10-18T20:05:46.316Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "109ac6a4-6f30-42f1-a84f-2cae2d93b3b6",
+            "member": "597e39ab4d398cc1",
+            "nombres": "WILLIANS JONMAICOL",
+            "apellidos": "ROMERO MAYORCA",
+            "telefono": 907492002,
+            "dni": 74442695,
+            "superior": "tolentino Benites",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T20:07:08.714Z",
+            "updatedAt": "2024-10-18T20:07:11.723Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "d929f4c5-e6c4-4b98-bced-3fbc24c90038",
+            "member": "62f7ad72e19bc014",
+            "nombres": "RUBÉN NOÉ",
+            "apellidos": "ALCEDO TORRES",
+            "telefono": 945565343,
+            "dni": 40226005,
+            "superior": "CARLOS PINTO RIVEROS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:08:08.035Z",
+            "updatedAt": "2024-10-18T20:08:12.715Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "07266d02-f809-4388-9c28-aa788cdbbaac",
+            "member": "22b6d1e52f8c5bef",
+            "nombres": "jesus",
+            "apellidos": "Gonzáles Arévalo",
+            "telefono": 910305969,
+            "dni": 75495675,
+            "superior": "cesar arias",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:11:38.377Z",
+            "updatedAt": "2024-10-18T20:12:04.972Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "5ceca3bd-c680-4071-87d0-7fdec9f8f045",
+            "member": "fde0e4c1d545ad0c",
+            "nombres": "miguel",
+            "apellidos": "carrillo",
+            "telefono": 917872073,
+            "dni": 71296309,
+            "superior": "jorges  pedro",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:15:04.476Z",
+            "updatedAt": "2024-10-18T20:15:25.902Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "58414e62-c8f5-417a-be73-7b4dcbe0bf12",
+            "member": "1b07caa13ca986d3",
+            "nombres": "Raúl Miguel",
+            "apellidos": "Ccahuana Chochoca",
+            "telefono": 920614126,
+            "dni": 40314856,
+            "superior": "Pedro Jorges",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:16:39.227Z",
+            "updatedAt": "2024-10-18T20:17:00.373Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b8e046ea-c5f2-46f9-92f9-a707bf91f242",
+            "member": "08a9ccde29ce832a",
+            "nombres": "angel gabriel",
+            "apellidos": "grandez salcedo",
+            "telefono": 966972328,
+            "dni": 60722010,
+            "superior": "carlos alva",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:20:53.961Z",
+            "updatedAt": "2024-10-18T20:20:58.200Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "f1387552-4f8a-4c1e-baea-6196df76c2ba",
+            "member": "8160eeacc530bd26",
+            "nombres": "ESAÚ FERMÍN",
+            "apellidos": "TOLENTINO BENITES",
+            "telefono": 960311531,
+            "dni": 76017866,
+            "superior": "VALLEJO SUÁREZ ADOLFO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T20:26:15.613Z",
+            "updatedAt": "2024-10-18T20:26:48.656Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0f3a4703-1f49-4d9c-bf83-f119231583e4",
+            "member": "cc362cc4f3000dba",
+            "nombres": "Roger José",
+            "apellidos": "Jara Tello",
+            "telefono": 936586610,
+            "dni": 46518225,
+            "superior": "Cáceres Lampa Jean",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:32:20.941Z",
+            "updatedAt": "2024-10-18T20:32:38.944Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a8b6c238-2255-4e46-a9c4-18f030cf2cdf",
+            "member": "f4a4d16289347b0d",
+            "nombres": "ANDREW",
+            "apellidos": "GUTIERREZ",
+            "telefono": 970575765,
+            "dni": 70309706,
+            "superior": "CACERES LAMPA",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:36:15.024Z",
+            "updatedAt": "2024-10-18T20:36:26.593Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "7d726c41-4213-41a6-ae05-b826bc8bfb28",
+            "member": "c2fa099d16e58396",
+            "nombres": "Jonathan",
+            "apellidos": "Castro Gago",
+            "telefono": 957325630,
+            "dni": 47404412,
+            "superior": "Carlos Pinto",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:41:07.724Z",
+            "updatedAt": "2024-10-18T20:41:21.012Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "810ced91-ae6a-4125-b82b-ec09f16dc87f",
+            "member": "7532039ad7814893",
+            "nombres": "Kenny Lubwin",
+            "apellidos": "Pizarro Vivanco",
+            "telefono": 903349028,
+            "dni": 70871066,
+            "superior": "cáceres",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:42:21.428Z",
+            "updatedAt": "2024-10-18T20:42:28.032Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "50789c22-3772-4c68-bd92-4f36c97165c0",
+            "member": "6bd32c4eac2f1dc2",
+            "nombres": "Brayan Fernando",
+            "apellidos": "Barreto Arriaran",
+            "telefono": 912645198,
+            "dni": 76536954,
+            "superior": "Cáceres",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:47:08.121Z",
+            "updatedAt": "2024-10-18T20:47:16.274Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "452f4e02-4447-4930-926b-0eb840e8e827",
+            "member": "d15b9001e72f5465",
+            "nombres": "ANA MARIBEL",
+            "apellidos": "QUILLCA SAUÑE",
+            "telefono": 902871120,
+            "dni": 76738609,
+            "superior": "caseres",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T20:51:05.064Z",
+            "updatedAt": "2024-10-18T20:51:50.802Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a96ad2df-b1d7-4b10-903b-281f607ed3d1",
+            "member": "1b08f368bfe029df",
+            "nombres": "Hugo Robespierre",
+            "apellidos": "García Lastarria",
+            "telefono": 923612861,
+            "dni": 43459276,
+            "superior": "Pinto Riveros Carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-19T19:36:14.398Z",
+            "updatedAt": "2024-10-21T14:01:25.104Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b82fde05-d39b-4d4b-badc-3f63951901f4",
+            "member": "4e4f4aeb8f2b6e50",
+            "nombres": "ricky",
+            "apellidos": "felix fernandez",
+            "telefono": 935394244,
+            "dni": 48423370,
+            "superior": "pinta rivera carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-19T19:29:31.938Z",
+            "updatedAt": "2024-10-21T14:01:26.075Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "46627533-76f6-46f5-802d-9058c7a39fae",
+            "member": "999f44f9f5b949b7",
+            "nombres": "William Rosmell",
+            "apellidos": "Pineda morales",
+            "telefono": 914790025,
+            "dni": 40795035,
+            "superior": "Luis Herrera",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-18T21:06:40.870Z",
+            "updatedAt": "2024-10-18T21:08:33.329Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "a628153e-0505-48b5-974c-fc50311aac5c",
+            "member": "939a54aca018ff44",
+            "nombres": "miche",
+            "apellidos": "cabrera cotrina",
+            "telefono": 902578519,
+            "dni": 41362049,
+            "superior": "antony mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:13:03.321Z",
+            "updatedAt": "2024-10-21T19:13:06.554Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "d3ef57c0-1444-423d-b8a6-57beda3888d6",
+            "member": "2812ae1e55a07bce",
+            "nombres": "carlos",
+            "apellidos": "Quispe Arellano",
+            "telefono": 902886104,
+            "dni": 10473902,
+            "superior": "Antony Mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:22:01.809Z",
+            "updatedAt": "2024-10-21T19:22:05.915Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ce30eafc-fcba-4f26-873a-c7e9e0dd9128",
+            "member": "11a7144a9ea39164",
+            "nombres": "Ian Christopher",
+            "apellidos": "Barreto Quispe",
+            "telefono": 992790205,
+            "dni": 76217406,
+            "superior": "Rodríguez Sandoval",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:30:35.525Z",
+            "updatedAt": "2024-10-21T19:30:38.876Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "df7b6602-9229-4ee5-9438-4d9de08d0223",
+            "member": "cc01d3304afbe7c4",
+            "nombres": "Julio César",
+            "apellidos": "Lara Castillo",
+            "telefono": 997574934,
+            "dni": 43474991,
+            "superior": "Alfaro",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:33:36.319Z",
+            "updatedAt": "2024-10-21T19:33:43.503Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a087d36c-88d5-4fb4-b905-0d866208c766",
+            "member": "9c81799747df0368",
+            "nombres": "Jayson Paul",
+            "apellidos": "Roman Zapata",
+            "telefono": 912078155,
+            "dni": 72795207,
+            "superior": "Antony Mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:37:07.011Z",
+            "updatedAt": "2024-10-21T19:37:15.689Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "c35bc402-5e95-47f5-8df0-15f46af6c655",
+            "member": "cb48a9b5912a2643",
+            "nombres": "Pepito",
+            "apellidos": "Pepito",
+            "telefono": 999999999,
+            "dni": 44444444,
+            "superior": "a",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:41:00.138Z",
+            "updatedAt": "2024-10-21T19:41:17.167Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "08db2945-4655-4e0f-9b50-bda15cf680ed",
+            "member": "9075f8b9b684c04c",
+            "nombres": "Haydee Yanneth",
+            "apellidos": "Reyes Arellano",
+            "telefono": 943424006,
+            "dni": 42502051,
+            "superior": "Mendoza Ricso Anthony",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:48:41.489Z",
+            "updatedAt": "2024-10-21T19:49:23.199Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "5e2f32c8-73b0-4887-acc3-15cfae137275",
+            "member": "63a71762cdd3e04e",
+            "nombres": "María del Pilar",
+            "apellidos": "Vento Ochoa",
+            "telefono": 950741256,
+            "dni": 70945832,
+            "superior": "Vargas Daniela",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:49:25.515Z",
+            "updatedAt": "2024-10-21T19:49:30.994Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "8cd979f2-c579-4187-8151-30e4c4aadeb3",
+            "member": "449fd3e4b4a62181",
+            "nombres": "William Javier",
+            "apellidos": "Castillo Aleman",
+            "telefono": 914653654,
+            "dni": 75559603,
+            "superior": "griseel mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T19:54:21.228Z",
+            "updatedAt": "2024-10-21T19:54:24.857Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "fec5383a-2d3b-4455-9f69-a60a23686ced",
+            "member": "5104fa7d4a052fea",
+            "nombres": "ROSALINDA",
+            "apellidos": "López Domínguez",
+            "telefono": 992511378,
+            "dni": 8116586,
+            "superior": "González Arica",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-21T20:00:13.583Z",
+            "updatedAt": "2024-10-21T20:01:01.923Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "1a1118f5-8e37-4baf-97b9-f36a5d575634",
+            "member": "66983f39bc8e352e",
+            "nombres": "Elena Noemí",
+            "apellidos": "Buiza Iparraguirre",
+            "telefono": 997651691,
+            "dni": 41032896,
+            "superior": "Flores Mamani Jesús",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:05:56.564Z",
+            "updatedAt": "2024-10-22T15:06:26.629Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "e2a32895-8b85-461c-8277-1236ca6bc398",
+            "member": "a8404efdd989bf3c",
+            "nombres": "Tania",
+            "apellidos": "Durand Cespedes",
+            "telefono": 991738642,
+            "dni": 46088024,
+            "superior": "flores Mamani Jesús",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:10:27.531Z",
+            "updatedAt": "2024-10-22T15:10:50.798Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "31c5f78a-b727-4404-b3d1-94907d94d12f",
+            "member": "178e9095fecc4ee8",
+            "nombres": "JESUS MANUEL",
+            "apellidos": "CURI MEJIA",
+            "telefono": 977775328,
+            "dni": 74380322,
+            "superior": "flores Mamani jesus",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:16:57.188Z",
+            "updatedAt": "2024-10-22T15:17:23.570Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a9fa30e9-ba08-4407-acf3-7dd1015f38db",
+            "member": "d83fabe52fc57a14",
+            "nombres": "Raúl nestor",
+            "apellidos": "Ñahuis salazar",
+            "telefono": 922604839,
+            "dni": 47109299,
+            "superior": "Huayhua gianmarco",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:26:01.385Z",
+            "updatedAt": "2024-10-22T15:26:09.841Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "b142c55f-13f5-4138-bb9d-bd0b9cb111f3",
+            "member": "87aa567f7c6bb626",
+            "nombres": "ELMO ERNAN",
+            "apellidos": "NAVARRO TARAZONA",
+            "telefono": 966233226,
+            "dni": 15431747,
+            "superior": "SORIA GALARZA",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:26:39.846Z",
+            "updatedAt": "2024-10-22T15:26:57.089Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "59cc426e-cd1e-4738-9726-c406464922dd",
+            "member": "8ce94d925e0250d8",
+            "nombres": "Alber Alonzo",
+            "apellidos": "Felix Chaqquere",
+            "telefono": 977531108,
+            "dni": 71277200,
+            "superior": "HUAYHUA FUENTES GIANMARCO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:36:42.774Z",
+            "updatedAt": "2024-10-22T15:36:49.064Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "27e275d3-28d0-40f5-b3f2-b9260baa806b",
+            "member": "b3f14c155b678a35",
+            "nombres": "Edwin",
+            "apellidos": "Pedraza Tejada",
+            "telefono": 987041391,
+            "dni": 31031136,
+            "superior": "Soria Galarza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:37:42.543Z",
+            "updatedAt": "2024-10-22T15:42:17.103Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "015bbcb8-7dac-4899-afa1-498f8ea4287f",
+            "member": "be6769f3316f61a6",
+            "nombres": "Carmen Rosa",
+            "apellidos": "Condori Sernaque",
+            "telefono": 983735510,
+            "dni": 77568039,
+            "superior": "Héctor Renzo Rodríguez",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:11:50.852Z",
+            "updatedAt": "2024-10-22T16:12:11.447Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "10629e77-8ec1-4331-b139-a626c096d57e",
+            "member": "da30ff1768b4e407",
+            "nombres": "mayra sayuri",
+            "apellidos": "de la cruz chavez",
+            "telefono": 976702351,
+            "dni": 78108350,
+            "superior": "soria",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:26:19.361Z",
+            "updatedAt": "2024-10-22T16:27:24.431Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "60232138-a508-4101-8d59-89bd662b659b",
+            "member": "dd926f1aee3093f2",
+            "nombres": "Ananela",
+            "apellidos": "Suere",
+            "telefono": 992791204,
+            "dni": 77172258,
+            "superior": "GIANMARCO HUAYHUA",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:44:54.126Z",
+            "updatedAt": "2024-10-22T15:46:59.413Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "d846d528-55d5-4f26-b0cc-a529665d8ac0",
+            "member": "153b9b743a9d1743",
+            "nombres": "Brath terry",
+            "apellidos": "gala Romero",
+            "telefono": 907930881,
+            "dni": 72371125,
+            "superior": "macapolopu Juan Carlos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T12:48:14.222Z",
+            "updatedAt": "2024-10-22T13:10:00.301Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "cddbabb2-aabc-450e-b51f-db3caf42b5cd",
+            "member": "b8e4692169c56824",
+            "nombres": "Billy John",
+            "apellidos": "Vivanco Quispe",
+            "telefono": 913238262,
+            "dni": 45660569,
+            "superior": "Anthony Mendoza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T11:05:29.610Z",
+            "updatedAt": "2024-10-22T13:10:02.168Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3d370a4a-6450-4dbc-b92c-42fdec7af8d9",
+            "member": "7b6d5a3ad3a98b04",
+            "nombres": "Cristhian Antonio",
+            "apellidos": "Garrido Anchante",
+            "telefono": 935421183,
+            "dni": 48382646,
+            "superior": "Macalopu",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T13:23:25.186Z",
+            "updatedAt": "2024-10-22T13:23:56.976Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "7cdc0dc1-4766-43a6-91de-3f5b5de34d68",
+            "member": "cf06f4c0977cfadb",
+            "nombres": "Cassandra miluska",
+            "apellidos": "valle Navarro",
+            "telefono": 935032815,
+            "dni": 43319135,
+            "superior": "Macalopu",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T13:28:52.957Z",
+            "updatedAt": "2024-10-22T13:31:10.222Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "4e2a790e-b2d5-42c9-afb7-00e0475f01a0",
+            "member": "1324e9172b673393",
+            "nombres": "Franklin Ricardo",
+            "apellidos": "Collanque Quezada",
+            "telefono": 931129845,
+            "dni": 42057905,
+            "superior": "Juan Carlos Macalopu",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T13:31:59.247Z",
+            "updatedAt": "2024-10-22T13:32:03.203Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "b2b7a4a9-d308-411e-9e61-aa870dfa7f30",
+            "member": "f0629c1bf9c00b9a",
+            "nombres": "juan moises",
+            "apellidos": "zubiaga negron",
+            "telefono": 934677463,
+            "dni": 41428176,
+            "superior": "Flores mamani Jesús javier",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:40:40.188Z",
+            "updatedAt": "2024-10-22T14:42:04.983Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3e5b03ce-5d70-4d3d-8036-315ae28e6101",
+            "member": "e8afae4a8160971a",
+            "nombres": "Karoline Pamela",
+            "apellidos": "Camacho Vasquez",
+            "telefono": 936345463,
+            "dni": 73742077,
+            "superior": "Jesus Casado",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:55:41.253Z",
+            "updatedAt": "2024-10-22T16:56:57.689Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "53e477e5-319e-4f18-a434-6d74f9e71197",
+            "member": "d864ed00dffce4c1",
+            "nombres": "SHEILA BETSABE",
+            "apellidos": "GOMEZ AGUIRRE",
+            "telefono": 994208465,
+            "dni": 77091246,
+            "superior": "SORIA GALARZAANJHELO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T15:57:13.136Z",
+            "updatedAt": "2024-10-22T16:01:05.273Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0620f301-2ac8-4928-9311-d94b56ce0f38",
+            "member": "78adc0b65a810ad0",
+            "nombres": "Judith magali",
+            "apellidos": "Mayhua benito",
+            "telefono": 904063866,
+            "dni": 75350110,
+            "superior": "Huayhua gianmarco",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:02:57.600Z",
+            "updatedAt": "2024-10-22T16:03:11.354Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ecc08bb1-e051-4290-b99f-a0fb62658a55",
+            "member": "2e57ea927ddd9a94",
+            "nombres": "Aaron",
+            "apellidos": "Abarca González",
+            "telefono": 934963055,
+            "dni": 72352904,
+            "superior": "Casado Sinti Jesus",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:33:46.576Z",
+            "updatedAt": "2024-10-22T16:36:38.512Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3fae7498-9164-476e-a47b-788245d0408a",
+            "member": "0a8bac84307a9016",
+            "nombres": "Juan Daniel",
+            "apellidos": "Reyes Velasquez",
+            "telefono": 960607254,
+            "dni": 18168798,
+            "superior": "soria",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:34:57.326Z",
+            "updatedAt": "2024-10-22T16:36:38.706Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3b0555eb-ac5d-484f-8b86-a2ba20ce08b2",
+            "member": "b4717a64e190c8ed",
+            "nombres": "Eliab eliazar",
+            "apellidos": "Ponce salazar",
+            "telefono": 955090012,
+            "dni": 22487652,
+            "superior": "Jesus cazado",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:52:38.816Z",
+            "updatedAt": "2024-10-22T16:53:44.393Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "c9a8f2b8-2a71-416a-a101-96d8bb71b538",
+            "member": "72a702e60866abff",
+            "nombres": "Moisés",
+            "apellidos": "Meza Rodríguez",
+            "telefono": 989793142,
+            "dni": 46879670,
+            "superior": "Soria Galarza Angelo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:28:56.553Z",
+            "updatedAt": "2024-10-22T14:30:21.001Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "f222e616-c5da-44d4-a385-1687df849bbc",
+            "member": "0312d4444d593698",
+            "nombres": "LEONARDA JESSICA JOHANA",
+            "apellidos": "MAMANI CHURA",
+            "telefono": 901139257,
+            "dni": 47819698,
+            "superior": "FLORES MAMANI JESUS JAVIER",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:37:39.945Z",
+            "updatedAt": "2024-10-22T14:38:35.398Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "88294962-1712-4f81-b36a-fafa9933b733",
+            "member": "8be94c65a32039f8",
+            "nombres": "Rosa María",
+            "apellidos": "De la cruz cerdan",
+            "telefono": 904741796,
+            "dni": 70699585,
+            "superior": "Angelo Soria Galarza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:40:36.024Z",
+            "updatedAt": "2024-10-22T14:42:03.719Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "bd88db19-8fbf-4409-be2a-2cc7d503d53a",
+            "member": "0ffae560ab9bc668",
+            "nombres": "ROBERT ALVARO",
+            "apellidos": "ARAGON CHAMPAC",
+            "telefono": 983405304,
+            "dni": 7526805,
+            "superior": "FLORES MAMANI JOSÉ",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:50:52.916Z",
+            "updatedAt": "2024-10-22T14:52:33.374Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "6013ac1a-5bde-4663-8f00-654b43808950",
+            "member": "99ad05553dbbc6f9",
+            "nombres": "Carlos Manuel",
+            "apellidos": "Castañeda Estrada",
+            "telefono": 930879365,
+            "dni": 10425077,
+            "superior": "Flores Mamani Jesús",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:50:09.573Z",
+            "updatedAt": "2024-10-22T14:52:34.167Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "6b031ff9-8a96-4145-9508-4fa932a5e65f",
+            "member": "a82458783081c4fb",
+            "nombres": "Robert Miguel",
+            "apellidos": "janampa Rimac",
+            "telefono": 933157219,
+            "dni": 10669718,
+            "superior": "Soria Galarza Angelo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T14:50:49.527Z",
+            "updatedAt": "2024-10-22T14:52:34.891Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "8b97033d-cb26-4a81-ba53-e39c296de5f3",
+            "member": "364cc0f156370da4",
+            "nombres": "Estefany Alexandra",
+            "apellidos": "cabrera Celis",
+            "telefono": 935819788,
+            "dni": 75247593,
+            "superior": "Soria Galarza",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T16:58:06.305Z",
+            "updatedAt": "2024-10-22T16:59:29.680Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "cd81ecfb-b5eb-4189-a0b2-e2773441c1b0",
+            "member": "8fa9160cc7e36bfd",
+            "nombres": "MARICIELO",
+            "apellidos": "PADILLA RUMALDO",
+            "telefono": 944214229,
+            "dni": 74288173,
+            "superior": "SORIA GALARZA ANJHELO",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T17:09:48.558Z",
+            "updatedAt": "2024-10-22T17:11:20.582Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "7ef47b4f-5faf-4083-b374-acf279410ab3",
+            "member": "961ae2c563884ab1",
+            "nombres": "Rolando",
+            "apellidos": "Pérez Márquez",
+            "telefono": 977205868,
+            "dni": 42197222,
+            "superior": "Hector Renzo Rodriguez",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T17:13:07.095Z",
+            "updatedAt": "2024-10-22T17:16:22.414Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "be8da5f3-6ddc-47fa-a845-d9bade51e3a3",
+            "member": "e1592359fa6facfa",
+            "nombres": "Lluoel",
+            "apellidos": "Huaclis Galarza",
+            "telefono": 904510669,
+            "dni": 18343675,
+            "superior": "Soria Angelo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T17:18:41.006Z",
+            "updatedAt": "2024-10-22T17:20:41.431Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3c10efb4-d435-4e64-a056-83f93c84258d",
+            "member": "b36eefdff7226a49",
+            "nombres": "Gianmarco",
+            "apellidos": "Huayhua Fuentes",
+            "telefono": 936264019,
+            "dni": 70562254,
+            "superior": "Huayhua Fuentes Gianmarco",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T17:35:07.311Z",
+            "updatedAt": "2024-10-22T17:35:33.675Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "235b7f51-0345-4730-ba30-d20cd044a90d",
+            "member": "2c94da96c3e48e30",
+            "nombres": "Dayana",
+            "apellidos": "Miguel Samaniego",
+            "telefono": 969316869,
+            "dni": 74898686,
+            "superior": "Huayhua Fuentes Gianmarco",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-22T17:56:19.281Z",
+            "updatedAt": "2024-10-22T17:57:20.663Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "19ce49fd-7704-4d15-8ae3-3980d89f58af",
+            "member": "039acc3b4596971c",
+            "nombres": "Raúl Edinho",
+            "apellidos": "Suárez López",
+            "telefono": 936369168,
+            "dni": 43752316,
+            "superior": "juan Carlos Macalupu",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T18:49:01.822Z",
+            "updatedAt": "2024-10-22T18:57:52.805Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "8d942b2a-67c0-43ff-a67f-53ac6a41098b",
+            "member": "a923f699f1524700",
+            "nombres": "Jairo Jhoann",
+            "apellidos": "De La O Cubas",
+            "telefono": 903243539,
+            "dni": 75589533,
+            "superior": "Juan Carlos Macalupu",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T19:00:52.726Z",
+            "updatedAt": "2024-10-22T19:02:07.737Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "0a302968-7983-4ae6-a22c-99d4d0e55b55",
+            "member": "29f5a006ec658ce9",
+            "nombres": "carlos luis",
+            "apellidos": "ruiz garcia",
+            "telefono": 993142665,
+            "dni": 19782248,
+            "superior": "celson capcha mamani",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T20:40:29.046Z",
+            "updatedAt": "2024-10-22T20:41:11.642Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "c7d9b163-9250-4d3f-8cb6-fe621c8dcabe",
+            "member": "965225ae519d3f68",
+            "nombres": "ALICIA",
+            "apellidos": "LIMA VARGAS",
+            "telefono": 947783314,
+            "dni": 41320445,
+            "superior": "ZAMBRANO PINEDO ALEX",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T20:53:59.611Z",
+            "updatedAt": "2024-10-22T20:54:09.413Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "d0001e5d-39a3-4275-9215-590153b0beba",
+            "member": "54209de4cd6f43a2",
+            "nombres": "Getsemaní José",
+            "apellidos": "ramos Vargas",
+            "telefono": 934542247,
+            "dni": 42562915,
+            "superior": "Abel Araujo",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T20:56:13.626Z",
+            "updatedAt": "2024-10-22T20:57:10.341Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "13f88ae1-1c11-4414-bd31-9c8f811353db",
+            "member": "23163303c7e59240",
+            "nombres": "Benjamín Humberto",
+            "apellidos": "Abanto Arellano",
+            "telefono": 994747343,
+            "dni": 18011736,
+            "superior": "Zambrano Pinedo, Alex.",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:05:49.381Z",
+            "updatedAt": "2024-10-22T21:06:45.979Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "e55d2bf5-852c-4b23-9570-8f225d5ee938",
+            "member": "a70cae25cf7e7146",
+            "nombres": "Joel",
+            "apellidos": "Hidalgo",
+            "telefono": 971707237,
+            "dni": 76424486,
+            "superior": "Fretel",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-18T11:41:04.377Z",
+            "updatedAt": "2024-10-23T15:49:08.146Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "9f5b5126-2da1-47ab-b9b9-31d41a31c7ad",
+            "member": "75e99f468095b1ee",
+            "nombres": "javier",
+            "apellidos": "borja villodas",
+            "telefono": 942799683,
+            "dni": 40703490,
+            "superior": "ZAMBRANO PINEDO ALEX",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:10:39.662Z",
+            "updatedAt": "2024-10-22T21:16:37.710Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "01394705-a5b3-46dc-8ef1-7dffbf2fe4a4",
+            "member": "8c558e0a4af6910c",
+            "nombres": "Carlos alberto",
+            "apellidos": "leguia delgado",
+            "telefono": 999328555,
+            "dni": 41257526,
+            "superior": "mesa troncos",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:18:52.273Z",
+            "updatedAt": "2024-10-22T21:20:14.233Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "7ccc0a31-e4e0-4750-904c-29102fa71efc",
+            "member": "63eba34f84ddbb43",
+            "nombres": "Alex junior",
+            "apellidos": "Zambrano pinedo",
+            "telefono": 967300586,
+            "dni": 73440728,
+            "superior": "Alex junior Zambrano pinedo",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:26:01.638Z",
+            "updatedAt": "2024-10-22T21:27:14.809Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "10dd76eb-320a-401d-b93d-7d2a0cdf9b27",
+            "member": "7c3aa899bcf17288",
+            "nombres": "Jorge Luis",
+            "apellidos": "Uzátegui Albitres",
+            "telefono": 908742208,
+            "dni": 10665994,
+            "superior": "Abel Araújo Campana",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:26:49.593Z",
+            "updatedAt": "2024-10-22T21:27:15.368Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "4e93c583-2254-417b-a566-eef5061f2dc8",
+            "member": "660b6138e8a83cf9",
+            "nombres": "Shirley Rosa",
+            "apellidos": "Ari Calizaya",
+            "telefono": 960220296,
+            "dni": 48423902,
+            "superior": "Zambrano Pinedo Alex",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:33:52.975Z",
+            "updatedAt": "2024-10-22T21:37:27.049Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "da07eca0-2aa3-4edd-901a-6d6442a68a28",
+            "member": "53c2f9f8601ae0cf",
+            "nombres": "pedro gerardo",
+            "apellidos": "lopez nicho",
+            "telefono": 921407439,
+            "dni": 20122742,
+            "superior": "abel araujo",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:34:43.017Z",
+            "updatedAt": "2024-10-22T21:37:27.688Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "607c470a-c143-41fc-a6ba-e2f1a0565f21",
+            "member": "2996157df8816f01",
+            "nombres": "Luis",
+            "apellidos": "Espino Miranda",
+            "telefono": 957989031,
+            "dni": 46211194,
+            "superior": "Meza TRONCOS",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:47:09.825Z",
+            "updatedAt": "2024-10-22T21:47:47.461Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "e093a75f-6d2a-4691-9a06-62c5ddfaaeef",
+            "member": "ba01d0344d4ab290",
+            "nombres": "teófilo",
+            "apellidos": "Evaristo Briceño",
+            "telefono": 994777280,
+            "dni": 45534999,
+            "superior": "jorges Ruiz Pedro",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T21:55:16.004Z",
+            "updatedAt": "2024-10-22T21:56:01.119Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "d7e78fb6-e692-46f2-8ea1-29b8615dc105",
+            "member": "5bc87c953b872857",
+            "nombres": "Jose luis",
+            "apellidos": "Remigio ortiz",
+            "telefono": 995495316,
+            "dni": 19651687,
+            "superior": "Pedro jorges ruiz",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-22T22:06:59.186Z",
+            "updatedAt": "2024-10-22T22:08:48.395Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "884a2929-912f-4da9-979f-14171b724683",
+            "member": "idsfjkdsfjlkfsda",
+            "nombres": "fsdfasd serenazgo",
+            "apellidos": "sdfasdf diez",
+            "telefono": 971707234,
+            "dni": 76424400,
+            "superior": "fasdsdf",
+            "turno": 3,
+            "state": true,
+            "createdAt": "2024-10-24T23:39:44.470Z",
+            "updatedAt": "2024-10-24T23:39:55.361Z",
+            "TurnoAsociado": {
+                "nombre": "Noche"
+            }
+        },
+        {
+            "id": "cd8010ad-4722-4dbc-88dd-955a86d7a64d",
+            "member": "deviceId",
+            "nombres": "JOEL ANGEL",
+            "apellidos": "Hidalgo Perez",
+            "telefono": 971707237,
+            "dni": 76424486,
+            "superior": "Dina",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-23T13:59:02.335Z",
+            "updatedAt": "2024-10-25T12:35:30.780Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "3fbce518-259f-4516-ae97-cd81e1308301",
+            "member": "MyOS13.0.0_A54_CLA_PE",
+            "nombres": "Joel",
+            "apellidos": "Prueba",
+            "telefono": 971707237,
+            "dni": 76424486,
+            "superior": "Dina",
+            "turno": 3,
+            "state": true,
+            "createdAt": "2024-10-25T00:01:58.443Z",
+            "updatedAt": "2024-10-25T12:35:31.466Z",
+            "TurnoAsociado": {
+                "nombre": "Noche"
+            }
+        },
+        {
+            "id": "f883b92b-7e52-4ea8-b559-e7d0434d68a7",
+            "member": "032563b64271638a",
+            "nombres": "Noelia Elizabeth",
+            "apellidos": "mercado Sifuentes",
+            "telefono": 968097523,
+            "dni": 10357129,
+            "superior": "Tolentino Benites Esaú",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-25T14:53:32.758Z",
+            "updatedAt": "2024-10-25T14:55:10.396Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0f2b7371-99dc-4aa7-8510-1b9621079331",
+            "member": "c3cce65a88085ed3",
+            "nombres": "YRIS ADA",
+            "apellidos": "MATOS LOPEZ",
+            "telefono": 947643957,
+            "dni": 9652317,
+            "superior": "TOLENTINO BENITES",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-25T14:55:01.755Z",
+            "updatedAt": "2024-10-25T14:55:11.357Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "0834bdb9-2cc9-406f-9ede-6efc32a80c79",
+            "member": "4910bb8b65a2754d",
+            "nombres": "lopez",
+            "apellidos": "espejo",
+            "telefono": 946531555,
+            "dni": 88845515,
+            "superior": "superior",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-23T02:00:01.963Z",
+            "updatedAt": "2024-10-23T15:49:02.580Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "3c344e88-6c2f-4808-a5af-e93f9db669c0",
+            "member": "7116a9cc7babb66b",
+            "nombres": "WERLIN JAVIER",
+            "apellidos": "VILLACORTA PINCHI",
+            "telefono": 993271339,
+            "dni": 40883942,
+            "superior": "SERENO A PIE",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-23T12:14:16.613Z",
+            "updatedAt": "2024-10-23T15:49:03.289Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "106d5f3b-2d63-40b2-b074-cf4fbcd0aede",
+            "member": "b7a56611cb613a85",
+            "nombres": "José Carlos",
+            "apellidos": "Olivares Quispe",
+            "telefono": 955516414,
+            "dni": 6560997,
+            "superior": "chófer de camioneta",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-23T12:13:42.141Z",
+            "updatedAt": "2024-10-23T15:49:04.551Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "13ce26d5-ea05-4bc0-8ace-1a3c34fbd7d5",
+            "member": "169c6220a54d3002",
+            "nombres": "Valeria",
+            "apellidos": "Tuanama Tuanama",
+            "telefono": 913022211,
+            "dni": 76758379,
+            "superior": "casado sinti",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T15:58:13.498Z",
+            "updatedAt": "2024-10-24T15:59:43.408Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "f0b43551-ba91-4130-b18f-ec3e89f7aad1",
+            "member": "54d0fab1d1e34225",
+            "nombres": "Geraldine Katherine",
+            "apellidos": "Salazar canales",
+            "telefono": 993993154,
+            "dni": 47516861,
+            "superior": "Rodriguez valdez Héctor Renzo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T17:21:48.547Z",
+            "updatedAt": "2024-10-24T17:23:23.630Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "15a986d7-6788-4f3d-abf3-e98ce7f44724",
+            "member": "3359014eda9f48a9",
+            "nombres": "Carol",
+            "apellidos": "Miguel Samaniego",
+            "telefono": 991044858,
+            "dni": 74597232,
+            "superior": "Jesús Casado Sinti",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T17:41:32.135Z",
+            "updatedAt": "2024-10-24T17:41:43.233Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "630a9155-b046-42d1-8336-5f2774a5326c",
+            "member": "4bad3dc7431c4a23",
+            "nombres": "Evelyn maritza",
+            "apellidos": "pardo Figueroa ygarza",
+            "telefono": 973679725,
+            "dni": 43759725,
+            "superior": "Casado sinti Jesús",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T17:46:47.666Z",
+            "updatedAt": "2024-10-24T17:47:10.568Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "37726d61-9e22-407c-81ed-8675bfb067dc",
+            "member": "ac0ea0d5fabfa169",
+            "nombres": "Miguel Angel",
+            "apellidos": "Vilca Laucata",
+            "telefono": 942731969,
+            "dni": 10133108,
+            "superior": "Casado Sinti",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T17:58:10.246Z",
+            "updatedAt": "2024-10-24T17:59:04.448Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "74958447-b60b-4d43-be3b-39f41997936d",
+            "member": "eed0780a1cef526d",
+            "nombres": "SEGUNDO PITTER",
+            "apellidos": "flores arbayza",
+            "telefono": 936078776,
+            "dni": 16182964,
+            "superior": "cazado jesus",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T18:30:22.278Z",
+            "updatedAt": "2024-10-24T18:31:42.315Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ef5cef57-36c5-4db3-ab2e-fc59980955a6",
+            "member": "42f8bb407322bb7c",
+            "nombres": "Gerson",
+            "apellidos": "pecho Osorio",
+            "telefono": 928008381,
+            "dni": 45165067,
+            "superior": "casado sin ti Jesús Guillermo",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T18:42:51.220Z",
+            "updatedAt": "2024-10-24T18:45:08.150Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "ff2903de-6616-424b-9a14-08e9f79a788a",
+            "member": "54fe4243fc142efd",
+            "nombres": "Felipe Fernando",
+            "apellidos": "Gómez Guizado",
+            "telefono": 990565702,
+            "dni": 19659914,
+            "superior": "Jesús Casado",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T18:45:37.610Z",
+            "updatedAt": "2024-10-24T18:45:52.232Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "f3293554-ba38-4083-bdd2-92bcd1fa9644",
+            "member": "b3beca77ed4c7cfc",
+            "nombres": "Carlos Enrique",
+            "apellidos": "Bujaico Guadalupe",
+            "telefono": 979551470,
+            "dni": 10663611,
+            "superior": "Jesús Casado Sinti",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T18:48:40.622Z",
+            "updatedAt": "2024-10-24T18:50:29.981Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "908eed2d-6bac-451e-ae09-83e31831581e",
+            "member": "907dac65aa3426a8",
+            "nombres": "Victor Cipriano",
+            "apellidos": "soncco Quispe",
+            "telefono": 949261306,
+            "dni": 19667081,
+            "superior": "Héctor Renso Rodríguez",
+            "turno": 1,
+            "state": true,
+            "createdAt": "2024-10-24T18:58:30.706Z",
+            "updatedAt": "2024-10-24T18:58:58.234Z",
+            "TurnoAsociado": {
+                "nombre": "Mañana"
+            }
+        },
+        {
+            "id": "a06f9f20-a8b1-4532-b0b1-cd43f8192364",
+            "member": "41af7c7bbdd6d07d",
+            "nombres": "José Félix",
+            "apellidos": "Vilca Salcedo",
+            "telefono": 994909206,
+            "dni": 40234318,
+            "superior": "Santos Herrera Yenny",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-24T19:40:43.819Z",
+            "updatedAt": "2024-10-24T19:41:29.078Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        },
+        {
+            "id": "bb555ef2-5bce-4ece-a262-ddb3945bbc4c",
+            "member": "7c505ee2f7bba1b5",
+            "nombres": "Paul Uber",
+            "apellidos": "Chombo Figueredo",
+            "telefono": 948345233,
+            "dni": 43601276,
+            "superior": "Conductor",
+            "turno": 2,
+            "state": true,
+            "createdAt": "2024-10-24T19:31:29.349Z",
+            "updatedAt": "2024-10-24T19:41:29.822Z",
+            "TurnoAsociado": {
+                "nombre": "Tarde"
+            }
+        }
+    ]
+}

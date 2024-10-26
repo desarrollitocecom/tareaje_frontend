@@ -4,8 +4,10 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Link, useNavigate } from "react-router-dom";
 
 const SeguimientoAsistencia = () => {
+  const navigate = useNavigate()
   const [startDate, setStartDate] = useState(new Date(2024, 9, 7)); // Fecha de inicio (2024-10-07)
   const [isMesAnoOpen, setIsMesAnoOpen] = useState(false);
   const [isIntervaloOpen, setIsIntervaloOpen] = useState(false);
@@ -48,7 +50,12 @@ const SeguimientoAsistencia = () => {
 
   return (
     <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
-      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg">
+      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
+        <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
+          <ArrowBackIosNewRoundedIcon
+            className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
+          />
+        </Link>
         <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
           SEGUIMIENTO DE ASISTENCIAS
         </h1>
