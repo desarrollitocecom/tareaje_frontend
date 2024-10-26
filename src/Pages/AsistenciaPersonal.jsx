@@ -1,5 +1,5 @@
 import React from "react";
-import useData from "../Components/hooks/UseData";
+import useData from "../Components/Hooks/UseDB";
 
 const AsistenciaPersonal = () => {
   const { data, cargos, turnos } = useData();

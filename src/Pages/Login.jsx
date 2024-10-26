@@ -7,11 +7,9 @@ import fondo_sjl_top from '../assets/logos/fondo_sjl_top.png';
 import fondo_sjl_bottom from '../assets/logos/fondo_sjl_bottom.png';
 import logo from '../assets/logos/logo_sjl.png';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import CustomSwal from '../helpers/swalConfig';
 
 const Login = () => {
-  const MySwal = withReactContent(Swal)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -35,12 +33,13 @@ const Login = () => {
       resetForm();
       navigate('/');
     } else {
-      MySwal.fire({
+      CustomSwal.fire({
         title: 'Credenciales incorrectas',
         toast: true,
         icon: 'error',
         position: 'top-end',
         showConfirmButton: false,
+        showCancelButton: false,
         timer: 2000,
         timerProgressBar: true,
       })
