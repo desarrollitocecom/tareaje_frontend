@@ -8,6 +8,8 @@ import AsistenciaPersonal from "../Pages/AsistenciaPersonal";
 import SeguimientoAsistencia from "../Pages/SeguimientoAsitencia";
 import Login from '../Pages/Login';
 import Error403 from '../Pages/Error403';
+import Error404 from '../Pages/Error404';
+import Buscador from '../Pages/Buscador';
 import PersonalBD from '../Pages/PersonalBD';
 
 const AppRouter = () => {
@@ -42,7 +44,7 @@ const AppRouter = () => {
           children: [
             {
               path: "/buscar",
-              element: <PrivateRouter element={<Outlet />} />,
+              element: <PrivateRouter element={<Buscador />} />,
             },
             {
               path: "/buscar/:id",
@@ -51,8 +53,12 @@ const AppRouter = () => {
           ]
         },
         {
-          path: "/error",
+          path: "/error-403",
           element: <PrivateRouter element={<Error403 />} />,
+        },
+        {
+          path: "/*",
+          element: <PrivateRouter element={<Error404 />} />,
         },
       ]
     },

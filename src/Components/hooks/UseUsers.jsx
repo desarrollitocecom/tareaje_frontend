@@ -2,7 +2,7 @@
 //import { useState, useEffect } from 'react';
 import {cargos, turnos,data} from '../../helpers/SelectorCargo_Turno';
 
-const useData = () => {
+const UseUsers = () => {
   //const [data, setData] = useState([]);
 
 
@@ -60,4 +60,4 @@ const useData = () => {
   return { data, cargos, turnos };
 };
 
-export default useData;
+export default UseUsers;
