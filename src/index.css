@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
-/* .content-body{
-  height: calc(100% - 56px);
-} */
+body.swal2-height-auto {
+  height: 100% !important;
+}
+
+.swal2-container{
+  z-index: 1200 !important;
+}
