@@ -1,5 +1,5 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -9,8 +9,8 @@ import {
   TableRow,
   Button,
 } from "@mui/material";
-
-import Error from "../assets/logos/Error.png";
+import CustomSwal from "../helpers/swalConfig";
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const personasData = [
   {
@@ -40,25 +40,29 @@ const personasData = [
 
 const PersonaIdentificado = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const persona = personasData.find((p) => p.id === id);
 
+  useEffect(() => {
+    if (!persona) {
+      navigate("/buscar");
+      CustomSwal.fire({
+        icon: "error",
+        title: "Persona no encontrada",
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        showCancelButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      })
+    }
+
+  }, [persona])
+
   if (!persona) {
-    return (
-      <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
-        <h1 className="text-6xl md:text-8xl font-bold">404</h1>
-        <p className="text-lg md:text-2xl mt-4 text-center">
-          Persona no encontrada
-        </p>
-        <div className="flex flex-col items-center justify-center mt-8">
-          <img
-            src={Error}
-            alt="Error"
-            className="w-full max-w-xs md:max-w-md lg:max-w-lg mx-auto h-auto opacity-100"
-          />
-        </div>
-      </div>
-    );
+    return null; // No renderizar nada mientras se redirige
   }
 
   // Dividir datos en dos partes
@@ -88,16 +92,21 @@ const PersonaIdentificado = () => {
 
   return (
     <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
-      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg">
-        <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
-          INFORMACIÓN DEL PERSONAL
-        </h1>
-      </header>
+      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
+          <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
+            <ArrowBackIosNewRoundedIcon
+              className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
+            />
+          </Link>
+          <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
+            INFORMACIÓN DEL PERSONAL
+          </h1>
+        </header>
 
       <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1">
         <div
           className="bg-white p-6 text-sm flex flex-col mx-auto mt-16"
-          
+
         >
           {/* Contenedor de tablas divididas */}
           <div className="flex">

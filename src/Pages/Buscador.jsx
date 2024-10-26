@@ -7,18 +7,25 @@ import CardActionArea from '@mui/material/CardActionArea';
 import useData from '../Components/hooks/UseData'; 
 import { Formik, Form } from 'formik'; 
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText} from '@mui/material'; // Importar componentes de Material-UI
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
 const PersonalBD = () => {
   const { data, cargos, turnos, sexos } = useData(); // Obtiene los datos utilizando el hook personalizado
+  const navigate = useNavigate()
 
   return (
     <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto">
-      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg">
-        <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
+      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
+          <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
+            <ArrowBackIosNewRoundedIcon
+              className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
+            />
+          </Link>
+          <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
           BUSCADOR
-        </h1>
-      </header>
+          </h1>
+        </header>
       <Formik
         initialValues={{ buscar: '', cargo: '', turnos: '', sexos: '' }}
         onSubmit={(values) => {
