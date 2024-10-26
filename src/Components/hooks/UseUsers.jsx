@@ -1,8 +1,15 @@
-import { useState } from 'react';
 
-const useLogin = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [error, setError] = useState(null);
+//import { useState, useEffect } from 'react';
+import {cargos, turnos,data} from '../../helpers/SelectorCargo_Turno';
+
+const useData = () => {
+  //const [data, setData] = useState([]);
+
+
+  /*
+  const [cargos, setCargos] = useState([]);
+  const [turnos, setTurnos] = useState([]);
+  */
 
   // Endpoint para login
   const endpointLogin = 'https://api.example.com/user';
@@ -34,4 +41,4 @@ const useLogin = () => {
   return { isAuthenticated, error, login };
 };
 
-export default useLogin;
+export default useData;
