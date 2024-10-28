@@ -110,12 +110,12 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de Empleados',
           icon: GroupsIcon,
           children: [
-            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/celular', target: '_self' },
-            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/celular/desactivados', target: '_self' },
-            { id: 3, label: 'Sexo', icon: WcIcon, link: '/celular/sin-señal', target: '_self' },
-            { id: 4, label: 'Grado de Estudio', icon: SchoolIcon, link: '/celular', target: '_self' },
-            { id: 5, label: 'Subgerencia', icon: BusinessIcon, link: '/celular/sin-señal', target: '_self' },
-            { id: 6, label: 'Función', icon: TaskIcon, link: '/celular/sin-señal', target: '_self' },
+            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/Empleado', target: '_self' },
+            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/Cargo', target: '_self' },
+            { id: 3, label: 'Sexo', icon: WcIcon, link: '/Sexo', target: '_self' },
+            { id: 4, label: 'Grado de Estudio', icon: SchoolIcon, link: '/grado-estudio', target: '_self' },
+            { id: 5, label: 'Subgerencia', icon: BusinessIcon, link: '/subgerencia', target: '_self' },
+            { id: 6, label: 'Función', icon: TaskIcon, link: '/funcion', target: '_self' },
           ]
         },
         {
@@ -136,8 +136,8 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Ubicación y Jurisdicción',
           icon: MapIcon,
           children: [
-            { id: 1, label: 'Jurisdicción', icon: PublicIcon, link: '/celular', target: '_self' },
-            { id: 2, label: 'Lugar de Trabajo', icon: LocationOnIcon, link: '/celular/desactivados', target: '_self' },
+            { id: 1, label: 'Jurisdicción', icon: PublicIcon, link: '/jurisdiccion', target: '_self' },
+            { id: 2, label: 'Lugar de Trabajo', icon: LocationOnIcon, link: '/lugar-trabajo', target: '_self' },
           ]
         },
       ],
