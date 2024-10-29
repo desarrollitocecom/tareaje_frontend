@@ -102,7 +102,7 @@ const Sidebar = ({ toggled, setToggled }) => {
           icon: PersonAddIcon,
           children: [
             { id: 1, label: 'Roles', icon: AdminPanelSettingsIcon, link: '/Roles', target: '_self' },
-            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/celular/sin-señal', target: '_self' },
+            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/Usuarios', target: '_self' },
           ]
         },
         {
@@ -123,12 +123,12 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de Tiempo Laboral:',
           icon: HourglassEmptyIcon,
           children: [
-            { id: 1, label: 'Turno', icon: ScheduleIcon, link: '/celular', target: '_self' },
-            { id: 2, label: 'Régimen Laboral', icon: GavelIcon, link: '/celular/desactivados', target: '_self' },
-            { id: 3, label: 'Vacaciones', icon: BeachAccessIcon, link: '/celular/sin-señal', target: '_self' },
-            { id: 4, label: 'Descansos', icon: WeekendIcon, link: '/celular', target: '_self' },
-            { id: 5, label: 'Feriados', icon: EventIcon, link: '/celular/desactivados', target: '_self' },
-            { id: 6, label: 'Justificaciones', icon: AssignmentIcon, link: '/celular/sin-señal', target: '_self' },
+            { id: 1, label: 'Turno', icon: ScheduleIcon, link: '/turno', target: '_self' },
+            { id: 2, label: 'Régimen Laboral', icon: GavelIcon, link: '/regimen-laboral', target: '_self' },
+            { id: 3, label: 'Vacaciones', icon: BeachAccessIcon, link: '/vacaciones', target: '_self' },
+            { id: 4, label: 'Descansos', icon: WeekendIcon, link: '/descansos', target: '_self' },
+            { id: 5, label: 'Feriados', icon: EventIcon, link: '/feriados', target: '_self' },
+            { id: 6, label: 'Justificaciones', icon: AssignmentIcon, link: '/justificaciones', target: '_self' },
           ]
         },
         {

@@ -178,7 +178,7 @@ const SeguimientoAsistencia = () => {
               </label>
               <input type="date" className="w-full p-2 border rounded-lg" />
             </div>
-            <div>
+            <div className="h-full flex items-end">
               <button className="w-full bg-green-500 text-white p-2 rounded-lg">
                 Descargar Excel
               </button>
