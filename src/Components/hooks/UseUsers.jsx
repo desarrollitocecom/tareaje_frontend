@@ -1,20 +1,9 @@
-
 //import { useState, useEffect } from 'react';
-import {cargos, turnos,data} from '../../helpers/SelectorCargo_Turno';
-
-const useData = () => {
-  //const [data, setData] = useState([]);
-
-
-  /*
-  const [cargos, setCargos] = useState([]);
-  const [turnos, setTurnos] = useState([]);
-  */
-
+import {data} from '../../helpers/SelectorUsers.js';
+const UseUsers = () => {
   // Endpoint para login
-  const endpointLogin = 'https://api.example.com/user';
+/*  const endpointLogin = 'https://api.example.com/user';
 
-  
   const login = (username, password) => {
     fetch(endpointLogin, {
       method: 'POST',
@@ -24,21 +13,17 @@ const useData = () => {
       body: JSON.stringify({ username, password }), 
     })
       .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          setIsAuthenticated(true); 
-        } else {
-          setIsAuthenticated(false);
-          setError('Credenciales incorrectas o usuario no registrado');
-        }
-      })
+      .then((data) => setData(data))
       .catch((error) => {
-        console.error('Error al iniciar sesión:', error);
-        setError('Ocurrió un error al intentar iniciar sesión');
+        console.error('Error al obtener datos de asistencia:', error);
       });
-  };
+  }, []);
+  
 
   return { isAuthenticated, error, login };
-};
+};*/
 
-export default useData;
+return { data };
+}
+
+export default UseUsers;
