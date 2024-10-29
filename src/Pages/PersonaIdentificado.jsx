@@ -11,11 +11,17 @@ import {
 } from "@mui/material";
 import CustomSwal from "../helpers/swalConfig";
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
+import PersonIcon from '@mui/icons-material/Person';
+import WorkIcon from '@mui/icons-material/Work';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import SchoolIcon from '@mui/icons-material/School';
+import CommentIcon from '@mui/icons-material/Comment';
 
 const personasData = [
   {
     id: "1",
     nombres: "Ana Pérez",
+    subgerencia: "Subgerencia de serenazgo",
     dni: "12345678",
     ruc: "20123456789",
     cargo: "Gerente",
@@ -65,107 +71,173 @@ const PersonaIdentificado = () => {
     return null; // No renderizar nada mientras se redirige
   }
 
-  // Dividir datos en dos partes
-  const dataPart1 = [
-    { label: "Nombres y Apellidos", value: persona.nombres },
-    { label: "DNI", value: persona.dni },
-    { label: "RUC", value: persona.ruc },
-    { label: "Cargo", value: persona.cargo },
-    { label: "Turno", value: persona.turno },
-    { label: "Régimen Laboral", value: persona.regimen },
-    { label: "Sexo", value: persona.sexo },
-    { label: "Cantidad de Hijos", value: persona.hijos },
-    { label: "Edad", value: persona.edad },
-  ];
-
-  const dataPart2 = [
-    { label: "Jurisdicción", value: persona.jurisdiccion },
-    { label: "Fecha de Nacimiento", value: persona.fechaNacimiento },
-    { label: "Lugar de Trabajo", value: persona.lugarTrabajo },
-    { label: "Correo Electrónico", value: persona.correo },
-    { label: "Domicilio", value: persona.domicilio },
-    { label: "Celular", value: persona.celular },
-    { label: "Fecha de Inicio de Labores", value: persona.fechaInicio },
-    { label: "Grado de Estudios", value: persona.gradoEstudios },
-    { label: "Observaciones", value: persona.observaciones },
-  ];
 
   return (
     <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
-          <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
-            <ArrowBackIosNewRoundedIcon
-              className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
-            />
-          </Link>
-          <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
-            INFORMACIÓN DEL PERSONAL
-          </h1>
-        </header>
+        <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
+          <ArrowBackIosNewRoundedIcon
+            className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
+          />
+        </Link>
+        <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
+          INFORMACIÓN DEL PERSONAL
+        </h1>
+      </header>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1">
-        <div
-          className="bg-white p-6 text-sm flex flex-col mx-auto mt-16"
-
-        >
-          {/* Contenedor de tablas divididas */}
-          <div className="flex">
-            <TableContainer style={{ marginRight: "20px", width: "400px" }}>
-              <Table aria-label="simple table">
-                <TableBody>
-                  {dataPart1.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row.label}</TableCell>
-                      <TableCell>{row.value}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            {/* Contenedor de imagen y botón */}
-            <div
-              className="flex flex-col items-center"
-              style={{ marginRight: "20px" }}
-            >
-              <div
-                style={{
-                  width: 400,
-                  height: 450,
-                  overflow: "hidden",
-                  borderRadius: "12px",
-                  border: "2px solid #ccc",
-                }}
-              >
-                <img
-                  src={persona.imagen}
-                  alt={persona.nombres}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+      <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 overflow-hidden">
+        <div className="container overflow-auto">
+          <div className="w-full flex justify-center">
+            <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
+              <img
+                src={persona.imagen}
+                alt="Persona"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover shadow-xl"
+              />
+              <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
+                <h2 className="text-xl md:text-2xl font-semibold">{persona.nombres}</h2>
+                <p className="text-gray-500 text-md md:text-base">{persona.subgerencia}</p>
               </div>
-
-              {/* Botón debajo de la imagen */}
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ marginTop: "20px" }}
-              >
-                Descargar en PDF
-              </Button>
             </div>
+          </div>
+          <div className="flex flex-col items-center">
+            {/* Información Personal */}
+            <div className="w-full max-w-[95%] py-6">
+              <div className="flex items-center gap-1"><PersonIcon className="text-gray-600" /> <h3 className="text-lg font-semibold">Información Personal</h3></div>
+              <div className="flex justify-center px-5 md:px-10">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
+                  <div>
+                    <p className="text-sm font-medium">Nombre:</p>
+                    <p className="text-base text-gray-800">{persona.nombres}</p>
+                  </div>
 
-            <TableContainer style={{ width: "400px" }}>
-              <Table aria-label="simple table">
-                <TableBody>
-                  {dataPart2.map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{row.label}</TableCell>
-                      <TableCell>{row.value}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  <div>
+                    <p className="text-sm font-medium">Sexo:</p>
+                    <p className="text-base text-gray-800">{persona.sexo}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Edad:</p>
+                    <p className="text-base text-gray-800">{persona.edad}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Hijos:</p>
+                    <p className="text-base text-gray-800">{persona.hijos}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Fecha de Nacimiento:</p>
+                    <p className="text-base text-gray-800">{persona.fechaNacimiento}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Correo:</p>
+                    <p className="text-base text-gray-800">{persona.correo}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Domicilio:</p>
+                    <p className="text-base text-gray-800">{persona.domicilio}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Celular:</p>
+                    <p className="text-base text-gray-800">{persona.celular}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Información Laboral */}
+            <div className="w-full max-w-[95%] py-6">
+              <div className="flex items-center gap-1"><WorkIcon className="text-gray-600" /> <h3 className="text-lg font-semibold">Información Laboral</h3></div>
+              <div className="flex justify-center px-5 md:px-10">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
+
+                  <div>
+                    <p className="text-sm font-medium">Subgerencia:</p>
+                    <p className="text-base text-gray-800">{persona.subgerencia}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Lugar de Trabajo:</p>
+                    <p className="text-base text-gray-800">{persona.lugarTrabajo}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Cargo:</p>
+                    <p className="text-base text-gray-800">{persona.cargo}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Turno:</p>
+                    <p className="text-base text-gray-800">{persona.turno}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Régimen:</p>
+                    <p className="text-base text-gray-800">{persona.regimen}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Fecha de Inicio:</p>
+                    <p className="text-base text-gray-800">{persona.fechaInicio}</p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm font-medium">Jurisdicción:</p>
+                    <p className="text-base text-gray-800">{persona.jurisdiccion}</p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {/* Información Documentaria */}
+            <div className="w-full max-w-[95%] py-6">
+              <div className="flex items-center gap-1">
+                <AssignmentIndIcon className="text-gray-600" />
+                <h3 className="text-lg font-semibold">Información Documentaria</h3>
+              </div>
+              <div className="flex justify-center px-5 md:px-10">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
+                  <div>
+                    <p className="text-sm font-medium">DNI:</p>
+                    <p className="text-base text-gray-800">{persona.dni}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">RUC:</p>
+                    <p className="text-base text-gray-800">{persona.ruc}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Información Académica */}
+            <div className="w-full max-w-[95%] py-6">
+              <div className="flex items-center gap-1">
+                <SchoolIcon className="text-gray-600" />
+                <h3 className="text-lg font-semibold">Información Académica</h3>
+              </div>
+              <div className="flex justify-center px-5 md:px-10">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
+                  <div>
+                    <p className="text-sm font-medium">Grado de Estudios:</p>
+                    <p className="text-base text-gray-800">{persona.gradoEstudios}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Información Académica */}
+            <div className="w-full max-w-[95%] py-6">
+              <div className="flex items-center gap-1">
+                <CommentIcon className="text-gray-600" />
+                <h3 className="text-lg font-semibold">Observaciones</h3>
+              </div>
+              <div className="flex justify-center px-5 md:px-10">
+                <div className="w-full">
+                  <p className="text-base text-gray-800">{persona.observaciones}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
