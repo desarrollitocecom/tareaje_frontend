@@ -6,26 +6,21 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { Link, useNavigate } from "react-router-dom";
+import FiltroSelect from '../Components/Filtroselect/Filtro';
 
 const PersonalBD = () => {
   const { data, cargos, turnos } = useData();
-  const navigate = useNavigate()
 
   return (
     <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
-      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
-        <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
-          <ArrowBackIosNewRoundedIcon
-            className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
-          />
-        </Link>
+      <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg">
         <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
           BASE DE DATOS DEL PERSONAL
         </h1>
       </header>
       <Formik
         initialValues={{ buscar: '', cargo: '', turnos: '' }}      >
-        {({ isSubmitting, handleChange, handleBlur, values, errors, touched }) => (
+        {({ handleChange, handleBlur, values, errors, touched }) => (
           <Form>
             <div className="text-nowrap">
               <div elevation={3} sx={{ padding: 3, borderRadius: 2 }} className="flex flex-col lg:flex-row gap-4">
@@ -47,57 +42,29 @@ const PersonalBD = () => {
                         />
                       </Box>
                     </div>
-
                     <div>
-                      <Box>
-                        <FormControl fullWidth variant="outlined" size="small" className="bg-white" error={touched.cargo && Boolean(errors.cargo)}>
-                          <InputLabel id="cargo-label">Cargo</InputLabel>
-                          <Select
-                            labelId="cargo-label"
-                            label="Cargo"
-                            name="cargo"
-                            value={values.cargo || ''}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          >
-                            <MenuItem value="">
-                              <em>Ninguno</em>
-                            </MenuItem>
-                            {cargos.map((cargo) => (
-                              <MenuItem key={cargo.id} value={cargo.id}>{cargo.valor}</MenuItem>
-                            ))}
-                          </Select>
-                          {touched.cargo && errors.cargo && (
-                            <FormHelperText error>{errors.cargo}</FormHelperText>
-                          )}
-                        </FormControl>
-                      </Box>
+                      <FiltroSelect
+                        label="Cargo"
+                        name="cargos"
+                        value={values.cargos || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        options={cargos}
+                        error={errors.cargos}
+                        touched={touched.cargos}
+                      />
                     </div>
-
                     <div>
-                      <Box>
-                        <FormControl fullWidth variant="outlined" size="small" className="bg-white" error={touched.turno && Boolean(errors.turno)}>
-                          <InputLabel id="turno-label">Turno</InputLabel>
-                          <Select
-                            labelId="turno-label"
-                            label="Turnos"
-                            name="turnos"
-                            value={values.turnos || ''}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                          >
-                            <MenuItem value="">
-                              <em>Ninguno</em>
-                            </MenuItem>
-                            {turnos.map((turno) => (
-                              <MenuItem key={turno.id} value={turno.id}>{turno.valor}</MenuItem>
-                            ))}
-                          </Select>
-                          {touched.turno && errors.turno && (
-                            <FormHelperText error>{errors.turno}</FormHelperText>
-                          )}
-                        </FormControl>
-                      </Box>
+                      <FiltroSelect
+                        label="Turno"
+                        name="turnos"
+                        value={values.turnos || ''}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        options={turnos}
+                        error={errors.turnos}
+                        touched={touched.turnos}
+                      />
                     </div>
                   </div>
                 </div>

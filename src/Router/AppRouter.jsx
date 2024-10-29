@@ -21,6 +21,13 @@ import Subgerencia from '../Pages/Subgerencia/Subgerencia ';
 import Funcion from '../Pages/Funcion/Funcion';
 import Jurisdiccion from '../Pages/Jurisdiccion/Jurisdiccion';
 import LugarTrabajo from '../Pages/LugarTrabajo/LugarTrabajo';
+import Usuarios from '../Pages/Usuarios/Usuarios';
+import Turno from '../Pages/Turno/Turnos';
+import Vacaciones from '../Pages/Vacaciones/Vacaciones';
+import Descansos from '../Pages/Descanso/Descansos';
+import Feriados from '../Pages/Feriados/Feriados';
+import Justificaciones from '../Pages/Justificaciones/Justificaciones';
+import RegimenLaboral from '../Pages/Regimen/Regimen';
 
 const AppRouter = () => {
   const router = createBrowserRouter([
@@ -66,10 +73,10 @@ const AppRouter = () => {
           path: "/roles",
           element: <PrivateRouter element={<Roles />} />,
         },
-        // {
-        //   path: "/usuarios",
-        //   element: <PrivateRouter element={<Usuarios />} />,
-        // },
+        {
+          path: "/usuarios",
+          element: <PrivateRouter element={<Usuarios />} />,
+        },
         {
            path: "/empleado",
            element: <PrivateRouter element={<Empleado />} />,
@@ -94,30 +101,30 @@ const AppRouter = () => {
           path: "/funcion",
           element: <PrivateRouter element={<Funcion />} />,
         },
-        // {
-        //   path: "/turno",
-        //   element: <PrivateRouter element={<Turno />} />,
-        // },
-        // {
-        //   path: "/regimen-laboral",
-        //   element: <PrivateRouter element={<RegimenLaboral />} />,
-        // },
-        // {
-        //   path: "/vacaciones",
-        //   element: <PrivateRouter element={<Vacaciones />} />,
-        // },
-        // {
-        //   path: "/descansos",
-        //   element: <PrivateRouter element={<Descansos />} />,
-        // },
-        // {
-        //   path: "/feriados",
-        //   element: <PrivateRouter element={<Feriados />} />,
-        // },
-        // {
-        //   path: "/justificaciones",
-        //   element: <PrivateRouter element={<Justificaciones />} />,
-        // },
+        {
+          path: "/turno",
+          element: <PrivateRouter element={<Turno />} />,
+        },
+        {
+          path: "/regimen-laboral",
+          element: <PrivateRouter element={<RegimenLaboral />} />,
+        },
+        {
+          path: "/vacaciones",
+          element: <PrivateRouter element={<Vacaciones />} />,
+        },
+        {
+          path: "/descansos",
+          element: <PrivateRouter element={<Descansos />} />,
+        },
+        {
+          path: "/feriados",
+          element: <PrivateRouter element={<Feriados />} />,
+        },
+        {
+          path: "/justificaciones",
+          element: <PrivateRouter element={<Justificaciones />} />,
+        },
         {
            path: "/jurisdiccion",
            element: <PrivateRouter element={<Jurisdiccion />} />,

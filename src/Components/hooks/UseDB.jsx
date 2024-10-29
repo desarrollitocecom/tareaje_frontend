@@ -1,6 +1,6 @@
-
 //import { useState, useEffect } from 'react';
-import {cargos, turnos, data} from '../../helpers/SelectorCargo_Turno';
+import {cargos, turnos, regimens, sexos, cants_hijos, edades, Jurisdicciones, data} from '../../helpers/SelectorCargo_Turno.js';
+
 
 const useData = () => {
   //const [data, setData] = useState([]);
@@ -57,7 +57,7 @@ const useData = () => {
   }, []);
   */
 
-  return { data, cargos, turnos };
+  return { data, cargos, regimens, sexos, cants_hijos, edades, Jurisdicciones, turnos };
 };
 
 export default useData;

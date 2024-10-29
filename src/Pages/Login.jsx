@@ -8,10 +8,13 @@ import fondo_sjl_bottom from '../assets/logos/fondo_sjl_bottom.png';
 import logo from '../assets/logos/logo_sjl.png';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
 import CustomSwal from '../helpers/swalConfig';
+import UseUsers from '../Components/hooks/UseUsers'; 
 
 const Login = () => {
+  const MySwal = withReactContent(Swal)
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { data } = UseUsers(); // Obtener los datos de usuarios
 
   const validate = (values) => {
     const errors = {};
@@ -28,21 +31,24 @@ const Login = () => {
 
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(false);
-    if (values.username === 'admin' && values.password === 'admin123') {
-      dispatch(loginSuccess({ user: { username: 'admin' }, token: 'some-token' }));
+
+    // Verificar las credenciales en el conjunto de datos
+    const user = data.find(user => user.username === values.username && user.password === values.password);
+    
+    if (user) {
+      dispatch(loginSuccess({ user: { username: user.username }, token: 'some-token' }));
       resetForm();
       navigate('/');
     } else {
-      CustomSwal.fire({
+      MySwal.fire({
         title: 'Credenciales incorrectas',
         toast: true,
         icon: 'error',
         position: 'top-end',
         showConfirmButton: false,
-        showCancelButton: false,
         timer: 2000,
         timerProgressBar: true,
-      })
+      });
     }
   };
 
@@ -79,7 +85,7 @@ const Login = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.username && Boolean(errors.username)}
-                    helperText={touched.username && errors.username || "ingrese el nombre de usuario"}
+                    helperText={touched.username && errors.username || "Ingrese el nombre de usuario"}
                   />
                 </Box>
                 <Box mb={2}>
