@@ -13,6 +13,14 @@ import Buscador from '../Pages/Buscador';
 import PersonalBD from '../Pages/PersonalBD';
 import PersonaIdentificado from '../Pages/PersonaIdentificado';
 import Roles from '../Pages/Roles/Roles';
+import Empleado from '../Pages/Empleado/Empleado';
+import Cargo from '../Pages/Cargo/Cargo';
+import Sexo from '../Pages/Sexo/Sexo';
+import GradoEstudio from '../Pages/GradoEstudio/GradoEstudio';
+import Subgerencia from '../Pages/Subgerencia/Subgerencia ';
+import Funcion from '../Pages/Funcion/Funcion';
+import Jurisdiccion from '../Pages/Jurisdiccion/Jurisdiccion';
+import LugarTrabajo from '../Pages/LugarTrabajo/LugarTrabajo';
 
 const AppRouter = () => {
   const router = createBrowserRouter([
@@ -62,30 +70,30 @@ const AppRouter = () => {
         //   path: "/usuarios",
         //   element: <PrivateRouter element={<Usuarios />} />,
         // },
-        // {
-        //   path: "/empleado",
-        //   element: <PrivateRouter element={<Empleado />} />,
-        // },
-        // {
-        //   path: "/cargo",
-        //   element: <PrivateRouter element={<Cargo />} />,
-        // },
-        // {
-        //   path: "/sexo",
-        //   element: <PrivateRouter element={<Sexo />} />,
-        // },
-        // {
-        //   path: "/grado-estudio",
-        //   element: <PrivateRouter element={<GradoEstudio />} />,
-        // },
-        // {
-        //   path: "/subgerencia",
-        //   element: <PrivateRouter element={<Subgerencia />} />,
-        // },
-        // {
-        //   path: "/funcion",
-        //   element: <PrivateRouter element={<Funcion />} />,
-        // },
+        {
+           path: "/empleado",
+           element: <PrivateRouter element={<Empleado />} />,
+        },
+        {
+          path: "/cargo",
+          element: <PrivateRouter element={<Cargo />} />,
+        },
+        {
+          path: "/sexo",
+          element: <PrivateRouter element={<Sexo />} />,
+        },
+        {
+          path: "/grado-estudio",
+          element: <PrivateRouter element={<GradoEstudio />} />,
+        },
+        {
+          path: "/subgerencia",
+          element: <PrivateRouter element={<Subgerencia />} />,
+        },
+        {
+          path: "/funcion",
+          element: <PrivateRouter element={<Funcion />} />,
+        },
         // {
         //   path: "/turno",
         //   element: <PrivateRouter element={<Turno />} />,
@@ -110,14 +118,14 @@ const AppRouter = () => {
         //   path: "/justificaciones",
         //   element: <PrivateRouter element={<Justificaciones />} />,
         // },
-        // {
-        //   path: "/jurisdiccion",
-        //   element: <PrivateRouter element={<Jurisdiccion />} />,
-        // },
-        // {
-        //   path: "/lugar-trabajo",
-        //   element: <PrivateRouter element={<LugarTrabajo />} />,
-        // },
+        {
+           path: "/jurisdiccion",
+           element: <PrivateRouter element={<Jurisdiccion />} />,
+        },
+        {
+           path: "/lugar-trabajo",
+          element: <PrivateRouter element={<LugarTrabajo />} />,
+        },
         {
           path: "/error-403",
           element: <PrivateRouter element={<Error403 />} />,
