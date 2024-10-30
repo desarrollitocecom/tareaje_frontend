@@ -75,21 +75,21 @@ const Sidebar = ({ toggled, setToggled }) => {
       id: 3,
       label: "Asistencia Personal",
       icon: PeopleIcon,
-      link: "/AsistenciaPersonal",
+      link: "/asistencia-personal",
       target: "_self",
     },
     {
       id: 4,
       label: "Seguimiento de Asistencias",
       icon: AssessmentIcon,
-      link: "/SeguiminetoAsistencia",
+      link: "/seguimineto-asistencia",
       target: "_self",
     },
     {
       id: 5,
       label: 'Base de datos',
       icon: storage,
-      link: '/personal',
+      link: '/base-datos',
       target: '_self'
     },
     {
@@ -101,8 +101,8 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de usuarios',
           icon: PersonAddIcon,
           children: [
-            { id: 1, label: 'Roles', icon: AdminPanelSettingsIcon, link: '/Roles', target: '_self' },
-            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/Usuarios', target: '_self' },
+            { id: 1, label: 'Roles', icon: AdminPanelSettingsIcon, link: '/roles', target: '_self' },
+            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/usuarios', target: '_self' },
           ]
         },
         {
@@ -110,9 +110,9 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de Empleados',
           icon: GroupsIcon,
           children: [
-            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/Empleado', target: '_self' },
-            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/Cargo', target: '_self' },
-            { id: 3, label: 'Sexo', icon: WcIcon, link: '/Sexo', target: '_self' },
+            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/empleado', target: '_self' },
+            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/cargo', target: '_self' },
+            { id: 3, label: 'Sexo', icon: WcIcon, link: '/sexo', target: '_self' },
             { id: 4, label: 'Grado de Estudio', icon: SchoolIcon, link: '/grado-estudio', target: '_self' },
             { id: 5, label: 'Subgerencia', icon: BusinessIcon, link: '/subgerencia', target: '_self' },
             { id: 6, label: 'Función', icon: TaskIcon, link: '/funcion', target: '_self' },
