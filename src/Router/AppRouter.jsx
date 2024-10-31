@@ -6,7 +6,6 @@ import Layout from '../Pages/Layout';
 import Inicio from '../Pages/Inicio';
 import AsistenciaPersonal from "../Pages/AsistenciaPersonal";
 import SeguimientoAsistencia from "../Pages/SeguimientoAsitencia";
-import Login from '../Pages/Login';
 import Error403 from '../Pages/Error403';
 import Error404 from '../Pages/Error404';
 import Buscador from '../Pages/Buscador';
@@ -28,6 +27,7 @@ import Descansos from '../Pages/Descanso/Descansos';
 import Feriados from '../Pages/Feriados/Feriados';
 import Justificaciones from '../Pages/Justificaciones/Justificaciones';
 import RegimenLaboral from '../Pages/Regimen/Regimen';
+import Login from '../Pages/Login/Login';
 
 const AppRouter = () => {
   const router = createBrowserRouter([

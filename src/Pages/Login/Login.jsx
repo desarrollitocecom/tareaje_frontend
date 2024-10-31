@@ -2,18 +2,17 @@ import React from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../Redux/Slices/AuthSlice';
-import fondo_sjl_top from '../assets/logos/fondo_sjl_top.png';
-import fondo_sjl_bottom from '../assets/logos/fondo_sjl_bottom.png';
-import logo from '../assets/logos/logo_sjl.png';
+import fondo_sjl_top from '../../assets/logos/fondo_sjl_top.png';
+import fondo_sjl_bottom from '../../assets/logos/fondo_sjl_bottom.png';
+import logo from '../../assets/logos/logo_sjl.png';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
-import CustomSwal from '../helpers/swalConfig';
-import UseUsers from '../Components/hooks/UseUsers'; 
+import { loginSuccess } from '../../Redux/Slices/AuthSlice';
+import CustomSwal from '../../helpers/swalConfig';
+import UseLogin from './UseLogin';
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { data } = UseUsers(); // Obtener los datos de usuarios
+  const { loading, error, login, logout } = UseLogin();
 
   const validate = (values) => {
     const errors = {};
@@ -28,26 +27,41 @@ const Login = () => {
     return errors;
   };
 
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    try {
+      const formattedValues = { usuario: values.username, contraseña: values.password };
+      
+      // Llama a la función de login del hook
+      const response = await login(formattedValues);
 
-    // Verificar las credenciales en el conjunto de datos
-    const user = data.find(user => user.username === values.username && user.password === values.password);
-    
-    if (user) {
-      dispatch(loginSuccess({ user: { username: user.username }, token: 'some-token' }));
-      resetForm();
-      navigate('/');
-    } else {
-      CustomSwal.fire({
-        title: 'Credenciales incorrectas',
-        toast: true,
-        icon: 'error',
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-      });
+      // Si el inicio de sesión es exitoso, se actualiza el estado de Redux
+      if (response) {
+        resetForm(); // Limpia el formulario
+        navigate('/'); // Redirige a la página principal o a donde desees
+        CustomSwal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 4000
+        })
+      }else{
+        CustomSwal.fire({
+          icon: 'error',
+          title: error,
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 4000
+        })
+      }
+
+    } catch (error) {
+      // Manejo de errores (puedes también actualizar el estado de error en Redux si lo deseas)
+      console.error(error);
+    } finally {
+      setSubmitting(false); // Finaliza el estado de envío
     }
   };
 
