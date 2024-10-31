@@ -2,10 +2,7 @@ import React from "react";
 import { Formik, Form } from "formik";
 import useData from "../Components/Hooks/UseDB";
 import { Link, useNavigate } from "react-router-dom";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import FiltroSelect from "../Components/Filtroselect/Filtro";
 import { TextField } from "@mui/material";
@@ -58,7 +55,6 @@ const AsistenciaPersonal = () => {
 
               {/* Seleccionar Fecha */}
               <div className="flex flex-col">
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     label="Seleccionar Fecha"
                     value={values.fecha}
@@ -75,7 +71,6 @@ const AsistenciaPersonal = () => {
                       />
                     )}
                   />
-                </LocalizationProvider>
               </div>
 
               {/* Seleccionar Cargo */}
