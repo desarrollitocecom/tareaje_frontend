@@ -99,6 +99,7 @@ const Login = () => {
                     onBlur={handleBlur}
                     error={touched.password && Boolean(errors.password)}
                     helperText={touched.password && errors.password || "La contraseña debe tener al menos 6 caracteres"}
+                    autoComplete="new-password"
                   />
                 </Box>
                 <Button
