@@ -72,7 +72,7 @@ const CRUDTable = memo(({
                                                     </TableSortLabel>
                                                 </TableCell>
                                             ))}
-                                            {onDelete || onEdit && (
+                                            {(typeof onEdit === 'function' || typeof onDelete === 'function') && (
                                                 <TableCell sx={{ fontWeight: 600 }} align={'left'}></TableCell>
                                             )}
                                         </TableRow>
@@ -80,7 +80,8 @@ const CRUDTable = memo(({
                                     <TableBody>
                                         {sortedData.map((row) => (
                                             <TableRow
-                                                onClick={() => rowOnClick && rowOnClick(row)}
+                                                onClick={(e) => typeof rowOnClick === 'function' && rowOnClick(e, row)}
+                                                className={`${typeof rowOnClick === 'function' ? 'cursor-pointer hover:bg-gray-100' : ''}`}
                                                 key={row.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
@@ -97,16 +98,16 @@ const CRUDTable = memo(({
                                                         </TableCell>
                                                     )
                                                 })}
-                                                {onEdit || onDelete && (
+                                                {(typeof onEdit === 'function' || typeof onDelete === 'function') && (
                                                     <TableCell align="right">
-                                                        {onEdit && (
+                                                        {typeof onEdit === 'function' && (
                                                             <IconButton aria-label="edit" size="small"
                                                                 onClick={() => onEdit(row)}
                                                             >
                                                                 <EditIcon fontSize="small" />
                                                             </IconButton>
                                                         )}
-                                                        {onDelete && (
+                                                        {typeof onDelete === 'function' && (
 
                                                             <IconButton aria-label="delete" size="small"
                                                                 onClick={() => onDelete(row)}
