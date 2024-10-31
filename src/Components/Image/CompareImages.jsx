@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Skeleton, Zoom } from '@mui/material';
+import { Fade, Modal, Skeleton, Zoom } from '@mui/material';
 import ReactCompareImage from "react-compare-image";
 
 function ImageComparisonModal({ open, handleClose, imagen, captura }) {
@@ -14,7 +14,7 @@ function ImageComparisonModal({ open, handleClose, imagen, captura }) {
                 justifyContent: 'center',
             }}
         >
-            <Zoom in={open}>
+            <Fade in={open}>
                 <div className="w-[95%] max-w-xl min-h-[300px] rounded-lg overflow-hidden relative">
                     {/* Comparador de imágenes con skeleton integrado */}
                     <ReactCompareImage
@@ -30,7 +30,7 @@ function ImageComparisonModal({ open, handleClose, imagen, captura }) {
                         }
                     />
                 </div>
-            </Zoom>
+            </Fade>
         </Modal>
     );
 }
