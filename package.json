@@ -20,6 +20,7 @@
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "react": "^18.3.1",
+    "react-compare-image": "^3.4.0",
     "react-date-range": "^2.0.1",
     "react-dom": "^18.3.1",
     "react-pro-sidebar": "^1.1.0",
