@@ -8,6 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import FiltroSelect from "../Components/Filtroselect/Filtro";
 import { TextField } from "@mui/material";
+import dayjs from 'dayjs';
 
 const AsistenciaPersonal = () => {
   const { cargos, turnos, subgerencias } = useData();
@@ -28,8 +29,8 @@ const AsistenciaPersonal = () => {
       const response = await axios.get(`/DataEjemplo.json`);
       const formattedData = response.data.data.map((item) => ({
         id: item.member,
-        nombres: item.nombres,
         apellidos: item.apellidos,
+        nombres: item.nombres,
         cargo: item.cargo,
         telefono: item.telefono,
       }));

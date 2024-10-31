@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { TextField, Card, CardActionArea, CardMedia, CardContent, Typography, Avatar, IconButton } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import FilterListIcon from '@mui/icons-material/FilterAlt';
-import FilterListoffIcon from '@mui/icons-material/FilterAltoff';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import useData from '../Components/Hooks/UseDB';
 import FiltroSelect from '../Components/Filtroselect/Filtro';
 
@@ -27,7 +27,7 @@ const PersonalBD = () => {
         onClick={() => setShowFilters(!showFilters)}
         className="md:hidden text-white flex items-left "
       >
-        {showFilters ? <FilterListIcon /> : <FilterListoffIcon />}
+        {showFilters ? <FilterListIcon /> : <FilterListOffIcon />}
         <h2 className='font-bold text-black'>Filtros</h2>
       </IconButton>
       {showFilters && (
