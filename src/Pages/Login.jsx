@@ -11,7 +11,6 @@ import CustomSwal from '../helpers/swalConfig';
 import UseUsers from '../Components/hooks/UseUsers'; 
 
 const Login = () => {
-  const MySwal = withReactContent(Swal)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data } = UseUsers(); // Obtener los datos de usuarios
@@ -40,7 +39,7 @@ const Login = () => {
       resetForm();
       navigate('/');
     } else {
-      MySwal.fire({
+      CustomSwal.fire({
         title: 'Credenciales incorrectas',
         toast: true,
         icon: 'error',

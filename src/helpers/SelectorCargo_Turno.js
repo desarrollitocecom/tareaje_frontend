@@ -5,6 +5,13 @@ export const cargos = [
     { id: 4, valor: 'Delta' },
     
   ];
+
+  export const subgerencias = [
+    { id: 1, valor: 'Transporte' },
+    { id: 2, valor: 'Fisca' },
+    { id: 3, valor: 'Serenazgo' },
+    
+  ];
   
   export const turnos = [
     { id: 1, valor: 'Mañana' },
@@ -79,8 +86,8 @@ export const cargos = [
   export const data = [
     {
       id: 1,
-      nombre: 'Juan',
-      apellido: 'Pérez',
+      nombre: 'Juan Manuel',
+      apellido: 'Pérez Pacotaipe',
       dni: '12345678',
       puesto: 'Transporte',
       turno: 'Mañana',

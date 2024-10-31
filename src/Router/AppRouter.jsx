@@ -44,15 +44,15 @@ const AppRouter = () => {
           element: <PrivateRouter element={<Inicio />} />,
         },
         {
-          path: "/personal",
+          path: "/base-datos",
           element: <PrivateRouter element={<PersonalBD />} />,
         },
         {
-          path: "/AsistenciaPersonal",
+          path: "/asistencia-personal",
           element: <PrivateRouter element={<AsistenciaPersonal />} />,
         },
         {
-          path: "/SeguiminetoAsistencia",
+          path: "/seguimineto-asistencia",
           element: <PrivateRouter element={<SeguimientoAsistencia />} />,
         },
         {
