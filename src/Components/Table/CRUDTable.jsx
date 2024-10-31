@@ -8,15 +8,16 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const CRUDTable = memo(({
     data = [],
-    onDelete = () => null,
-    onEdit = () => null,
+    onDelete = null,
+    onEdit = null,
     ArrLookup = [],
     loading = false,
+    rowOnClick = null,
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
         : [];
-        
+
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -73,12 +74,15 @@ const CRUDTable = memo(({
                                                     </TableSortLabel>
                                                 </TableCell>
                                             ))}
-                                            <TableCell sx={{ fontWeight: 600 }} align={'left'}></TableCell>
+                                            {onDelete || onEdit &&(
+                                                <TableCell sx={{ fontWeight: 600 }} align={'left'}></TableCell>
+                                            )}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {sortedData.map((row) => (
-                                            <TableRow
+                                            <TableRow 
+                                                onClick={() => rowOnClick && rowOnClick(row)}
                                                 key={row.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                             >
@@ -95,18 +99,27 @@ const CRUDTable = memo(({
                                                         </TableCell>
                                                     )
                                                 })}
-                                                <TableCell align="right">
-                                                    <IconButton aria-label="edit" size="small"
-                                                        onClick={() => onEdit(row)}
-                                                    >
-                                                        <EditIcon fontSize="small" />
-                                                    </IconButton>
-                                                    <IconButton aria-label="delete" size="small"
-                                                        onClick={() => onDelete(row)}
-                                                    >
-                                                        <DeleteIcon fontSize="small" />
-                                                    </IconButton>
-                                                </TableCell>
+                                                {onEdit || onDelete && (
+                                                    <TableCell align="right">
+                                                        {onEdit && (
+                                                            <IconButton aria-label="edit" size="small"
+                                                                onClick={() => onEdit(row)}
+                                                            >
+                                                                <EditIcon fontSize="small" />
+                                                            </IconButton>
+                                                        )}
+                                                        {onDelete && (
+
+                                                            <IconButton aria-label="delete" size="small"
+                                                                onClick={() => onDelete(row)}
+                                                            >
+                                                                <DeleteIcon fontSize="small" />
+                                                            </IconButton>
+                                                        )}
+                                                    </TableCell>
+                                                )}
+
+
                                             </TableRow>
                                         ))}
                                     </TableBody>
