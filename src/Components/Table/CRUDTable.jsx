@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider } from '@mui/material';
+import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider, TablePagination } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -13,6 +13,7 @@ const CRUDTable = memo(({
     ArrLookup = [],
     loading = false,
     rowOnClick = null,
+    limitRows = 20,
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
@@ -22,7 +23,8 @@ const CRUDTable = memo(({
     const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const page = queryParams.get('page');
+    const page = parseInt(queryParams.get('page')) || 0;
+    const limit = parseInt(queryParams.get('limit')) || limitRows;
 
     const [orderBy, setOrderBy] = useState('id');
     const [orderDirection, setOrderDirection] = useState('asc');
@@ -38,10 +40,6 @@ const CRUDTable = memo(({
         setSortedData(SortData(data, orderBy, orderDirection))
 
     }, [data, orderBy, orderDirection])
-
-    useEffect(() => {
-        console.log(page); // ejecutar logica de paginación
-    }, [page])
 
     return (
         <>
@@ -74,14 +72,14 @@ const CRUDTable = memo(({
                                                     </TableSortLabel>
                                                 </TableCell>
                                             ))}
-                                            {onDelete || onEdit &&(
+                                            {onDelete || onEdit && (
                                                 <TableCell sx={{ fontWeight: 600 }} align={'left'}></TableCell>
                                             )}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {sortedData.map((row) => (
-                                            <TableRow 
+                                            <TableRow
                                                 onClick={() => rowOnClick && rowOnClick(row)}
                                                 key={row.id}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -132,10 +130,24 @@ const CRUDTable = memo(({
                                 )
                         }
                     </div>
-                    <div className='flex justify-center pt-4'>
-                        <Stack spacing={2}>
-                            <Pagination page={page ? parseInt(page) : 1} onChange={(e, value) => { navigate(`?page=${value}`) }} count={10} sx={themePagination} />
-                        </Stack>
+                    <div className='flex justify-end pt-4'>
+                        <TablePagination
+                            className='select-none'
+                            component="div"
+                            count={100}
+                            page={page}
+                            onPageChange={(event, newPage) => {
+                                navigate(`?page=${newPage}&limit=${limit}`);
+                            }}
+                            rowsPerPage={limit}
+                            onRowsPerPageChange={(event) => {
+                                const newLimit = parseInt(event.target.value);
+                                navigate(`?page=0&limit=${newLimit}`);
+                            }}
+                            labelRowsPerPage="Filas por página"
+                            labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                            rowsPerPageOptions={[20, 50, 100]}
+                        />
                     </div>
                 </>
             }
