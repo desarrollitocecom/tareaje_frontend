@@ -125,7 +125,7 @@ const Sidebar = ({ toggled, setToggled }) => {
       requiresPermission: "asistencia"
     },
     {
-      id: 6,
+      id: 6, requiresPermission: "rol", 
       label: 'Administración',
       children: [
         {
