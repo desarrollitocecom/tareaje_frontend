@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
 import axios from 'axios';
@@ -7,22 +7,24 @@ import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddRegimen from './AddRegimen';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditRegimen from './EditRegimen';
 import DeleteRegimen from './DeleteRegimen';
+import usePermissions from '../../Components/hooks/usePermission';
 
-const Regimen = () => {
-  const navigate = useNavigate()
-  const [data, setdata] = useState([])
-  const [Update, setUpdate] = useState(false)
-  const [Loading, setLoading] = useState(false)
+const Regimen = ({ moduleName }) => {
+  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [Selected, setSelected] = useState(null)
+  const [selected, setSelected] = useState(null);
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    fetchData()
-  }, [Update])
+    fetchData();
+  }, [update]);
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -33,48 +35,42 @@ const Regimen = () => {
     }
 
     timeoutRef.current = setTimeout(() => {
-
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de búsqueda
     }, 800);
   };
 
   const refreshData = () => {
-    setUpdate((prev) => !prev)
-  }
-
+    setUpdate((prev) => !prev);
+  };
 
   const fetchData = () => {
-    setLoading(true)
+    setLoading(true);
 
     setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
       axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => {
-          return {
-            id: item.member,
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            dni: item.dni,
-            telefono: item.telefono,
-          }
-        })
-        setdata(dataFormated)
-
-        // setdata(res.data.data)
+        const dataFormated = res.data.data.map((item) => ({
+          id: item.member,
+          nombres: item.nombres,
+          apellidos: item.apellidos,
+          dni: item.dni,
+          telefono: item.telefono,
+        }));
+        setData(dataFormated);
       }).catch((err) => {
-        console.error(err)
+        console.error(err);
       }).finally(() => {
-        setLoading(false)
-      })
+        setLoading(false);
+      });
     }, 1000);
-  }
+  };
 
   const onEdit = (obj) => {
     setSelected(obj);
-    
-  }
+  };
+
   const onDelete = (obj) => {
-    DeleteRegimen(obj, refreshData)
-  }
+    DeleteRegimen(obj, refreshData);
+  };
 
   return (
     <>
@@ -102,7 +98,7 @@ const Regimen = () => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddRegimen />
+                  {canCreate && <AddRegimen />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -121,15 +117,18 @@ const Regimen = () => {
                 </FormControl>
               </div>
             </div>
-            <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
-          </div >
+            <CRUDTable
+              data={data}
+              loading={loading}
+              onDelete={canDelete ? onDelete : null}
+              onEdit={canEdit ? onEdit : null}
+            />
+          </div>
         </main>
       </div>
-      {/* Componetnes para editar y eliminar */}
-      <EditRegimen Selected={Selected} setSelected={setSelected}/>
-      
+      {canEdit && <EditRegimen Selected={selected} setSelected={setSelected} />}
     </>
-  )
-}
+  );
+};
 
-export default Regimen
+export default Regimen;

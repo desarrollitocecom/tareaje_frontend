@@ -125,7 +125,7 @@ const Sidebar = ({ toggled, setToggled }) => {
       requiresPermission: "asistencia"
     },
     {
-      id: 6,
+      id: 6, requiresPermission: "rol",
       label: 'Administración',
       children: [
         {
@@ -176,7 +176,7 @@ const Sidebar = ({ toggled, setToggled }) => {
     }
   ]
 
-  const filterMenuItems = (items) => 
+  const filterMenuItems = (items) =>
     items.reduce((acc, { children, requiresPermission, ...rest }) => {
       // Si no tiene requiresPermission o tiene permiso, lo agregamos
       if (!requiresPermission || hasPermissionFunction(user, requiresPermission)) {
@@ -190,11 +190,11 @@ const Sidebar = ({ toggled, setToggled }) => {
       }
       return acc;
     }, []);
-  
-  
+
+
   // Uso de la función
   const filteredMenuItems = filterMenuItems(MenuItems);
-  
+
 
   return (
     <div className="relative h-full w-max bg-slate-500 z-[1200]">
@@ -220,7 +220,7 @@ const Sidebar = ({ toggled, setToggled }) => {
           <div style={{ flex: 1 }} className='max-h-full overflow-hidden overflow-y-auto'>
             {
               filteredMenuItems.map((item) => (
-                item.children  ? (
+                item.children ? (
                   <Fragment key={item.id} >
                     <div style={{ padding: '0 24px', marginBottom: '8px', marginTop: '32px' }}>
                       <Typography
