@@ -6,7 +6,6 @@ import Layout from '../Pages/Layout';
 import Inicio from '../Pages/Inicio';
 import AsistenciaPersonal from "../Pages/AsistenciaPersonal";
 import SeguimientoAsistencia from "../Pages/SeguimientoAsitencia";
-import Error403 from '../Pages/Error403';
 import Error404 from '../Pages/Error404';
 import Buscador from '../Pages/Buscador';
 import PersonalBD from '../Pages/PersonalBD';
@@ -48,15 +47,15 @@ const AppRouter = () => {
         },
         {
           path: "/base-datos",
-          element: <PrivateRouter element={<PersonalBD />} />,
+          element: <PrivateRouter element={<PersonalBD />} requiresPermission={"asistencia"} />,
         },
         {
           path: "/asistencia-personal",
-          element: <PrivateRouter element={<AsistenciaPersonal />} />,
+          element: <PrivateRouter element={<AsistenciaPersonal />} requiresPermission={"asistencia"} />,
         },
         {
           path: "/seguimineto-asistencia",
-          element: <PrivateRouter element={<SeguimientoAsistencia />} />,
+          element: <PrivateRouter element={<SeguimientoAsistencia />} requiresPermission={"asistencia"} />,
         },
         {
           path: "/buscar",
@@ -74,71 +73,67 @@ const AppRouter = () => {
         },
         {
           path: "/roles",
-          element: <PrivateRouter element={<Roles />} />,
+          element: <PrivateRouter element={<Roles />} requiresPermission={"rol"} />,
         },
         {
           path: "/usuarios",
-          element: <PrivateRouter element={<Usuarios />} />,
+          element: <PrivateRouter element={<Usuarios />} requiresPermission={"usuario"} />,
         },
         {
           path: "/empleado",
-          element: <PrivateRouter element={<Empleado />} />,
+          element: <PrivateRouter element={<Empleado />} requiresPermission={"empleado"} />,
         },
         {
           path: "/cargo",
-          element: <PrivateRouter element={<Cargo />} />,
+          element: <PrivateRouter element={<Cargo />} requiresPermission={"cargo"} />,
         },
         {
           path: "/sexo",
-          element: <PrivateRouter element={<Sexo />} />,
+          element: <PrivateRouter element={<Sexo />} requiresPermission={"sexo"} />,
         },
         {
           path: "/grado-estudio",
-          element: <PrivateRouter element={<GradoEstudio />} />,
+          element: <PrivateRouter element={<GradoEstudio />} requiresPermission={"gradoDeEstudio"} />,
         },
         {
           path: "/subgerencia",
-          element: <PrivateRouter element={<Subgerencia />} />,
+          element: <PrivateRouter element={<Subgerencia />} requiresPermission={"subgerencia"} />,
         },
         {
           path: "/funcion",
-          element: <PrivateRouter element={<Funcion />} />,
+          element: <PrivateRouter element={<Funcion />} requiresPermission={"funcion"} />,
         },
         {
           path: "/turno",
-          element: <PrivateRouter element={<Turno />} />,
+          element: <PrivateRouter element={<Turno />} requiresPermission={"turno"} />,
         },
         {
           path: "/regimen-laboral",
-          element: <PrivateRouter element={<RegimenLaboral />} />,
+          element: <PrivateRouter element={<RegimenLaboral />} requiresPermission={"regimenLaboral"} />,
         },
         {
           path: "/vacaciones",
-          element: <PrivateRouter element={<Vacaciones />} />,
+          element: <PrivateRouter element={<Vacaciones />} requiresPermission={"vacacion"} />,
         },
         {
           path: "/descansos",
-          element: <PrivateRouter element={<Descansos />} />,
+          element: <PrivateRouter element={<Descansos />} requiresPermission={"descanso"} />,
         },
         {
           path: "/feriados",
-          element: <PrivateRouter element={<Feriados />} />,
+          element: <PrivateRouter element={<Feriados />} requiresPermission={"feriado"} />,
         },
         {
           path: "/justificaciones",
-          element: <PrivateRouter element={<Justificaciones />} />,
+          element: <PrivateRouter element={<Justificaciones />} requiresPermission={"justificacion"} />,
         },
         {
           path: "/jurisdiccion",
-          element: <PrivateRouter element={<Jurisdiccion />} />,
+          element: <PrivateRouter element={<Jurisdiccion />} requiresPermission={"jurisdiccion"} />,
         },
         {
           path: "/lugar-trabajo",
-          element: <PrivateRouter element={<LugarTrabajo />} />,
-        },
-        {
-          path: "/error-403",
-          element: <PrivateRouter element={<Error403 />} />,
+          element: <PrivateRouter element={<LugarTrabajo />} requiresPermission={"lugarDeTrabajo"} />,
         },
         {
           path: "/*",
