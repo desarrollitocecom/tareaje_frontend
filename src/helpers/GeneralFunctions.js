@@ -15,3 +15,9 @@ export function SortData(data, orderBy, orderDirection) {
             return aValue > bValue ? -1 : 1;
         });
 }
+
+export const formatFirstNameLastName = (nombes, apellidos) => {
+    const firstName = nombes.trim().split(" ")[0];
+    const lastName = apellidos.trim().split(" ")[0];
+    return `${firstName} ${lastName}`;
+}

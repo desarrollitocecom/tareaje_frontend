@@ -28,8 +28,11 @@ import Feriados from '../Pages/Feriados/Feriados';
 import Justificaciones from '../Pages/Justificaciones/Justificaciones';
 import RegimenLaboral from '../Pages/Regimen/Regimen';
 import Login from '../Pages/Login/Login';
+import { useSelector } from 'react-redux';
+import Loader from '../Components/Loader/Loader';
 
 const AppRouter = () => {
+  const { loading } = useSelector((state) => state.auth);
   const router = createBrowserRouter([
     {
       path: "/login",
@@ -78,8 +81,8 @@ const AppRouter = () => {
           element: <PrivateRouter element={<Usuarios />} />,
         },
         {
-           path: "/empleado",
-           element: <PrivateRouter element={<Empleado />} />,
+          path: "/empleado",
+          element: <PrivateRouter element={<Empleado />} />,
         },
         {
           path: "/cargo",
@@ -126,11 +129,11 @@ const AppRouter = () => {
           element: <PrivateRouter element={<Justificaciones />} />,
         },
         {
-           path: "/jurisdiccion",
-           element: <PrivateRouter element={<Jurisdiccion />} />,
+          path: "/jurisdiccion",
+          element: <PrivateRouter element={<Jurisdiccion />} />,
         },
         {
-           path: "/lugar-trabajo",
+          path: "/lugar-trabajo",
           element: <PrivateRouter element={<LugarTrabajo />} />,
         },
         {
@@ -147,7 +150,10 @@ const AppRouter = () => {
   ]);
 
   return (
-    <RouterProvider router={router} />
+    <>
+      {loading && <Loader />}
+      <RouterProvider router={router} />
+    </>
   )
 }
 

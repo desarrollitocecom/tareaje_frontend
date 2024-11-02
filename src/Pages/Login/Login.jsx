@@ -6,13 +6,14 @@ import fondo_sjl_top from '../../assets/logos/fondo_sjl_top.png';
 import fondo_sjl_bottom from '../../assets/logos/fondo_sjl_bottom.png';
 import logo from '../../assets/logos/logo_sjl.png';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
-import { loginSuccess } from '../../Redux/Slices/AuthSlice';
+import { loginSuccess, setLoading } from '../../Redux/Slices/AuthSlice';
 import CustomSwal from '../../helpers/swalConfig';
 import UseLogin from './UseLogin';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { loading, error, login, logout } = UseLogin();
+  const dispatch = useDispatch();
+  const { login } = UseLogin();
 
   const validate = (values) => {
     const errors = {};
@@ -28,39 +29,44 @@ const Login = () => {
   };
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    dispatch(setLoading(true));
+
     try {
       const formattedValues = { usuario: values.username, contraseña: values.password };
-      
+
       // Llama a la función de login del hook
       const response = await login(formattedValues);
 
-      // Si el inicio de sesión es exitoso, se actualiza el estado de Redux
-      if (response) {
-        resetForm(); // Limpia el formulario
-        navigate('/'); // Redirige a la página principal o a donde desees
-        CustomSwal.fire({
-          icon: 'success',
-          title: 'Inicio de sesión exitoso',
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 4000
-        })
-      }else{
-        CustomSwal.fire({
-          icon: 'error',
-          title: error,
-          toast: true,
-          position: 'top-end',
-          showConfirmButton: false,
-          timer: 4000
-        })
-      }
+      if (!response.status) throw (response.error);
+
+      resetForm(); // Limpia el formulario
+      navigate('/'); // Redirige a la página principal o a donde desees
+      CustomSwal.fire({
+        icon: 'success',
+        title: 'Inicio de sesión exitoso',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+      })      
+
+      dispatch(loginSuccess(response.data));
 
     } catch (error) {
+
       // Manejo de errores (puedes también actualizar el estado de error en Redux si lo deseas)
+      CustomSwal.fire({
+        icon: 'error',
+        title: error,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+      })
+
       console.error(error);
     } finally {
+      dispatch(setLoading(false));
       setSubmitting(false); // Finaliza el estado de envío
     }
   };

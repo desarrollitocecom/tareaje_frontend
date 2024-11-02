@@ -6,5 +6,8 @@ dayjs.extend(isoWeek);
 export const currentYear = dayjs();
 
 export const isSameWeek = (start, end) => {
-    return dayjs(start).isoWeek() === dayjs(end).isoWeek() && dayjs(start).year() === dayjs(end).year();
+    const sameWeek = dayjs(start).isoWeek() === dayjs(end).isoWeek() && dayjs(start).year() === dayjs(end).year();
+    const monthDifference = dayjs(end).diff(dayjs(start), 'month');    
+
+    return sameWeek && monthDifference <= 1;
 };

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import Logo from "../../assets/logos/logo_sjl.png"
 import { Fragment, useState } from 'react';
+import ProfileUser from '../../assets/logos/userimg.png';
 import { Avatar, Box, Button, Popover, Tooltip, Typography } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -10,8 +11,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import storage from '@mui/icons-material/Storage';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../Redux/Slices/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, logout } from '../../Redux/Slices/AuthSlice';
 import SearchIcon from '@mui/icons-material/Search';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
@@ -32,11 +33,47 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
+import { formatFirstNameLastName } from '../../helpers/GeneralFunctions';
+import UseLogin from '../../Pages/Login/UseLogin';
+import CustomSwal from '../../helpers/swalConfig';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { user, refresh, token } = useSelector((state) => state.auth);
+  const { getUserData } = UseLogin()
+
+  const LogOut = () => {
+    dispatch(logout());
+    CustomSwal.fire({
+      icon: "info",
+      title: 'Se ha cerrado la sesion',
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 4000,
+      timerProgressBar: true,
+    })
+  };
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData(token);         
+
+        dispatch(loginSuccess({ user: userData, token: token }));
+      } catch (error) {
+        LogOut();
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+   fetchData()
+    
+  }, [refresh])
+
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,14 +84,6 @@ const Sidebar = ({ toggled, setToggled }) => {
   };
 
   const open = Boolean(anchorEl);
-
-  const userSession = {
-    user: {
-      name: 'Diego Matute',
-      email: 'djcord2024@gmail.com',
-      image: 'https://contents.bebee.com/users/id/b7aEe63d2afd43a5ad/avatar-lRUe7.jpg',
-    },
-  };
 
   const MenuItems = [
     {
@@ -219,8 +248,8 @@ const Sidebar = ({ toggled, setToggled }) => {
               onClick={handlePopoverOpen}
             >
               <Avatar
-                src={userSession.user.image}
-                alt={userSession.user.name}
+                src={user.image || ProfileUser}
+                alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
 
                 sx={{
                   width: Collapsed ? 30 : 50,
@@ -231,10 +260,10 @@ const Sidebar = ({ toggled, setToggled }) => {
               {!Collapsed && (
                 <Box ml={2} flexGrow={1}>
                   <Typography variant="body1" fontWeight="bold" noWrap>
-                    {userSession.user.name}
+                    {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" noWrap>
-                    {userSession.user.email}
+                    {user.correo}
                   </Typography>
                 </Box>
               )}
@@ -252,23 +281,23 @@ const Sidebar = ({ toggled, setToggled }) => {
             >
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
                 <Avatar
-                  src={userSession.user.image}
-                  alt={userSession.user.name}
+                  src={user.image || ProfileUser}
+                  alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                   sx={{ width: 50, height: 50, mb: 1 }}
 
                 />
                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  {userSession.user.name}
+                  {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                 </Typography>
                 <Typography sx={{ fontSize: '0.8rem', color: 'textSecondary', mb: 1 }}>
-                  {userSession.user.email}
+                  {user.correo}
                 </Typography>
                 <Button
                   variant="contained"
                   sx={{ fontSize: 12, fontWeight: 'bold', textTransform: 'capitalize', padding: '8px 16px' }}
                   color="success"
                   startIcon={<LogoutIcon />}
-                  onClick={() => dispatch(logout())}
+                  onClick={LogOut}
                 >
                   Cerrar Sesión
                 </Button>
