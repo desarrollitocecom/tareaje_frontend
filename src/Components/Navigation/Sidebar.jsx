@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import Logo from "../../assets/logos/logo_sjl.png"
 import { Fragment, useState } from 'react';
+import ProfileUser from '../../assets/logos/userimg.png';
 import { Avatar, Box, Button, Popover, Tooltip, Typography } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -10,8 +11,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import storage from '@mui/icons-material/Storage';
-import { useDispatch } from 'react-redux';
-import { logout } from '../../Redux/Slices/AuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess, logout } from '../../Redux/Slices/AuthSlice';
 import SearchIcon from '@mui/icons-material/Search';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
@@ -32,11 +33,47 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
+import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
+import UseLogin from '../../Pages/Login/UseLogin';
+import CustomSwal from '../../helpers/swalConfig';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { user, refresh, token } = useSelector((state) => state.auth);
+  const { getUserData } = UseLogin()
+
+  const LogOut = () => {
+    dispatch(logout());
+    CustomSwal.fire({
+      icon: "info",
+      title: 'Se ha cerrado la sesion',
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 4000,
+      timerProgressBar: true,
+    })
+  };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData(token);
+
+        dispatch(loginSuccess({ user: userData, token: token }));
+      } catch (error) {
+        LogOut();
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData()
+
+  }, [refresh])
+
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,14 +84,6 @@ const Sidebar = ({ toggled, setToggled }) => {
   };
 
   const open = Boolean(anchorEl);
-
-  const userSession = {
-    user: {
-      name: 'Diego Matute',
-      email: 'djcord2024@gmail.com',
-      image: 'https://contents.bebee.com/users/id/b7aEe63d2afd43a5ad/avatar-lRUe7.jpg',
-    },
-  };
 
   const MenuItems = [
     {
@@ -77,6 +106,7 @@ const Sidebar = ({ toggled, setToggled }) => {
       icon: PeopleIcon,
       link: "/asistencia-personal",
       target: "_self",
+      requiresPermission: "asistencia"
     },
     {
       id: 4,
@@ -84,13 +114,15 @@ const Sidebar = ({ toggled, setToggled }) => {
       icon: AssessmentIcon,
       link: "/seguimineto-asistencia",
       target: "_self",
+      requiresPermission: "asistencia"
     },
     {
       id: 5,
       label: 'Base de datos',
       icon: storage,
       link: '/base-datos',
-      target: '_self'
+      target: '_self',
+      requiresPermission: "asistencia"
     },
     {
       id: 6,
@@ -101,8 +133,8 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de usuarios',
           icon: PersonAddIcon,
           children: [
-            { id: 1, label: 'Roles', icon: AdminPanelSettingsIcon, link: '/roles', target: '_self' },
-            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/usuarios', target: '_self' },
+            { id: 1, label: 'Roles', icon: AdminPanelSettingsIcon, link: '/roles', target: '_self', requiresPermission: "rol" },
+            { id: 2, label: 'Usuarios', icon: PeopleIcon, link: '/usuarios', target: '_self', requiresPermission: "usuario" },
           ]
         },
         {
@@ -110,25 +142,25 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Gestión de Empleados',
           icon: GroupsIcon,
           children: [
-            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/empleado', target: '_self' },
-            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/cargo', target: '_self' },
-            { id: 3, label: 'Sexo', icon: WcIcon, link: '/sexo', target: '_self' },
-            { id: 4, label: 'Grado de Estudio', icon: SchoolIcon, link: '/grado-estudio', target: '_self' },
-            { id: 5, label: 'Subgerencia', icon: BusinessIcon, link: '/subgerencia', target: '_self' },
-            { id: 6, label: 'Función', icon: TaskIcon, link: '/funcion', target: '_self' },
+            { id: 1, label: 'Empleado', icon: FolderSharedIcon, link: '/empleado', target: '_self', requiresPermission: "empleado" },
+            { id: 2, label: 'Cargo', icon: WorkIcon, link: '/cargo', target: '_self', requiresPermission: "cargo" },
+            { id: 3, label: 'Sexo', icon: WcIcon, link: '/sexo', target: '_self', requiresPermission: "sexo" },
+            { id: 4, label: 'Grado de Estudio', icon: SchoolIcon, link: '/grado-estudio', target: '_self', requiresPermission: "gradoDeEstudio" },
+            { id: 5, label: 'Subgerencia', icon: BusinessIcon, link: '/subgerencia', target: '_self', requiresPermission: "subgerencia" },
+            { id: 6, label: 'Función', icon: TaskIcon, link: '/funcion', target: '_self', requiresPermission: "funcion" },
           ]
         },
         {
           id: 3,
-          label: 'Gestión de Tiempo Laboral:',
+          label: 'Gestión de Tiempo Laboral',
           icon: HourglassEmptyIcon,
           children: [
-            { id: 1, label: 'Turno', icon: ScheduleIcon, link: '/turno', target: '_self' },
-            { id: 2, label: 'Régimen Laboral', icon: GavelIcon, link: '/regimen-laboral', target: '_self' },
-            { id: 3, label: 'Vacaciones', icon: BeachAccessIcon, link: '/vacaciones', target: '_self' },
-            { id: 4, label: 'Descansos', icon: WeekendIcon, link: '/descansos', target: '_self' },
-            { id: 5, label: 'Feriados', icon: EventIcon, link: '/feriados', target: '_self' },
-            { id: 6, label: 'Justificaciones', icon: AssignmentIcon, link: '/justificaciones', target: '_self' },
+            { id: 1, label: 'Turno', icon: ScheduleIcon, link: '/turno', target: '_self', requiresPermission: "turno" },
+            { id: 2, label: 'Régimen Laboral', icon: GavelIcon, link: '/regimen-laboral', target: '_self', requiresPermission: "regimenLaboral" },
+            { id: 3, label: 'Vacaciones', icon: BeachAccessIcon, link: '/vacaciones', target: '_self', requiresPermission: "vacacion" },
+            { id: 4, label: 'Descansos', icon: WeekendIcon, link: '/descansos', target: '_self', requiresPermission: "descanso" },
+            { id: 5, label: 'Feriados', icon: EventIcon, link: '/feriados', target: '_self', requiresPermission: "feriado" },
+            { id: 6, label: 'Justificaciones', icon: AssignmentIcon, link: '/justificaciones', target: '_self', requiresPermission: "justificacion" },
           ]
         },
         {
@@ -136,13 +168,33 @@ const Sidebar = ({ toggled, setToggled }) => {
           label: 'Ubicación y Jurisdicción',
           icon: MapIcon,
           children: [
-            { id: 1, label: 'Jurisdicción', icon: PublicIcon, link: '/jurisdiccion', target: '_self' },
-            { id: 2, label: 'Lugar de Trabajo', icon: LocationOnIcon, link: '/lugar-trabajo', target: '_self' },
+            { id: 1, label: 'Jurisdicción', icon: PublicIcon, link: '/jurisdiccion', target: '_self', requiresPermission: "jurisdiccion" },
+            { id: 2, label: 'Lugar de Trabajo', icon: LocationOnIcon, link: '/lugar-trabajo', target: '_self', requiresPermission: "lugarDeTrabajo" },
           ]
         },
       ],
     }
   ]
+
+  const filterMenuItems = (items) => 
+    items.reduce((acc, { children, requiresPermission, ...rest }) => {
+      // Si no tiene requiresPermission o tiene permiso, lo agregamos
+      if (!requiresPermission || hasPermissionFunction(user, requiresPermission)) {
+        const item = { ...rest };
+        // Si tiene hijos, filtramos recursivamente
+        if (children) {
+          const filteredChildren = filterMenuItems(children);
+          if (filteredChildren.length) item.children = filteredChildren; // Solo agregar si hay hijos filtrados
+        }
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+  
+  
+  // Uso de la función
+  const filteredMenuItems = filterMenuItems(MenuItems);
+  
 
   return (
     <div className="relative h-full w-max bg-slate-500 z-[1200]">
@@ -167,8 +219,8 @@ const Sidebar = ({ toggled, setToggled }) => {
           </Link>
           <div style={{ flex: 1 }} className='max-h-full overflow-hidden overflow-y-auto'>
             {
-              MenuItems.map((item) => (
-                item.children ? (
+              filteredMenuItems.map((item) => (
+                item.children  ? (
                   <Fragment key={item.id} >
                     <div style={{ padding: '0 24px', marginBottom: '8px', marginTop: '32px' }}>
                       <Typography
@@ -219,8 +271,8 @@ const Sidebar = ({ toggled, setToggled }) => {
               onClick={handlePopoverOpen}
             >
               <Avatar
-                src={userSession.user.image}
-                alt={userSession.user.name}
+                src={user.image || ProfileUser}
+                alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
 
                 sx={{
                   width: Collapsed ? 30 : 50,
@@ -231,10 +283,10 @@ const Sidebar = ({ toggled, setToggled }) => {
               {!Collapsed && (
                 <Box ml={2} flexGrow={1}>
                   <Typography variant="body1" fontWeight="bold" noWrap>
-                    {userSession.user.name}
+                    {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" noWrap>
-                    {userSession.user.email}
+                    {user.correo}
                   </Typography>
                 </Box>
               )}
@@ -252,23 +304,23 @@ const Sidebar = ({ toggled, setToggled }) => {
             >
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
                 <Avatar
-                  src={userSession.user.image}
-                  alt={userSession.user.name}
+                  src={user.image || ProfileUser}
+                  alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                   sx={{ width: 50, height: 50, mb: 1 }}
 
                 />
                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  {userSession.user.name}
+                  {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
                 </Typography>
                 <Typography sx={{ fontSize: '0.8rem', color: 'textSecondary', mb: 1 }}>
-                  {userSession.user.email}
+                  {user.correo}
                 </Typography>
                 <Button
                   variant="contained"
                   sx={{ fontSize: 12, fontWeight: 'bold', textTransform: 'capitalize', padding: '8px 16px' }}
                   color="success"
                   startIcon={<LogoutIcon />}
-                  onClick={() => dispatch(logout())}
+                  onClick={LogOut}
                 >
                   Cerrar Sesión
                 </Button>

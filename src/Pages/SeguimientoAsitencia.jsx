@@ -296,7 +296,7 @@ const SeguimientoAsistencia = () => {
         </div> */}
 
         {/* Tabla de asistencias */}
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto !select-none">
           <table className="min-w-full bg-white border text-xs text-nowrap">
             <thead>
               <tr>

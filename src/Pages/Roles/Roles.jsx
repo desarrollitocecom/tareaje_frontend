@@ -10,8 +10,13 @@ import AddRol from './addRol';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditRol from './EditRol';
 import deleteRole from './DeleteRol';
+import usePermissions from '../../Components/hooks/usePermission';
 
-const Roles = () => {
+
+
+const Roles = ({ moduleName }) => {
+  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+
   const navigate = useNavigate()
   const [data, setdata] = useState([])
   const [Update, setUpdate] = useState(false)
@@ -70,7 +75,7 @@ const Roles = () => {
 
   const onEdit = (obj) => {
     setSelected(obj);
-    
+
   }
   const onDelete = (obj) => {
     deleteRole(obj, refreshData)
@@ -102,7 +107,7 @@ const Roles = () => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddRol />
+                  {canCreate && <AddRol />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -121,13 +126,18 @@ const Roles = () => {
                 </FormControl>
               </div>
             </div>
-            <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+            <CRUDTable
+              data={data}
+              loading={Loading}
+              onDelete={canDelete ? onDelete : null}
+              onEdit={canEdit ? onEdit : null}
+            />
           </div >
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      <EditRol Selected={Selected} setSelected={setSelected}/>
-      
+      {canEdit && <EditRol Selected={Selected} setSelected={setSelected} />}
+
     </>
   )
 }
