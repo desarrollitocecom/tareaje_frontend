@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import Logo from "../../assets/logos/logo_sjl.png"
 import { Fragment, useState } from 'react';
-import ProfileUser from '../../assets/logos/userimg.png';
+import ProfileUser from '../../assets/logos/userimg.webp';
 import { Avatar, Box, Button, Popover, Tooltip, Typography } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -271,8 +271,8 @@ const Sidebar = ({ toggled, setToggled }) => {
               onClick={handlePopoverOpen}
             >
               <Avatar
-                src={user.image || ProfileUser}
-                alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
+                src={user?.image || ProfileUser}
+                alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
 
                 sx={{
                   width: Collapsed ? 30 : 50,
@@ -283,10 +283,10 @@ const Sidebar = ({ toggled, setToggled }) => {
               {!Collapsed && (
                 <Box ml={2} flexGrow={1}>
                   <Typography variant="body1" fontWeight="bold" noWrap>
-                    {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
+                    {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" noWrap>
-                    {user.correo}
+                    {user?.correo}
                   </Typography>
                 </Box>
               )}
@@ -304,16 +304,16 @@ const Sidebar = ({ toggled, setToggled }) => {
             >
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
                 <Avatar
-                  src={user.image || ProfileUser}
-                  alt={`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
+                  src={user?.image || ProfileUser}
+                  alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                   sx={{ width: 50, height: 50, mb: 1 }}
 
                 />
                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
-                  {`${formatFirstNameLastName(user.empleado.nombres, user.empleado.apellidos)}`}
+                  {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                 </Typography>
                 <Typography sx={{ fontSize: '0.8rem', color: 'textSecondary', mb: 1 }}>
-                  {user.correo}
+                  {user?.correo}
                 </Typography>
                 <Button
                   variant="contained"
