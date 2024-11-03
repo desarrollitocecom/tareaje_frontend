@@ -17,7 +17,7 @@ const UseLogin = () => {
                 status: true
             };
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Error de inicio de sesión';
+            const errorMessage = err.response?.data?.message || err || 'Error de inicio de sesión';
             console.error(`Error en login: ${errorMessage}`); // Registro de error
 
             return {
@@ -40,7 +40,7 @@ const UseLogin = () => {
 
             return { ...data, permissions };
         } catch (err) {
-            const errorMessage = err.response?.data?.message || 'Error al obtener los datos del usuario';
+            const errorMessage = err.response?.data?.message || err || 'Error al obtener los datos del usuario';
             throw (errorMessage);
         }
     };
