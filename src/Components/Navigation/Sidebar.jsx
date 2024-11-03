@@ -34,15 +34,13 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
-import UseLogin from '../../Pages/Login/UseLogin';
 import CustomSwal from '../../helpers/swalConfig';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user, refresh, token } = useSelector((state) => state.auth);
-  const { getUserData } = UseLogin()
+  const { user } = useSelector((state) => state.auth);
 
   const LogOut = () => {
     dispatch(logout());
@@ -56,24 +54,6 @@ const Sidebar = ({ toggled, setToggled }) => {
       timerProgressBar: true,
     })
   };
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await getUserData(token);
-
-        dispatch(loginSuccess({ user: userData, token: token }));
-      } catch (error) {
-        LogOut();
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData()
-
-  }, [refresh])
-
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -269,30 +249,29 @@ const Sidebar = ({ toggled, setToggled }) => {
           <div>
             {/* Pie de página con la información del usuario */}
             <div
-              className="flex items-center justify-center p-4 border-t w-full cursor-pointer"
-              style={{ flexDirection: Collapsed ? 'column' : 'row' }}
+              className="flex items-center justify-start p-4 border-t w-full cursor-pointer"
+              style={{ flexDirection: 'row' }}
               onClick={handlePopoverOpen}
             >
-              <Avatar
-                src={user?.image || ProfileUser}
-                alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-
-                sx={{
-                  width: Collapsed ? 30 : 50,
-                  height: Collapsed ? 30 : 50,
-                  transition: 'width 0.5s, height 0.5s'
-                }}
-              />
-              {!Collapsed && (
-                <Box ml={2} flexGrow={1}>
-                  <Typography variant="body1" fontWeight="bold" noWrap>
-                    {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" noWrap>
-                    {user?.correo}
-                  </Typography>
-                </Box>
-              )}
+              <div className="min-w-12 min-h-12 flex items-center justify-center">
+                <Avatar
+                  src={user?.image || ProfileUser}
+                  alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+                  sx={{
+                    width: Collapsed ? 40 : 50,
+                    height: Collapsed ? 40 : 50,
+                    transition: 'width 0.5s, height 0.5s'
+                  }}
+                />
+              </div>
+              <Box ml={2} flexGrow={1}>
+                <Typography variant="body1" fontWeight="bold" noWrap>
+                  {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" noWrap>
+                  {user?.correo}
+                </Typography>
+              </Box>
             </div>
 
             {/* Popover para mostrar opciones de usuario */}
