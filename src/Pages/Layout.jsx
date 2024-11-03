@@ -5,7 +5,7 @@ import Header from '../Components/Navigation/Header'
 import UseLogin from './Login/UseLogin'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomSwal from '../helpers/swalConfig'
-import { logout } from '../Redux/Slices/AuthSlice'
+import { loginSuccess, logout } from '../Redux/Slices/AuthSlice'
 
 const Layout = () => {
     const [toggled, setToggled] = useState(false);
@@ -15,7 +15,6 @@ const Layout = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
                 const userData = await getUserData(token);
                 dispatch(loginSuccess({ user: userData, token: token }));
@@ -29,7 +28,6 @@ const Layout = () => {
                         dispatch(logout());
                     }
                 })
-
                 console.error("Error fetching user data:", error);
             }
         };
