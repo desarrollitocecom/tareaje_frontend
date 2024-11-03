@@ -125,7 +125,7 @@ const Sidebar = ({ toggled, setToggled }) => {
       requiresPermission: "asistencia"
     },
     {
-      id: 6, requiresPermission: "rol",
+      id: 6,
       label: 'Administración',
       children: [
         {
@@ -176,20 +176,23 @@ const Sidebar = ({ toggled, setToggled }) => {
     }
   ]
 
-  const filterMenuItems = (items) =>
-    items.reduce((acc, { children, requiresPermission, ...rest }) => {
+  const filterMenuItems = (items) => {
+    return items.reduce((acc, { children, requiresPermission, ...rest }) => {
       // Si no tiene requiresPermission o tiene permiso, lo agregamos
       if (!requiresPermission || hasPermissionFunction(user, requiresPermission)) {
         const item = { ...rest };
         // Si tiene hijos, filtramos recursivamente
         if (children) {
           const filteredChildren = filterMenuItems(children);
-          if (filteredChildren.length) item.children = filteredChildren; // Solo agregar si hay hijos filtrados
+          item.children = filteredChildren;
         }
-        acc.push(item);
+        if (item.children?.length > 0 || !item.children) {
+          acc.push(item);
+        }
       }
       return acc;
     }, []);
+  }
 
 
   // Uso de la función
