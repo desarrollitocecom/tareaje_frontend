@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 // Importa los reducers que crearás más adelante
 import { loadStateFromLocalStorage, saveStateToLocalStorage } from '../../helpers/localStorageUtils';
-import AuthSlice from '../slices/AuthSlice';
+import AuthSlice from '../Slices/AuthSlice';
 
 
 const preloadedState = loadStateFromLocalStorage();
