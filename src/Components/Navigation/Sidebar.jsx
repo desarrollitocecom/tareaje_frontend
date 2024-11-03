@@ -34,15 +34,13 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
-import UseLogin from '../../Pages/Login/UseLogin';
 import CustomSwal from '../../helpers/swalConfig';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user, refresh, token } = useSelector((state) => state.auth);
-  const { getUserData } = UseLogin()
+  const { user } = useSelector((state) => state.auth);
 
   const LogOut = () => {
     dispatch(logout());
@@ -56,24 +54,6 @@ const Sidebar = ({ toggled, setToggled }) => {
       timerProgressBar: true,
     })
   };
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await getUserData(token);
-
-        dispatch(loginSuccess({ user: userData, token: token }));
-      } catch (error) {
-        LogOut();
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchData()
-
-  }, [refresh])
-
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
