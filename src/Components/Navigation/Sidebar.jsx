@@ -249,30 +249,29 @@ const Sidebar = ({ toggled, setToggled }) => {
           <div>
             {/* Pie de página con la información del usuario */}
             <div
-              className="flex items-center justify-center p-4 border-t w-full cursor-pointer"
-              style={{ flexDirection: Collapsed ? 'column' : 'row' }}
+              className="flex items-center justify-start p-4 border-t w-full cursor-pointer"
+              style={{ flexDirection: 'row' }}
               onClick={handlePopoverOpen}
             >
-              <Avatar
-                src={user?.image || ProfileUser}
-                alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-
-                sx={{
-                  width: Collapsed ? 30 : 50,
-                  height: Collapsed ? 30 : 50,
-                  transition: 'width 0.5s, height 0.5s'
-                }}
-              />
-              {!Collapsed && (
-                <Box ml={2} flexGrow={1}>
-                  <Typography variant="body1" fontWeight="bold" noWrap>
-                    {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" noWrap>
-                    {user?.correo}
-                  </Typography>
-                </Box>
-              )}
+              <div className="min-w-12 min-h-12 flex items-center justify-center">
+                <Avatar
+                  src={user?.image || ProfileUser}
+                  alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+                  sx={{
+                    width: Collapsed ? 40 : 50,
+                    height: Collapsed ? 40 : 50,
+                    transition: 'width 0.5s, height 0.5s'
+                  }}
+                />
+              </div>
+              <Box ml={2} flexGrow={1}>
+                <Typography variant="body1" fontWeight="bold" noWrap>
+                  {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" noWrap>
+                  {user?.correo}
+                </Typography>
+              </Box>
             </div>
 
             {/* Popover para mostrar opciones de usuario */}
