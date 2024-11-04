@@ -6,6 +6,7 @@ import UseLogin from './Login/UseLogin'
 import { useDispatch, useSelector } from 'react-redux'
 import CustomSwal from '../helpers/swalConfig'
 import { loginSuccess, logout } from '../Redux/Slices/AuthSlice'
+import { socket } from '../Components/Socket/socket'
 
 const Layout = () => {
     const [toggled, setToggled] = useState(false);
@@ -14,25 +15,36 @@ const Layout = () => {
     const { getUserData } = UseLogin()
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const userData = await getUserData(token);
                 dispatch(loginSuccess({ user: userData, token: token }));
 
             } catch (error) {
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: 'La sesion ha caducado',
-                    text: 'Por favor, vuelve a iniciar sesión para continuar.',
-                    didClose: () => {
-                        dispatch(logout());
-                    }
-                })
-                console.error("Error fetching user data:", error);
+                console.error(error);
             }
         };
 
         fetchData()
+
+        socket.on('forceLogout', (data) => {
+            if (data) {
+                CustomSwal.fire({
+                    icon: 'warning',
+                    title: 'Nueva sesión detectada',
+                    text: 'Revisa la seguridad de tu cuenta si no reconoces esta actividad.',
+                    didClose: () => {
+                        dispatch(logout());
+                    }
+                });
+            }
+        })
+
+        return () => {
+            socket.off('foreLogout');
+        }
+
     }, [refresh])
 
     return (
