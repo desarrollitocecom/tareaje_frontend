@@ -10,13 +10,14 @@ import { currentYear, isSameWeek } from "../helpers/DayJs.Confg";
 import CustomPopover from "../Components/Popover/CustomPopover";
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import dayjs from "dayjs";
 import { DateRange } from 'react-date-range';
 import CustomSwal from "../helpers/swalConfig";
 import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 import SaveIcon from '@mui/icons-material/Save';
-import { es } from "date-fns/locale";
+import { da, es } from "date-fns/locale";
 
 const SeguimientoAsistencia = () => {
   const navigate = useNavigate()
@@ -33,6 +34,8 @@ const SeguimientoAsistencia = () => {
   const [isPrevDisabled, setIsPrevDisabled] = useState(false);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [editCalendar, setEditCalendar] = useState(false)
+
+  const [showDatePicker, setshowDatePicker] = useState(false)
 
   const { datosAsistencias, meses, anios, turnos } = useDataSeguimiento();
 
@@ -198,7 +201,7 @@ const SeguimientoAsistencia = () => {
                   onChange={item => {
                     const { startDate: start, endDate: end } = item.selection;
                     const isSameWeekResult = isSameWeek(start, end);
-                    
+
                     setStartDate(start);
                     setEndDate(end);
                     setIsPrevDisabled(isSameWeekResult);
@@ -233,9 +236,27 @@ const SeguimientoAsistencia = () => {
               Hoy
             </Button>
           </div>
-          <span className="text-sm md:text-base font-semibold text-center">
-            {formatDate(weekRange[0])} - {formatDate(weekRange[1])}
-          </span>
+          <div className="relative">
+            <DemoContainer date components={['DatePicker']}>
+              <DatePicker
+                className="opacity-0 !absolute z-[-1] bottom-0 right-0"
+                onClose={() => setshowDatePicker(false)}
+                // maxDate={dayjs(endDate) || dayjs(new Date())}
+                maxDate={dayjs(endDate)}
+                minDate={dayjs(startDate)}
+                open={showDatePicker}
+                value={dayjs(Fecha)}
+                onChange={(e) => setFecha(e.toDate())}
+                label="Fecha actual"
+              />
+            </DemoContainer>
+            <span
+              className="text-sm md:text-base font-semibold text-center cursor-pointer"
+              onClick={() => setshowDatePicker((prev) => !prev)}
+            >
+              {formatDate(weekRange[0])} - {formatDate(weekRange[1])}
+            </span>
+          </div>
           <div className="flex gap-2">
             <div>
               <Tooltip title={`${editCalendar ? "Guardar Ediciòn" : "Activar Ediciòn"}`} placement='top' arrow>
