@@ -14,7 +14,7 @@ const PersonalBD = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto">
+    <div className="w-full bg-gray-100 p-4 h-full flex flex-col overflow-auto">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
         <Link onClick={() => navigate(-1)} className="flex items-center gap-1">
           <ArrowBackIosNewRoundedIcon className="!size-5 md:!size-6 mt-[0.1rem] absolute left-4" />

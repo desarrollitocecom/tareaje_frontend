@@ -73,10 +73,10 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-cover bg-center relative">
-      <div className="flex absolute top-0 left-0 w-1/3 md:w-80 lg:w-96 aspect-square bg-left-top opacity-70 bg-no-repeat bg-cover"
+      <div className="flex absolute top-0 left-0 w-3/5 sm:w-2/5 md:w-80 lg:w-96 aspect-square bg-left-top opacity-70 bg-no-repeat bg-cover"
         style={{ backgroundImage: `url(${fondo_sjl_top})` }}>
       </div>
-      <div className="flex absolute bottom-0 right-0 w-1/3 md:w-80 lg:w-96 aspect-square bg-right-bottom opacity-70 bg-no-repeat bg-cover"
+      <div className="flex absolute bottom-0 right-0 w-3/5 sm:w-2/5 md:w-80 lg:w-96 aspect-square bg-right-bottom opacity-70 bg-no-repeat bg-cover"
         style={{ backgroundImage: `url(${fondo_sjl_bottom})` }}>
       </div>
       <Container maxWidth="xs">
@@ -84,9 +84,9 @@ const Login = () => {
           <img
             src={logo}
             alt="logo"
-            className="flex w-72 md:w-96 h-auto absolute top-[-150px] md:top-[-180px]" />
+            className="flex w-64 md:w-96 h-auto absolute top-[-120px] md:top-[-180px]" />
         </div>
-        <Paper elevation={3} sx={{ padding: 3, borderRadius: 5 }}>
+        <div className='w-full sm:shadow-lg sm:border bg-white rounded-lg p-6'>
           <Formik
             initialValues={{ username: '', password: '' }}
             validate={validate}
@@ -135,7 +135,7 @@ const Login = () => {
               </Form>
             )}
           </Formik>
-        </Paper>
+        </div>
       </Container>
     </div>
   );
