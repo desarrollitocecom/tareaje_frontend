@@ -14,6 +14,7 @@ const CRUDTable = memo(({
     loading = false,
     rowOnClick = null,
     limitRows = 20,
+    count = 0,
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
@@ -135,7 +136,7 @@ const CRUDTable = memo(({
                         <TablePagination
                             className='select-none'
                             component="div"
-                            count={100}
+                            count={count}
                             page={page}
                             onPageChange={(event, newPage) => {
                                 navigate(`?page=${newPage}&limit=${limit}`);
