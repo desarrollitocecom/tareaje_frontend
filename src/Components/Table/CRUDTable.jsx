@@ -14,8 +14,7 @@ const CRUDTable = memo(({
     ArrLookup = [],
     loading = false,
     rowOnClick = null,
-    limitRows = 20,
-    count = 0,
+    count = 100,
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
@@ -25,8 +24,8 @@ const CRUDTable = memo(({
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const page = parseInt(queryParams.get('page')) || 0;
-    const limit = parseInt(queryParams.get('limit')) || limitRows;
+    const page = parseInt(queryParams.get('page')) || 1;
+    const limit = parseInt(queryParams.get('limit')) || 20;
 
     const [orderBy, setOrderBy] = useState('id');
     const [orderDirection, setOrderDirection] = useState('asc');
@@ -138,14 +137,14 @@ const CRUDTable = memo(({
                             className='select-none'
                             component="div"
                             count={count}
-                            page={page}
+                            page={page - 1}
                             onPageChange={(event, newPage) => {
-                                addParams({ page: newPage });
+                                addParams({ page: newPage + 1, limit });
                             }}
                             rowsPerPage={limit}
                             onRowsPerPageChange={(event) => {
                                 const newLimit = parseInt(event.target.value);
-                                addParams({ limit: newLimit });
+                                addParams({ page: 1, limit: newLimit });
                             }}
                             labelRowsPerPage="Filas por página"
                             labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
