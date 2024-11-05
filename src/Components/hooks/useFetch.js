@@ -64,9 +64,9 @@ function useFetch() {
     }
   }
 
-  const putData = async (url, data, token) => {
+  const patchData = async (url, data, token) => {
     try {
-      const response = await axios.put(url, data, {
+      const response = await axios.patch(url, data, {
         headers: { Authorization: `Bearer___${token}` },
       });
 
@@ -107,7 +107,7 @@ function useFetch() {
   }
 
 
-  return { getData, postData, putData, deleteData }
+  return { getData, postData, patchData, deleteData }
 }
 
 export default useFetch
