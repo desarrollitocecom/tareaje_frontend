@@ -73,7 +73,7 @@ const PersonaIdentificado = () => {
 
 
   return (
-    <div className="w-full bg-gray-100 px-6 py-8 h-full flex flex-col overflow-auto overflow-y-scroll">
+    <div className="w-full bg-gray-100 p-4 h-full flex flex-col overflow-auto overflow-y-scroll">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
         <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
           <ArrowBackIosNewRoundedIcon
@@ -85,26 +85,27 @@ const PersonaIdentificado = () => {
         </h1>
       </header>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 overflow-hidden">
-        <div className="container overflow-auto">
-          <div className="w-full flex justify-center">
-            <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
-              <img
-                src={persona.imagen}
-                alt="Persona"
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover shadow-xl"
-              />
-              <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
-                <h2 className="text-xl md:text-2xl font-semibold">{persona.nombres}</h2>
-                <p className="text-gray-500 text-md md:text-base">{persona.subgerencia}</p>
+      <div className="bg-white py-6 rounded-lg shadow-lg text-sm flex flex-1 overflow-hidden">
+        <div className="w-full overflow-auto px-6 flex justify-center">
+          <div className="container">
+            <div className="md:mt-5 md:ml-7">
+              <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
+                <img
+                  src={persona.imagen}
+                  alt="Persona"
+                  className="w-24 h-24 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
+                />
+                <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
+                  <h2 className="text-xl md:text-2xl font-semibold">{persona.nombres}</h2>
+                  <p className="text-gray-500 text-md md:text-base">{persona.subgerencia}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col items-center">
+
             {/* Información Personal */}
-            <div className="w-full max-w-[95%] py-6">
+            <div className="w-full max-w-[95%] py-6 mt-3">
               <div className="flex items-center gap-1"><PersonIcon className="text-gray-600" /> <h3 className="text-lg font-semibold">Información Personal</h3></div>
-              <div className="flex justify-center px-5 md:px-10">
+              <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">Nombre:</p>
@@ -151,7 +152,7 @@ const PersonaIdentificado = () => {
             {/* Información Laboral */}
             <div className="w-full max-w-[95%] py-6">
               <div className="flex items-center gap-1"><WorkIcon className="text-gray-600" /> <h3 className="text-lg font-semibold">Información Laboral</h3></div>
-              <div className="flex justify-center px-5 md:px-10">
+              <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
 
                   <div>
@@ -198,7 +199,7 @@ const PersonaIdentificado = () => {
                 <AssignmentIndIcon className="text-gray-600" />
                 <h3 className="text-lg font-semibold">Información Documentaria</h3>
               </div>
-              <div className="flex justify-center px-5 md:px-10">
+              <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">DNI:</p>
@@ -217,7 +218,7 @@ const PersonaIdentificado = () => {
                 <SchoolIcon className="text-gray-600" />
                 <h3 className="text-lg font-semibold">Información Académica</h3>
               </div>
-              <div className="flex justify-center px-5 md:px-10">
+              <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">Grado de Estudios:</p>
@@ -232,13 +233,14 @@ const PersonaIdentificado = () => {
                 <CommentIcon className="text-gray-600" />
                 <h3 className="text-lg font-semibold">Observaciones</h3>
               </div>
-              <div className="flex justify-center px-5 md:px-10">
+              <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full">
                   <p className="text-base text-gray-800">{persona.observaciones}</p>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

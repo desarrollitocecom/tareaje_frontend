@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { SortData } from '../../helpers/GeneralFunctions';
 import { useLocation, useNavigate } from 'react-router-dom';
+import UseUrlParamsManager from '../hooks/UseUrlParamsManager';
 
 const CRUDTable = memo(({
     data = [],
@@ -20,8 +21,8 @@ const CRUDTable = memo(({
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
         : [];
 
+    const { addParams } = UseUrlParamsManager();
 
-    const navigate = useNavigate();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const page = parseInt(queryParams.get('page')) || 0;
@@ -139,12 +140,12 @@ const CRUDTable = memo(({
                             count={count}
                             page={page}
                             onPageChange={(event, newPage) => {
-                                navigate(`?page=${newPage}&limit=${limit}`);
+                                addParams({ page: newPage });
                             }}
                             rowsPerPage={limit}
                             onRowsPerPageChange={(event) => {
                                 const newLimit = parseInt(event.target.value);
-                                navigate(`?page=0&limit=${newLimit}`);
+                                addParams({ limit: newLimit });
                             }}
                             labelRowsPerPage="Filas por página"
                             labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
