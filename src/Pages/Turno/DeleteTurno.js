@@ -1,7 +1,9 @@
 import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
-const deleteTurno = (obj, refreshData) => {
+
+const deleteTurno = ({obj, refreshData, token, deleteData}) => {
+
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -13,31 +15,30 @@ const deleteTurno = (obj, refreshData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //   axios.delete(`https://yourapiendpoint.com/delete/${obj.id}`)
-            //     .then(() => {
-            //       Swal.fire(
-            //         'Eliminado',
-            //         'El turno ha sido eliminado correctamente.',
-            //         'success'
-            //       );
-            //       refreshData(); // Refresca los datos después de eliminar
-            //     })
-            //     .catch((error) => {
-            //       Swal.fire(
-            //         'Error',
-            //         'Hubo un problema al eliminar el turno.',
-            //         'error'
-            //       );
-            //       console.error('Error eliminando el turno:', error);
-            //     });
-            CustomSwal.fire(
-                'Eliminado',
-                'El turno ha sido eliminado correctamente.',
-                'success'
-            );
-            refreshData(); // Refresca los datos después de eliminar
+            const eliminar = async() => {
+                try {
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`,token)
+                    console.log(response)
+                    CustomSwal.fire(
+                        'Eliminado',
+                        'El turno ha sido eliminado correctamente.',
+                        'success'
+                      );
+                      refreshData(); // Refresca los datos después de eliminar
+                  } catch (error) {
+                    CustomSwal.fire(
+                        'Error',
+                        'Hubo un problema al eliminar el turno.',
+                        'error'
+                      );
+                      console.error('Error eliminando el turno:', error);
+                  } 
+            }
+            eliminar()        
+            }
+            
         }
-    });
+    );
 };
 
 export default deleteTurno;
