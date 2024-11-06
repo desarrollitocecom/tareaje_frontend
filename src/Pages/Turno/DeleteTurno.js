@@ -2,7 +2,7 @@ import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
 
-const deleteTurno = ({obj, refreshData, token, deleteData}) => {
+const deleteTurno = (obj, refreshData, token, deleteData) => {
 
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
@@ -16,6 +16,8 @@ const deleteTurno = ({obj, refreshData, token, deleteData}) => {
     }).then((result) => {
         if (result.isConfirmed) {
             const eliminar = async() => {
+                console.log(obj)
+
                 try {
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`,token)
                     console.log(response)
