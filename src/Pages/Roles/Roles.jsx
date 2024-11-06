@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
 import axios from 'axios';
@@ -11,23 +11,29 @@ import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditRol from './EditRol';
 import deleteRole from './DeleteRol';
 import usePermissions from '../../Components/hooks/usePermission';
+import useFetch from '../../Components/hooks/useFetch';
+import { useSelector } from 'react-redux';
 
 
 
 const Roles = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
-
+  const { getData, deleteData } = useFetch()
+  const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate()
-  const [data, setdata] = useState([])
+  const location = useLocation();
+  const [data, setData] = useState([])
   const [Update, setUpdate] = useState(false)
   const [Loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    fetchData()
-  }, [Update])
+    fetchData(location.search || undefined);
+  }, [location.search, Update])
+
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -42,35 +48,32 @@ const Roles = ({ moduleName }) => {
       console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
     }, 800);
   };
-
+  
   const refreshData = () => {
     setUpdate((prev) => !prev)
   }
 
 
-  const fetchData = () => {
+  const fetchData = async() => {
     setLoading(true)
 
-    setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-      axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => {
-          return {
-            id: item.member,
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            dni: item.dni,
-            telefono: item.telefono,
-          }
-        })
-        setdata(dataFormated)
-
-        // setdata(res.data.data)
-      }).catch((err) => {
-        console.error(err)
-      }).finally(() => {
-        setLoading(false)
+    try {
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, token)
+      setCount(response.data.data.totalCount)
+      const dataFormated = response.data.data.data.map((item) => {
+        return {
+          id: item.id,
+          nombre: item.nombre,
+          descripción: item.descripcion
+        }
       })
-    }, 1000);
+      setData(dataFormated)
+    } catch (error) {
+      console.error(error);
+      
+    }finally{
+      setLoading(false)
+    }
   }
 
   const onEdit = (obj) => {

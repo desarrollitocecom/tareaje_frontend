@@ -1,8 +1,8 @@
 import axios from 'axios'
 import React from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CustomSwal from '../../helpers/swalConfig';
-import { logout } from '../../Redux/Slices/AuthSlice';
+import { logout, moduleLoading } from '../../Redux/Slices/AuthSlice';
 
 function useFetch() {
   const dispatch = useDispatch()
@@ -22,6 +22,7 @@ function useFetch() {
 
   const getData = async (url, token) => {
     try {
+      dispatch(moduleLoading(true))
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -39,12 +40,15 @@ function useFetch() {
         error: error,
         status: false
       }
+    } finally {
+      dispatch(moduleLoading(false))
     }
 
   }
 
   const postData = async (url, data, token) => {
     try {
+      dispatch(moduleLoading(true))
       const response = await axios.post(url, data, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -61,11 +65,14 @@ function useFetch() {
         error: error,
         status: false
       }
+    } finally {
+      dispatch(moduleLoading(false))
     }
   }
 
   const patchData = async (url, data, token) => {
     try {
+      dispatch(moduleLoading(true))
       const response = await axios.patch(url, data, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -82,11 +89,14 @@ function useFetch() {
         error: error,
         status: false
       }
+    } finally {
+      dispatch(moduleLoading(false))
     }
   }
 
   const deleteData = async (url, token) => {
     try {
+      dispatch(moduleLoading(true))
       const response = await axios.delete(url, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -103,6 +113,8 @@ function useFetch() {
         error: error,
         status: false
       }
+    } finally {
+      dispatch(moduleLoading(false))
     }
   }
 
