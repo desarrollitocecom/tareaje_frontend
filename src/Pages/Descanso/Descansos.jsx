@@ -10,16 +10,36 @@ import AddDescanso from './AddDescanso';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditDescanso from './EditDescanso';
 import DeleteDescanso from './DeleteDescanso';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
-const Descansos = () => {
+const Descansos = ({ moduleName}) => {
+  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const location = useLocation();
+  const { token } = useSelector((state) => state.auth);
+  const { getData } = useFetch()
   const navigate = useNavigate()
-  const [data, setdata] = useState([])
+  const [data, setData] = useState([])
   const [Update, setUpdate] = useState(false)
   const [Loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
+  const [limitRows, setLimitRows] = useState(20);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    const limitRows = parseInt(location.search.split('limit=')[1])
+    const page = parseInt(location.search.split('page=')[1]) + 1
+    if (limitRows && page) {
+      setLimitRows(limitRows)
+      setPage(page)
+    }
+  }, [location])
+  
   useEffect(() => {
     fetchData()
   }, [Update])
@@ -43,29 +63,30 @@ const Descansos = () => {
   }
 
 
-  const fetchData = () => {
+  const fetchData = async() => {
     setLoading(true)
 
-    setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-      axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => {
-          return {
-            id: item.member,
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            dni: item.dni,
-            telefono: item.telefono,
-          }
-        })
-        setdata(dataFormated)
+    try {
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/descansos?page=${page}&limit=${limitRows}`,token)
+      console.log(response.data)
 
-        // setdata(res.data.data)
-      }).catch((err) => {
-        console.error(err)
-      }).finally(() => {
-        setLoading(false)
+      setCount(response.data.data.totalCount)
+      const dataFormated = response.data.data.data.map((item) =>{
+        return{
+          id:item.id,
+          nombre: item.empleado.nombres,
+          apellidos: item.empleado.apellidos,
+          dni: item.empleado.dni,
+          observacion: item.observacion,
+          fecha: item.fecha
+        }
       })
-    }, 1000);
+      setData(dataFormated)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false)
+    }
   }
 
   const onEdit = (obj) => {
@@ -121,12 +142,18 @@ const Descansos = () => {
                 </FormControl>
               </div>
             </div>
-            <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+            <CRUDTable
+              data={data}
+              loading={Loading}
+              onDelete={canDelete ? onDelete : null}
+              onEdit={canEdit ? onEdit : null}
+              count={count}
+            />
           </div >
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      <EditDescanso Selected={Selected} setSelected={setSelected}/>
+      {canEdit && <EditDescanso Selected={Selected} setSelected={setSelected} />}
       
     </>
   )

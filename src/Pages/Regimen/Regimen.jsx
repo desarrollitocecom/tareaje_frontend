@@ -10,10 +10,15 @@ import AddRegimen from './AddRegimen';
 import EditRegimen from './EditRegimen';
 import DeleteRegimen from './DeleteRegimen';
 import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
 const Regimen = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
-
+  const location = useLocation();
+  const {token} = useSelector((state) => state.auth);
+  const { getData, deleteData } = useFetch();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [update, setUpdate] = useState(false);
@@ -21,7 +26,14 @@ const Regimen = ({ moduleName }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selected, setSelected] = useState(null);
   const timeoutRef = useRef(null);
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    if(location.search){
+      fetchData(location.search)
+    }
+  }, [location.search])
+  
   useEffect(() => {
     fetchData();
   }, [update]);
@@ -43,33 +55,34 @@ const Regimen = ({ moduleName }) => {
     setUpdate((prev) => !prev);
   };
 
-  const fetchData = () => {
+  const fetchData = async(url) => {
     setLoading(true);
 
-    setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-      axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => ({
-          id: item.member,
-          nombres: item.nombres,
-          apellidos: item.apellidos,
-          dni: item.dni,
-          telefono: item.telefono,
-        }));
-        setData(dataFormated);
-      }).catch((err) => {
-        console.error(err);
-      }).finally(() => {
-        setLoading(false);
-      });
-    }, 1000);
-  };
+    const urlParams = url || ''
+
+    try {
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales/${urlParams}`,token)
+      setCount(response.data.data.totalCount)
+      const dataFormated = response.data.data.data.map((item) =>{
+        return{
+          id:item.id,
+          nombre: item.nombre,
+        }
+      })
+      setData(dataFormated)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const onEdit = (obj) => {
     setSelected(obj);
   };
 
   const onDelete = (obj) => {
-    DeleteRegimen(obj, refreshData);
+    DeleteRegimen(obj, refreshData, token, deleteData);
   };
 
   return (
@@ -98,7 +111,7 @@ const Regimen = ({ moduleName }) => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  {canCreate && <AddRegimen />}
+                  {canCreate && <AddRegimen refreshData={refreshData} />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -122,6 +135,7 @@ const Regimen = ({ moduleName }) => {
               loading={loading}
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
+              count={count}
             />
           </div>
         </main>

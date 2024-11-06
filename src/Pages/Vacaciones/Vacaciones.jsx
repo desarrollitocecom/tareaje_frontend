@@ -10,8 +10,16 @@ import AddVacaciones from './AddVacaciones';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditVacaciones from './EditVacaciones';
 import DeleteVacaciones from './DeleteVacaciones';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
-const Vacaciones = () => {
+const Vacaciones = ({moduleName}) => {
+  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const location = useLocation();
+  const { token } = useSelector((state) => state.auth);
+  const { getData, deleteData } = useFetch();
   const navigate = useNavigate()
   const [data, setdata] = useState([])
   const [Update, setUpdate] = useState(false)
@@ -19,7 +27,19 @@ const Vacaciones = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
+  const [limitRows, setLimitRows] = useState(20);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    const limitRows = parseInt(location.search.split('limit=')[1])
+    const page = parseInt(location.search.split('page=')[1]) + 1
+    if (limitRows && page) {
+      setLimitRows(limitRows)
+      setPage(page)
+    }
+  }, [location])
+  
   useEffect(() => {
     fetchData()
   }, [Update])
@@ -43,29 +63,28 @@ const Vacaciones = () => {
   }
 
 
-  const fetchData = () => {
+  const fetchData = async() => {
     setLoading(true)
 
-    setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-      axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => {
-          return {
-            id: item.member,
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            dni: item.dni,
-            telefono: item.telefono,
-          }
-        })
-        setdata(dataFormated)
-
-        // setdata(res.data.data)
-      }).catch((err) => {
-        console.error(err)
-      }).finally(() => {
-        setLoading(false)
+    try {
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones?page=${page}&limit=${limitRows}`,token)
+      setCount(response.data.data.totalCount)
+      const dataFormated = response.data.data.data.map((item) =>{
+        return{
+          id:item.id,
+          nombre: item.empleado.nombres,
+          apellido: item.empleado.apellidos,
+          dni: item.empleado.dni,
+          f_inicio: item.f_inicio,
+          f_fin: item.f_fin
+        }
       })
-    }, 1000);
+      setdata(dataFormated)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false)
+    }
   }
 
   const onEdit = (obj) => {
@@ -73,7 +92,7 @@ const Vacaciones = () => {
     
   }
   const onDelete = (obj) => {
-    DeleteVacaciones(obj, refreshData)
+    DeleteVacaciones(obj, refreshData, token, deleteData)
   }
 
   return (
@@ -102,7 +121,7 @@ const Vacaciones = () => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddVacaciones />
+                  {canCreate && <AddVacaciones refreshData={refreshData}/>}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -121,12 +140,18 @@ const Vacaciones = () => {
                 </FormControl>
               </div>
             </div>
-            <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+            <CRUDTable
+              data={data}
+              loading={Loading}
+              onDelete={canDelete ? onDelete : null}
+              onEdit={canEdit ? onEdit : null}
+              count={count}
+            />
           </div >
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      <EditVacaciones Selected={Selected} setSelected={setSelected}/>
+      {canEdit && <EditVacaciones Selected={Selected} setSelected={setSelected} />}
       
     </>
   )

@@ -16,17 +16,29 @@ const deleteTurno = (obj, refreshData, token, deleteData) => {
     }).then((result) => {
         if (result.isConfirmed) {
             const eliminar = async() => {
-                console.log(obj)
 
                 try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`,token)
-                    console.log(response)
-                    CustomSwal.fire(
-                        'Eliminado',
-                        'El turno ha sido eliminado correctamente.',
-                        'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`)
+                    if (response.status) {
+                        setOpen(false);
+                        CustomSwal.fire(
+                            'Eliminado',
+                            'El turno ha sido eliminado correctamente.',
+                            'success'
+                        );
+                        // Llama a la función para refrescar los datos después de agregar el turno
+                        refreshData();
+                    } else {
+                        console.error('Error al agregar el turno:', response.error.response.data.message);
+                        CustomSwal.fire({
+                            icon: 'error',
+                            title: response.error.response.data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000
+                        });
+                    }
                   } catch (error) {
                     CustomSwal.fire(
                         'Error',
