@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
-const deleteVacaciones = (obj, refreshData) => {
+const deleteVacaciones = (obj, refreshData, token, deleteData) => {
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -13,29 +13,26 @@ const deleteVacaciones = (obj, refreshData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //   axios.delete(`https://yourapiendpoint.com/delete/${obj.id}`)
-            //     .then(() => {
-            //       Swal.fire(
-            //         'Eliminado',
-            //         'Las Vacaciones ha sido eliminado correctamente.',
-            //         'success'
-            //       );
-            //       refreshData(); // Refresca los datos después de eliminar
-            //     })
-            //     .catch((error) => {
-            //       Swal.fire(
-            //         'Error',
-            //         'Hubo un problema al eliminar las Vacaciones.',
-            //         'error'
-            //       );
-            //       console.error('Error eliminando las Vacaciones:', error);
-            //     });
-            CustomSwal.fire(
-                'Eliminado',
-                'Las Vacaciones han sido eliminadas correctamente.',
-                'success'
-            );
-            refreshData(); // Refresca los datos después de eliminar
+            const eliminar = async() => {
+                try {
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones/${obj.id}`,token)
+                    console.log(response)
+                    CustomSwal.fire(
+                        'Eliminado',
+                        'Las vacaciónes ha sido eliminado correctamente.',
+                        'success'
+                      );
+                      refreshData(); // Refresca los datos después de eliminar
+                  } catch (error) {
+                    CustomSwal.fire(
+                        'Error',
+                        'Hubo un problema al eliminar las vacaciones.',
+                        'error'
+                      );
+                      console.error('Error eliminando las vacaciones:', error);
+                  } 
+            }
+            eliminar();
         }
     });
 };
