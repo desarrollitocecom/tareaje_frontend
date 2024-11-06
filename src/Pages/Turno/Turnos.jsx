@@ -30,14 +30,11 @@ const Turnos = ({ moduleName }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    if(location.search){
-      fetchData(location.search)
-    }
-  }, [location.search])
+    fetchData(location.search || undefined);
+  }, [location.search, Update])
 
-  useEffect(() => {
-    fetchData()
-  }, [Update])
+
+
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -58,18 +55,18 @@ const Turnos = ({ moduleName }) => {
   }
 
 
-  const fetchData = async(url) => {
+  const fetchData = async (url) => {
     setLoading(true)
 
-  const urlParams = url || ''
+    const urlParams = url || ''
 
     try {
-      
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${urlParams}`,token)
+
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${urlParams}`, token)
       setCount(response.data.data.total)
-      const dataFormated = response.data.data.data.map((item) =>{
-        return{
-          id:item.id,
+      const dataFormated = response.data.data.data.map((item) => {
+        return {
+          id: item.id,
           nombre: item.nombre,
         }
       })
@@ -115,7 +112,7 @@ const Turnos = ({ moduleName }) => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  {canCreate && <AddTurno refreshData={refreshData}/>}
+                  {canCreate && <AddTurno refreshData={refreshData} />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -145,7 +142,7 @@ const Turnos = ({ moduleName }) => {
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditTurno Selected={Selected} setSelected={setSelected} refreshData={refreshData}/>}
+      {canEdit && <EditTurno Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
 
     </>
   )
