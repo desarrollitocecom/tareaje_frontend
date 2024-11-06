@@ -5,8 +5,9 @@ import { Button, TextField, MenuItem } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
+import CustomSwal from '../../helpers/swalConfig';
 
-const EditTurno = ({ Selected, setSelected }) => {
+const EditTurno = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();
     const [Open, setOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
@@ -19,8 +20,18 @@ const EditTurno = ({ Selected, setSelected }) => {
     const handleClose = () => {
         setSelected(null);
     }
+    const validate = (values) => {
+        const errors = {};
+        if (!values.nombre) {
+            errors.nombre = 'Campo requerido';
+        }else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
+            errors.nombre = 'El nombre solo debe contener letras';
+        }
+        
+        return errors;
+    };
 
-    const handleSubmit = async (values, { setSubmitting }) => {
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         console.log(values,Selected?.id);
         
         try{
@@ -28,22 +39,39 @@ const EditTurno = ({ Selected, setSelected }) => {
             const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${Selected?.id}`, values, token);
             
             if (response.status) {
-                setSelected(null); 
-            }
+                setOpen(false);
+                CustomSwal.fire(
+                    'Modificado',
+                    'El turno ha sido modificado correctamente.',
+                    'success'
+                );
+                // Llama a la función para refrescar los datos después de agregar el turno
+                refreshData();
+                resetForm();
             setSubmitting(false);
+            }else {
+                console.error('Error al modificar el turno:', response.error.response.data.error);
+                CustomSwal.fire({
+                    icon: 'error',
+                    title: response.error.response.data.error,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
         } catch (error) {
-            console.error('Error al actualizar el turno:', error);
-        }
+            console.error('Error en la solicitud:', error);
+            CustomSwal.fire({
+                icon: 'error',
+                title: response.error.response.data.error,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000
+            });        }
     };
 
-    const validate = (values) => {
-        const errors = {};
-        if (!values.nombre) {
-            errors.nombre = 'Campo requerido';
-        }
-        
-        return errors;
-    };
 
     // Usar selected para sacar los datos del turno
     return (
@@ -55,7 +83,7 @@ const EditTurno = ({ Selected, setSelected }) => {
             {Selected && (
                 <Formik
                     initialValues={{
-                        nombre: Selected.nombres || '',
+                        nombre: Selected.nombre || '',
                     }}
                     enableReinitialize
                     validate={validate}

@@ -24,7 +24,7 @@ const AddTurno = ({ refreshData }) => {
 
         if (!values.nombre) {
             errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-z\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
+        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
             errors.nombre = 'El nombre solo debe contener letras';
         }
 

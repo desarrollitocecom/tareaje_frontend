@@ -145,7 +145,7 @@ const Turnos = ({ moduleName }) => {
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditTurno Selected={Selected} setSelected={setSelected} />}
+      {canEdit && <EditTurno Selected={Selected} setSelected={setSelected} refreshData={refreshData}/>}
 
     </>
   )
