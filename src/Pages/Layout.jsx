@@ -7,11 +7,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import CustomSwal from '../helpers/swalConfig'
 import { loginSuccess, logout } from '../Redux/Slices/AuthSlice'
 import { socket } from '../Components/Socket/socket'
+import Loader from '../Components/Loader/Loader'
 
 const Layout = () => {
     const [toggled, setToggled] = useState(false);
     const dispatch = useDispatch();
-    const { refresh, token } = useSelector((state) => state.auth);
+    const { refresh, token, moduleLoading } = useSelector((state) => state.auth);
     const { getUserData } = UseLogin()
 
     useEffect(() => {
@@ -50,7 +51,8 @@ const Layout = () => {
     return (
         <div className='flex h-full w-full'>
             <Sidebar toggled={toggled} setToggled={setToggled} />
-            <div className='w-full overflow-auto flex flex-col'>
+            <div className='w-full overflow-auto flex flex-col relative'>
+                 <Loader />
                 <Header toggled={toggled} setToggled={setToggled} />
                 <div className='content-body bg-gray-100 flex flex-1 overflow-hidden'>
                     <Outlet />
