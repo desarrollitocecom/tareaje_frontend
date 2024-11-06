@@ -6,7 +6,7 @@ import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
-import AddRol from './addRol';
+import AddRol from './AddRol';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditRol from './EditRol';
 import deleteRole from './DeleteRol';

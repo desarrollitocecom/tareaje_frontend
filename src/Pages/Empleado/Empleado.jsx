@@ -10,9 +10,17 @@ import AddEmpleado from './AddEmpleado';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditEmpleado from './EditEmpleado';
 import deleteEmpleado from './DeleteEmpleado';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
+const Empleados = (moduleName) => {
 
-const Empleados = () => {
+    const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+    const location = useLocation();
+    const { token } = useSelector((state) => state.auth);
+    const { getData } = useFetch()
 
     const navigate = useNavigate()
     const [data, setdata] = useState([])
@@ -21,6 +29,20 @@ const Empleados = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [Selected, setSelected] = useState(null)
     const timeoutRef = useRef(null)
+
+    const [limitRows, setLimitRows] = useState(20);
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const limitRows = parseInt(location.search.split('limit=')[1])
+        const page = parseInt(location.search.split('page=')[1]) + 1
+        if (limitRows && page) {
+          setLimitRows(limitRows)
+          setPage(page)
+        }
+
+    }, [location])
 
     useEffect(() => {
         fetchData()
@@ -38,37 +60,33 @@ const Empleados = () => {
 
             console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
         }, 800);
-
     };
 
     const refreshData = () => {
         setUpdate((prev) => !prev)
     }
-
-    const fetchData = () => {
-
+    const fetchData = async () => {
         setLoading(true)
 
-        setTimeout(() => {//Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-            axios.get(`/DataEjemplo.json`).then((res) => {
-                const dataFormated = res.data.data.map((item) => {
-                    return {
-                        id: item.member,
-                        nombres: item.nombres,
-                        apellidos: item.apellidos,
-                        DNI: item.dni,
-                        telefono: item.telefono,
-                    }
-                })
-                setdata(dataFormated)
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados?page=${page}&limit=${limitRows}`, token)
+            setCount(response.data.data.totalCount)
+            const dataFormated = response.data.data.data.map((item) => {
+                return {
+                    nombres: item.nombres,
+                    apellidos: item.apellidos,
+                    dni: item.dni,
+                    celular: item.celular,
 
-                // setdata(res.data.data)
-            }).catch((err) => {
-                console.error(err)
-            }).finally(() => {
-                setLoading(false)
+                }
+
             })
-        }, 1000);
+            setdata(dataFormated)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
     }
 
     const onEdit = (obj) => {
@@ -105,7 +123,7 @@ const Empleados = () => {
                                             <RefreshRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
-                                    <AddEmpleado />
+                                    {canCreate && <AddEmpleado />}
                                 </div>
                                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                                     <InputLabel htmlFor="input-with-icon-adornment">
@@ -124,12 +142,18 @@ const Empleados = () => {
                                 </FormControl>
                             </div>
                         </div>
-                        <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+                        <CRUDTable
+                            data={data}
+                            loading={Loading}
+                            onDelete={canDelete ? onDelete : null}
+                            onEdit={canEdit ? onEdit : null}
+                            count={count}
+                        />
                     </div >
                 </main>
             </div>
             {/* Componetnes para editar y eliminar */}
-            <EditEmpleado Selected={Selected} setSelected={setSelected} />
+            {canEdit && <EditEmpleado Selected={Selected} setSelected={setSelected} />}
 
         </>
     )

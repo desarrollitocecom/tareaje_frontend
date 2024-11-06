@@ -10,8 +10,18 @@ import AddSexo from './AddSexo';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditSexo from './EditSexo';
 import deleteSexo from './DeleteSexo';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
-const Cargo = () => {
+const Sexo = (moduleName) => {
+
+
+    const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+    const location = useLocation();
+    const { token } = useSelector((state) => state.auth);
+    const { getData, deleteData } = useFetch()
 
     const navigate = useNavigate()
     const [data, setdata] = useState([])
@@ -21,9 +31,11 @@ const Cargo = () => {
     const [Selected, setSelected] = useState(null)
     const timeoutRef = useRef(null)
 
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
-        fetchData()
-    }, [Update])
+        fetchData(location.search || undefined);
+    }, [location.search, Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
@@ -43,39 +55,34 @@ const Cargo = () => {
     const refreshData = () => {
         setUpdate((prev) => !prev)
     }
-
-    const fetchData = () => {
-
+    const fetchData = async (url) => {
         setLoading(true)
 
-        setTimeout(() => {//Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-            axios.get(`/DataEjemplo.json`).then((res) => {
-                const dataFormated = res.data.data.map((item) => {
-                    return {
-                        id: item.member,
-                        nombres: item.nombres,
-                        apellidos: item.apellidos,
-                        cargo: item.dni,
-                        telefono: item.telefono,
-                    }
-                })
-                setdata(dataFormated)
+        const urlParams = url || ''
 
-                // setdata(res.data.data)
-            }).catch((err) => {
-                console.error(err)
-            }).finally(() => {
-                setLoading(false)
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/sexos/${urlParams}`, token)
+            setCount(response.data.data.totalCount)
+            const dataFormated = response.data.data.data.map((item) => {
+                return {
+                    id: item.id,
+                    nombre: item.nombre,
+                }
+
             })
-        }, 1000);
+            setdata(dataFormated)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
     }
-
     const onEdit = (obj) => {
         setSelected(obj);
     }
 
     const onDelete = (obj) => {
-        deleteSexo(obj, refreshData)
+        deleteSexo(obj, refreshData, token, deleteData)
     }
 
     return (
@@ -95,7 +102,7 @@ const Cargo = () => {
                     <div className='flex flex-col w-full h-full'>
                         <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
                             <div className='w-full flex items-center gap-2'>
-                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{count || 0}</span></span>
                             </div>
                             <div className='w-full flex items-center justify-end gap-3'>
                                 <div className='flex items-center'>
@@ -104,7 +111,7 @@ const Cargo = () => {
                                             <RefreshRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
-                                    <AddSexo />
+                                    {canCreate && <AddSexo refreshData={refreshData} />}
                                 </div>
                                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                                     <InputLabel htmlFor="input-with-icon-adornment">
@@ -123,12 +130,18 @@ const Cargo = () => {
                                 </FormControl>
                             </div>
                         </div>
-                        <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+                        <CRUDTable
+                            data={data}
+                            loading={Loading}
+                            onDelete={canDelete ? onDelete : null}
+                            onEdit={canEdit ? onEdit : null}
+                            count={count}
+                        />
                     </div >
                 </main>
             </div>
             {/* Componetnes para editar y eliminar */}
-            <EditSexo Selected={Selected} setSelected={setSelected} />
+            {canEdit && <EditSexo Selected={Selected} setSelected={setSelected}  refreshData={refreshData}/>}
 
         </>
     )
@@ -137,4 +150,4 @@ const Cargo = () => {
 
 }
 
-export default Cargo
+export default Sexo
