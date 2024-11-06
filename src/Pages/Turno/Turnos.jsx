@@ -103,7 +103,7 @@ const Turnos = ({ moduleName }) => {
           <div className='flex flex-col w-full h-full'>
             <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
               <div className='w-full flex items-center gap-2'>
-                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{count ||  0}</span></span>
               </div>
               <div className='w-full flex items-center justify-end gap-3'>
                 <div className='flex items-center'>

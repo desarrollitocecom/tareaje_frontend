@@ -46,10 +46,10 @@ const AddTurno = ({ refreshData }) => {
                 refreshData();
                 resetForm();
             } else {
-                console.error('Error al agregar el turno:', response.error.response.data.error);
+                console.error('Error al agregar el turno:', response.error.response.data.message);
                 CustomSwal.fire({
                     icon: 'error',
-                    title: response.error.response.data.error,
+                    title: response.error.response.data.message,
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
@@ -60,7 +60,7 @@ const AddTurno = ({ refreshData }) => {
             console.error('Error en la solicitud:', error);
             CustomSwal.fire({
                 icon: 'error',
-                title: response.error.response.data.error,
+                title: response.error.response.data.message,
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,

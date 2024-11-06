@@ -10,8 +10,16 @@ import AddUsuario from './AddUsuario';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditUsuario from './EditUsuario';
 import DeleteUsuario from './DeleteUsuario';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
 
-const Usuarios = () => {
+const Usuarios = ({ moduleName }) => {
+  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const location = useLocation()
+  const { token } = useSelector((state) => state.auth)
+  const { getData, deleteData } = useFetch()
   const navigate = useNavigate()
   const [data, setdata] = useState([])
   const [Update, setUpdate] = useState(false)
@@ -19,6 +27,13 @@ const Usuarios = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if(location.search){
+      fetchData(location.search)
+    }
+  }, [location.search])
 
   useEffect(() => {
     fetchData()
@@ -43,37 +58,35 @@ const Usuarios = () => {
   }
 
 
-  const fetchData = () => {
+  const fetchData = async (url) => {
     setLoading(true)
 
-    setTimeout(() => { // Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-      axios.get(`/DataEjemplo.json`).then((res) => {
-        const dataFormated = res.data.data.map((item) => {
-          return {
-            id: item.member,
-            nombres: item.nombres,
-            apellidos: item.apellidos,
-            dni: item.dni,
-            telefono: item.telefono,
-          }
-        })
-        setdata(dataFormated)
+    const urlParams = url || ''
 
-        // setdata(res.data.data)
-      }).catch((err) => {
-        console.error(err)
-      }).finally(() => {
-        setLoading(false)
+    try {
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/users/${urlParams}`,token)
+      setCount(response.data.data.totalCount)
+      const dataFormated = response.data.data.data.map((item) =>{
+        return{
+          id:item.id,
+          usuario: item.usuario,
+          correo: item.correo,
+        }
       })
-    }, 1000);
+      setdata(dataFormated)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false)
+    }
   }
 
   const onEdit = (obj) => {
     setSelected(obj);
-    
+
   }
   const onDelete = (obj) => {
-    DeleteUsuario(obj, refreshData)
+    DeleteUsuario(obj, refreshData, token, deleteData)
   }
 
   return (
@@ -102,7 +115,7 @@ const Usuarios = () => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddUsuario />
+                  {canCreate && <AddUsuario refreshData={refreshData}/>}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -121,13 +134,18 @@ const Usuarios = () => {
                 </FormControl>
               </div>
             </div>
-            <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+            <CRUDTable
+              data={data}
+              loading={Loading}
+              onDelete={canDelete ? onDelete : null}
+              onEdit={canEdit ? onEdit : null}
+              count={count}
+            />
           </div >
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      <EditUsuario Selected={Selected} setSelected={setSelected}/>
-      
+      {canEdit && <EditUsuario Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
     </>
   )
 }
