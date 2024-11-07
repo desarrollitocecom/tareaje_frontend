@@ -76,7 +76,7 @@ const AddRol = ({ refreshData }) => {
             return errors;
         },
         onSubmit: (values) => {
-            postData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, values, token).then((res) => {
+            postData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, values, token, true).then((res) => {
                 if (res.status) {
                     CustomSwal.fire({
                         icon: 'success',
@@ -122,7 +122,7 @@ const AddRol = ({ refreshData }) => {
                     <AddIcon />
                 </IconButton>
             </Tooltip>
-            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose}>
+            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={formik.isSubmitting}>
                 <div className="flex items-center mb-2">
                     <SecurityIcon className="w-6 h-6 mr-2" />
                     <h1 className='text-lg font-bold'>Añadir un rol</h1>

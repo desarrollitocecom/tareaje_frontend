@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const TablaPermisos = ({ formik, permisosAgrupados }) => {
+    const [ids, setIds] = useState({});
+
     const handlePermissionChange = (permisoKey) => {
         const permisos = formik.values.permisos;
 
@@ -22,32 +24,32 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
         }
     };
 
-    const [ids, setIds] = useState({});
-
     useEffect(() => {
-        // Genera y estructura los IDs únicos para módulos y acciones
-        const initialIds = Object.fromEntries(
-            Object.entries(permisosAgrupados).map(([modulo, permisosModulo]) => [
-                modulo,
-                {
-                    moduloId: uuidv4(),
-                    actions: permisosModulo.reduce((acc, { nombre }) => ({
-                        ...acc,
-                        [nombre]: uuidv4(),
-                    }), {})
+        // Genera y almacena un ID único para cada combinación de módulo y acción
+        const initialIds = {};
+        Object.entries(permisosAgrupados).forEach(([modulo, permisosModulo]) => {
+            initialIds[modulo] = {
+                moduloId: uuidv4(),
+                actions: permisosModulo.reduce((acc, permiso) => {
+                    acc[permiso.nombre] = uuidv4();
+                    return acc;
+                }, {})
+            };
+        });
+        console.log({
+            ...initialIds
+        });
+        
+
+        setIds({
+            ...initialIds, 'all-system-access': {
+                moduloId: uuidv4(),
+                actions: {
+                    all: uuidv4()
                 }
-            ])
-        );
-    
-        // Añade acceso a todo el sistema
-        initialIds['all-system-access'] = {
-            moduloId: uuidv4(),
-            actions: { all: uuidv4() }
-        };
-    
-        setIds(initialIds);
-    }, []);
-    
+            }
+        });
+    }, [permisosAgrupados]);
 
     return (
         <div className={`border rounded-lg ${formik.touched.permisos && formik.errors.permisos ? 'border-red-500 text-red-500' : 'border-neutral-300'}`}>
