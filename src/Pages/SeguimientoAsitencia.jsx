@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useDataSeguimiento from "../Components/hooks/useDataSeguimiento"; // Importa el hook
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Tooltip } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -15,7 +15,7 @@ import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import dayjs from "dayjs";
 import { DateRange } from 'react-date-range';
 import CustomSwal from "../helpers/swalConfig";
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { da, es } from "date-fns/locale";
 
@@ -143,6 +143,21 @@ const SeguimientoAsistencia = () => {
     setEditCalendar((prev) => !prev)
   }
 
+  const getClassName = (fecha) => {
+    const formattedFecha = new Date(fecha);
+    today.setHours(0, 0, 0, 0);
+    formattedFecha.setHours(0, 0, 0, 0);
+
+    const isToday = formattedFecha.getTime() === today.getTime();
+    const isOutOfRange = startDate && endDate && (new Date(fecha) < new Date(startDate) || new Date(fecha) > new Date(endDate));
+
+    const baseClasses = 'py-2 px-4 !text-xs';
+    const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
+    const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1 !border-b-2' : 'border-r-0';
+
+    return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
+  };
+
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col overflow-auto overflow-y-scroll">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
@@ -241,7 +256,6 @@ const SeguimientoAsistencia = () => {
               <DatePicker
                 className="opacity-0 !absolute z-[-1] bottom-0 right-0"
                 onClose={() => setshowDatePicker(false)}
-                // maxDate={dayjs(endDate) || dayjs(new Date())}
                 maxDate={dayjs(endDate)}
                 minDate={dayjs(startDate)}
                 open={showDatePicker}
@@ -269,7 +283,7 @@ const SeguimientoAsistencia = () => {
                   {editCalendar ?
                     (<SaveIcon sx={{ fontSize: 20 }} />)
                     :
-                    (<EditCalendarIcon sx={{ fontSize: 20 }} />)
+                    (<EditIcon sx={{ fontSize: 20 }} />)
                   }
                 </Button>
               </Tooltip>
