@@ -48,13 +48,13 @@ const Roles = ({ moduleName }) => {
       console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
     }, 800);
   };
-  
+
   const refreshData = () => {
     setUpdate((prev) => !prev)
   }
 
 
-  const fetchData = async() => {
+  const fetchData = async () => {
     setLoading(true)
 
     try {
@@ -70,8 +70,8 @@ const Roles = ({ moduleName }) => {
       setData(dataFormated)
     } catch (error) {
       console.error(error);
-      
-    }finally{
+
+    } finally {
       setLoading(false)
     }
   }
@@ -81,7 +81,7 @@ const Roles = ({ moduleName }) => {
 
   }
   const onDelete = (obj) => {
-    deleteRole(obj, refreshData)
+    deleteRole(obj, deleteData, token, refreshData)
   }
 
   return (
@@ -101,7 +101,7 @@ const Roles = ({ moduleName }) => {
           <div className='flex flex-col w-full h-full'>
             <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
               <div className='w-full flex items-center gap-2'>
-                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{count || 0}</span></span>
               </div>
               <div className='w-full flex items-center justify-end gap-3'>
                 <div className='flex items-center'>
@@ -110,7 +110,7 @@ const Roles = ({ moduleName }) => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  {canCreate && <AddRol />}
+                  {canCreate && <AddRol refreshData={refreshData} />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -134,12 +134,13 @@ const Roles = ({ moduleName }) => {
               loading={Loading}
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
+              count={count}
             />
           </div >
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditRol Selected={Selected} setSelected={setSelected} />}
+      {canEdit && <EditRol Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
 
     </>
   )

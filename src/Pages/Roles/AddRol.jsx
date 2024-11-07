@@ -1,14 +1,50 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomModal from '../../Components/Modal/CustomModal'
 import AddIcon from '@mui/icons-material/Add';
-import { Button, Fab, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Tooltip } from '@mui/material';
+import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useFormik } from 'formik';
+import useFetchData from '../../Components/hooks/useFetchData';
+import { useSelector } from 'react-redux';
+import useFetch from '../../Components/hooks/useFetch';
+import CustomSwal from '../../helpers/swalConfig';
+import TablaPermisos from '../../Components/Table/TablaPermisos';
 
-const AddRol = () => {
+const AddRol = ({ refreshData }) => {
     const [Open, setOpen] = useState(false)
+    const { token } = useSelector((state) => state.auth);
+    const { fetchPermisos } = useFetchData(token);
+    const { postData } = useFetch();
+    const [permisosAgrupados, setPermisosAgrupados] = useState([])
+
+    useEffect(() => {
+        fetchPermisos().then((res) => {
+            const permisos = res.data;
+
+            const permisosAgrupados = permisos.reduce((acc, permiso) => {
+                // Excluir el permiso 'all_system_access'
+                if (permiso.nombre === 'all_system_access') return acc;
+
+                const modulo = permiso.nombre.split('_')[1]; // Obtener el módulo (por ejemplo: "asistencia", "cargo", etc.)
+
+                // Si el módulo no existe en el acumulador, lo inicializamos como un array vacío
+                if (!acc[modulo]) {
+                    acc[modulo] = [];
+                }
+
+                // Añadir el permiso al módulo correspondiente
+                acc[modulo].push(permiso);
+
+                return acc;
+            }, {});
+
+            setPermisosAgrupados(permisosAgrupados);
+        });
+    }, [])
+
 
     const handleClose = () => {
+        formik.resetForm();
         setOpen(false);
     }
     const formik = useFormik({
@@ -32,7 +68,7 @@ const AddRol = () => {
                 errors.descripcion = 'La descripción solo debe contener letras';
             }
 
-            if (permisos.length === 0) {
+            if (values.permisos.length === 0) {
                 errors.permisos = 'Debe seleccionar al menos un permiso';
             }
 
@@ -40,7 +76,42 @@ const AddRol = () => {
             return errors;
         },
         onSubmit: (values) => {
-            console.log(values);
+            postData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, values, token).then((res) => {
+                if (res.status) {
+                    CustomSwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                    refreshData();
+                    handleClose();
+                }else{
+                    CustomSwal.fire({
+                        icon: 'error',
+                        title: res.error.response.data.message || 'Error al crear el rol',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                }
+                
+            }).catch((err) => {
+                CustomSwal.fire({
+                    icon: 'error',
+                    title: err.response.data.message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000
+                })
+                console.error(err);
+            }).finally(() => {
+                formik.setSubmitting(false);
+            })
         }
     })
 
@@ -56,7 +127,7 @@ const AddRol = () => {
                     <SecurityIcon className="w-6 h-6 mr-2" />
                     <h1 className='text-lg font-bold'>Añadir un rol</h1>
                 </div>
-                <form className='mt-8'>
+                <form onSubmit={formik.handleSubmit} className='mt-8'>
                     <div className='flex flex-col gap-3'>
                         <div>
                             {/* Inputs para el rol */}
@@ -66,6 +137,11 @@ const AddRol = () => {
                                 variant="outlined"
                                 size='small'
                                 helperText="Ingrese el nombre del rol"
+                                className='w-full md:max-w-64'
+                                name='nombre'
+                                value={formik.values.nombre}
+                                onChange={formik.handleChange}
+                                error={formik.touched.nombre && Boolean(formik.errors.nombre)}
                             />
                         </div>
                         <div>
@@ -77,62 +153,24 @@ const AddRol = () => {
                                 variant="outlined"
                                 size="small"
                                 helperText="Ingrese una descripción"
+                                name='descripcion'
+                                value={formik.values.descripcion}
+                                onChange={formik.handleChange}
+                                error={formik.touched.descripcion && Boolean(formik.errors.descripcion)}
                                 multiline
                                 rows={3}
                             />
 
                         </div>
                         <div>
-                            <h3 className='text-base ml-3 mb-1'>Permisos</h3>
-                            <div>
-                                <Table size='small' className='text-nowrap'>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell className0='text-sm' align="left">
-                                                Modulo
-                                            </TableCell>
-                                            <TableCell className='text-sm !max-w-5' align="center">
-                                                Ver
-                                            </TableCell>
-                                            <TableCell className='text-sm !max-w-5' align="center">
-                                                Crear
-                                            </TableCell>
-                                            <TableCell className='text-sm !max-w-5' align="center">
-                                                Actualizar
-                                            </TableCell>
-                                            <TableCell className='text-sm !max-w-5' align="center">
-                                                Eliminar
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell className='!border-none !py-3' align="left">
-                                                Roles
-                                            </TableCell>
-                                            <TableCell className='!border-none !py-3' align="center">
-                                                <input type="checkbox" />
-                                            </TableCell>
-                                            <TableCell className='!border-none !py-3' align="center">
-                                                <input type="checkbox" />
-                                            </TableCell>
-                                            <TableCell className='!border-none !py-3' align="center">
-                                                <input type="checkbox" />
-                                            </TableCell>
-                                            <TableCell className='!border-none !py-3' align="center">
-                                                <input type="checkbox" />
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </div>
+                            <TablaPermisos formik={formik} permisosAgrupados={permisosAgrupados} />
                         </div>
                     </div>
                     <div className='flex justify-between pt-5'>
                         <div></div>
                         <div className='flex gap-3'>
                             <Button type='button' size='small' variant="contained" color="inherit" onClick={handleClose}>Cerrar</Button>
-                            {/* <Button type='submit' size='small' variant="contained" color="success" disabled={formik.isSubmitting}>Agregar</Button> */}
+                            <Button type='submit' size='small' variant="contained" color="success" disabled={formik.isSubmitting}>Agregar</Button>
                         </div>
                     </div>
                 </form>

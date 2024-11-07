@@ -8,7 +8,7 @@ const useFetchData = (token) => {
     // Obtener nombres de empleados    
     const fetchEmpleados = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados`, token);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados`, token, true);
             return{
                 data: response.data.data.data,
                 status: false
@@ -24,7 +24,7 @@ const useFetchData = (token) => {
     // Obtener roles
     const fetchRoles = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, token);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, token, true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -37,7 +37,38 @@ const useFetchData = (token) => {
         }
     };
 
-    return { fetchEmpleados, fetchRoles };
+    const fetchPermisos = async () => {
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/permiso`, token, true);
+            return{
+                data:response.data.data.data,
+                status:false
+            }
+        } catch (error) {
+            return{
+                error: error,
+                status: false
+            }
+        }
+    };
+
+    const fetchPermisosRol = async (id) => {
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol/permisos/${id}`, token, true);
+
+            return{
+                data:response.data.data,
+                status:true
+            }
+        } catch (error) {
+            return{
+                error: error,
+                status: false
+            }
+        }
+    };
+
+    return { fetchEmpleados, fetchRoles, fetchPermisos, fetchPermisosRol };
 };
 
 export default useFetchData;

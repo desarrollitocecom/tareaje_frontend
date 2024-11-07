@@ -17,12 +17,14 @@ function useFetch() {
           dispatch(logout())
         }
       })
+      return { isAuthError: true, message: 'Sesión expirada' }
     }
+    return { isAuthError: false }
   }
 
-  const getData = async (url, token) => {
+  const getData = async (url, token, lazy = false) => {
     try {
-      dispatch(moduleLoading(true))
+      !lazy && dispatch(moduleLoading(true))
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -34,7 +36,8 @@ function useFetch() {
 
     } catch (error) {
 
-      handleAuthError(error)
+      const authError = handleAuthError(error)
+      if (authError.isAuthError) return authError
 
       return {
         error: error,
@@ -46,9 +49,9 @@ function useFetch() {
 
   }
 
-  const postData = async (url, data, token) => {
+  const postData = async (url, data, token, lazy = false) => {
     try {
-      dispatch(moduleLoading(true))
+      !lazy && dispatch(moduleLoading(true))
       const response = await axios.post(url, data, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -59,7 +62,8 @@ function useFetch() {
       }
 
     } catch (error) {
-      handleAuthError(error)
+      const authError = handleAuthError(error)
+      if (authError.isAuthError) return authError
 
       return {
         error: error,
@@ -70,9 +74,9 @@ function useFetch() {
     }
   }
 
-  const patchData = async (url, data, token) => {
+  const patchData = async (url, data, token, lazy = false) => {
     try {
-      dispatch(moduleLoading(true))
+      !lazy && dispatch(moduleLoading(true))
       const response = await axios.patch(url, data, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -83,7 +87,8 @@ function useFetch() {
       }
 
     } catch (error) {
-      handleAuthError(error)
+      const authError = handleAuthError(error)
+      if (authError.isAuthError) return authError
 
       return {
         error: error,
@@ -94,9 +99,9 @@ function useFetch() {
     }
   }
 
-  const deleteData = async (url, token) => {
+  const deleteData = async (url, token, lazy = false) => {
     try {
-      dispatch(moduleLoading(true))
+      !lazy && dispatch(moduleLoading(true))
       const response = await axios.delete(url, {
         headers: { Authorization: `Bearer___${token}` },
       });
@@ -107,7 +112,8 @@ function useFetch() {
       }
 
     } catch (error) {
-      handleAuthError(error)
+      const authError = handleAuthError(error)
+      if (authError.isAuthError) return authError
 
       return {
         error: error,
