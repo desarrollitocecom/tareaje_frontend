@@ -13,5 +13,5 @@ body.swal2-height-auto {
 }
 
 .swal2-container{
-  z-index: 1200 !important;
+  z-index: 2000 !important;
 }
