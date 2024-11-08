@@ -54,7 +54,7 @@ const AppRouter = () => {
           element: <PrivateRouter element={<AsistenciaPersonal />} requiresPermission={"asistencia"} />,
         },
         {
-          path: "/seguimineto-asistencia",
+          path: "/seguimiento-asistencia",
           element: <PrivateRouter element={<SeguimientoAsistencia />} requiresPermission={"asistencia"} />,
         },
         {

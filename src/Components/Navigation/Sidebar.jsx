@@ -92,7 +92,7 @@ const Sidebar = ({ toggled, setToggled }) => {
       id: 4,
       label: "Seguimiento de Asistencias",
       icon: AssessmentIcon,
-      link: "/seguimineto-asistencia",
+      link: "/seguimiento-asistencia",
       target: "_self",
       requiresPermission: "asistencia"
     },
