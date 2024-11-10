@@ -36,7 +36,7 @@ const UseLogin = () => {
 
     const getUserData = async (token) => {
         try {
-            const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/users`, { token }, token);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/users/myuser`, token);
 
             const data = response.data.data;
 
