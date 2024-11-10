@@ -54,7 +54,7 @@ const useFetchData = (token) => {
 
     const fetchPermisosRol = async (id) => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol/permisos/${id}`, token, true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol/${id}`, token, true);
 
             return{
                 data:response.data.data,

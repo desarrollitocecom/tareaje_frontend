@@ -23,24 +23,16 @@ const EditRol = ({ Selected, setSelected, refreshData }) => {
         if (Selected) {  
             setisLoading(true)          
             fetchPermisosRol(Selected.id).then((res) => {
-                if (permisos.length === 0) {
-                    throw ('Error al obtener los permisos del rol');
-                }
-                               
-                const arrPermisos = res.data.map((permiso) => {
-                    const permisoEncontrado = permisos.find(permisoKey => permisoKey.nombre === permiso);
-                    if (permisoEncontrado) {
-                        return permisoEncontrado.id;
-                    }
-                });
-                
-                formik.setFieldValue('nombre', Selected.nombre);
-                formik.setFieldValue('descripcion', Selected.descripción);
-                formik.setFieldValue('permisos', arrPermisos);                
+                const data = res.data;
+                const permisos = data.permisos.map((permiso) => permiso.id);
+                                
+                formik.setFieldValue('nombre', data.nombre);
+                formik.setFieldValue('descripcion', data.descripcion);
+                formik.setFieldValue('permisos', permisos);                
                 
             }).catch((err) => {
                 CustomSwal.fire({
-                    title: 'Error al obtener los permisos del rol',
+                    title: 'Error al obtener la información del rol',
                     icon: 'error',
                     toast: true,
                     position: 'top-end',
