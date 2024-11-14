@@ -15,21 +15,21 @@ const deleteTurno = (obj, refreshData, token, deleteData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const eliminar = async() => {
+            const eliminar = async () => {
 
                 try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`)
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${obj.id}`, token)
                     if (response.status) {
-                        setOpen(false);
-                        CustomSwal.fire(
-                            'Eliminado',
-                            'El turno ha sido eliminado correctamente.',
-                            'success'
-                        );
-                        // Llama a la función para refrescar los datos después de agregar el turno
+                        CustomSwal.fire({
+                            icon: 'success',
+                            title: response.data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000
+                        });
                         refreshData();
                     } else {
-                        console.error('Error al agregar el turno:', response.error.response.data.message);
                         CustomSwal.fire({
                             icon: 'error',
                             title: response.error.response.data.message,
@@ -39,20 +39,21 @@ const deleteTurno = (obj, refreshData, token, deleteData) => {
                             timer: 4000
                         });
                     }
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar el turno.',
-                        'error'
-                      );
-                      console.error('Error eliminando el turno:', error);
-                  } 
+                } catch (error) {
+                    console.error('Error en la solicitud:', error);
+                    CustomSwal.fire({
+                        icon: 'error',
+                        title: 'Error en la solicitud',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                }
             }
-            eliminar()        
-            }
-            
+            eliminar()
         }
-    );
+    });
 };
 
 export default deleteTurno;
