@@ -38,6 +38,7 @@ const Regimen = ({ moduleName }) => {
     fetchData();
   }, [update]);
 
+
   const handleSearchChange = (event) => {
     const value = event.target.value;
     setSearchTerm(value);
@@ -140,7 +141,7 @@ const Regimen = ({ moduleName }) => {
           </div>
         </main>
       </div>
-      {canEdit && <EditRegimen Selected={selected} setSelected={setSelected} />}
+      {canEdit && <EditRegimen Selected={selected} setSelected={setSelected} refreshData={refreshData}/>}
     </>
   );
 };

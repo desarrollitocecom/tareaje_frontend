@@ -12,10 +12,10 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
     const [Open, setOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
 
-    useEffect(() => {        
+    useEffect(() => {
         setOpen(Selected !== null);
     }, [Selected])
-    
+
 
     const handleClose = () => {
         setSelected(null);
@@ -24,20 +24,19 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
         const errors = {};
         if (!values.nombre) {
             errors.nombre = 'Campo requerido';
-        }else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
+        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
             errors.nombre = 'El nombre solo debe contener letras';
         }
-        
+
         return errors;
     };
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log(values,Selected?.id);
-        
-        try{
+        console.log(values, Selected?.id);
+
+        try {
 
             const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${Selected?.id}`, values, token);
-            
             if (response.status) {
                 setOpen(false);
                 CustomSwal.fire(
@@ -48,17 +47,23 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
                 // Llama a la función para refrescar los datos después de agregar el turno
                 refreshData();
                 resetForm();
-            setSubmitting(false);
-            }else {
-                console.error('Error al modificar el turno:', response.error.response.data.error);
+                setSubmitting(false);
+            } else {
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                const errores = erroresArray.length > 0
+                    ? erroresArray.join(', ') // Unimos los elementos del array de errores
+                    : 'No se encontraron detalles del error';
+
+                // Mostramos la alerta
                 CustomSwal.fire({
                     icon: 'error',
-                    title: response.error.response.data.error,
+                    title: `${errores}`,
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 4000
+                    timer: 4000,
                 });
+
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
@@ -69,7 +74,8 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 4000
-            });        }
+            });
+        }
     };
 
 
@@ -83,7 +89,7 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
             {Selected && (
                 <Formik
                     initialValues={{
-                        nombre: Selected.nombre || '',
+                        nombre: Selected?.nombre || '',
                     }}
                     enableReinitialize
                     validate={validate}

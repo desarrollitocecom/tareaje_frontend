@@ -1,7 +1,7 @@
 import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
-const deleteFeriado = (obj, refreshData) => {
+const deleteFeriado = (obj, refreshData, token, deleteData) => {
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -13,29 +13,26 @@ const deleteFeriado = (obj, refreshData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //   axios.delete(`https://yourapiendpoint.com/delete/${obj.id}`)
-            //     .then(() => {
-            //       Swal.fire(
-            //         'Eliminado',
-            //         'El feriado ha sido eliminado correctamente.',
-            //         'success'
-            //       );
-            //       refreshData(); // Refresca los datos después de eliminar
-            //     })
-            //     .catch((error) => {
-            //       Swal.fire(
-            //         'Error',
-            //         'Hubo un problema al eliminar el feriado.',
-            //         'error'
-            //       );
-            //       console.error('Error eliminando el feriado:', error);
-            //     });
-            CustomSwal.fire(
-                'Eliminado',
-                'El feriado ha sido eliminado correctamente.',
-                'success'
-            );
-            refreshData(); // Refresca los datos después de eliminar
+            const eliminar = async() => {
+
+                try {
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/feriados/${obj.id}`,token)
+                    CustomSwal.fire(
+                        'Eliminado',
+                        'El regimen laboral ha sido eliminado correctamente.',
+                        'success'
+                      );
+                      refreshData(); // Refresca los datos después de eliminar
+                  } catch (error) {
+                    CustomSwal.fire(
+                        'Error',
+                        'Hubo un problema al eliminar el regimen laboral.',
+                        'error'
+                      );
+                      console.error('Error eliminando el regimen laboral:', error);
+                  } 
+            }
+            eliminar()        
         }
     });
 };

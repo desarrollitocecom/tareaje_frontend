@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
 import axios from 'axios';
@@ -11,16 +11,17 @@ import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditTurno from './EditTurno';
 import DeleteTurno from './DeleteTurno';
 import usePermissions from '../../Components/hooks/usePermission';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import { useSelector } from 'react-redux';
+
+
 
 const Turnos = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
-  const location = useLocation();
-  const { token } = useSelector((state) => state.auth);
   const { getData, deleteData } = useFetch()
+  const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate()
+  const location = useLocation();
   const [data, setData] = useState([])
   const [Update, setUpdate] = useState(false)
   const [Loading, setLoading] = useState(false)
@@ -32,9 +33,6 @@ const Turnos = ({ moduleName }) => {
   useEffect(() => {
     fetchData(location.search || undefined);
   }, [location.search, Update])
-
-
-
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -63,7 +61,7 @@ const Turnos = ({ moduleName }) => {
     try {
 
       const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${urlParams}`, token)
-      setCount(response.data.data.total)
+      setCount(response.data.data.totalcount)
       const dataFormated = response.data.data.data.map((item) => {
         return {
           id: item.id,

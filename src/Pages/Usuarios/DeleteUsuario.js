@@ -17,7 +17,6 @@ const deleteUsuario = (obj, refreshData, token, deleteData) => {
                 try {
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/users/${obj.usuario}`,token)
                     if (response.status) {
-                        setOpen(true);
                         CustomSwal.fire(
                             'Eliminado',
                             'El usuario ha sido eliminado correctamente.',

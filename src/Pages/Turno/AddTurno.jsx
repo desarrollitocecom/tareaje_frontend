@@ -24,7 +24,7 @@ const AddTurno = ({ refreshData }) => {
 
         if (!values.nombre) {
             errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
+        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
             errors.nombre = 'El nombre solo debe contener letras';
         }
 
@@ -34,7 +34,7 @@ const AddTurno = ({ refreshData }) => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos`, values, token);
-
+console.log(response);
             if (response.status) {
                 setOpen(false);
                 CustomSwal.fire(
@@ -46,21 +46,26 @@ const AddTurno = ({ refreshData }) => {
                 refreshData();
                 resetForm();
             } else {
-                console.error('Error al agregar el turno:', response.error.response.data.message);
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                const errores = erroresArray.length > 0
+                    ? erroresArray.join(', ') // Unimos los elementos del array de errores
+                    : 'No se encontraron detalles del error';
+
+                // Mostramos la alerta
                 CustomSwal.fire({
                     icon: 'error',
-                    title: response.error.response.data.message,
+                    title: `${errores}`,
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 4000
+                    timer: 4000,
                 });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
             CustomSwal.fire({
                 icon: 'error',
-                title: response.error.response.data.message,
+                title: response.error.response.data,
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
