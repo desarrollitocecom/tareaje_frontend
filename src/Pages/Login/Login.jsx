@@ -7,7 +7,7 @@ import fondo_sjl_bottom from '../../assets/logos/fondo_sjl_bottom.png';
 import logo from '../../assets/logos/logo_sjl.png';
 import { Container, Box, Button, TextField, Paper } from '@mui/material';
 import { loginSuccess, setLoading } from '../../Redux/Slices/AuthSlice';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import UseLogin from './UseLogin';
 
 const Login = () => {
@@ -53,18 +53,8 @@ const Login = () => {
       dispatch(loginSuccess(response.data));
 
     } catch (error) {
+      swalError(error);
 
-      // Manejo de errores (puedes también actualizar el estado de error en Redux si lo deseas)
-      CustomSwal.fire({
-        icon: 'error',
-        title: error,
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 4000
-      })
-
-      console.error(error);
     } finally {
       dispatch(setLoading(false));
       setSubmitting(false); // Finaliza el estado de envío
