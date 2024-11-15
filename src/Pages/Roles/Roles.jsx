@@ -13,6 +13,7 @@ import deleteRole from './DeleteRol';
 import usePermissions from '../../Components/hooks/usePermission';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
+import useFetchData from '../../Components/hooks/useFetchData';
 
 
 
@@ -20,6 +21,7 @@ const Roles = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
   const { getData, deleteData } = useFetch()
   const { token } = useSelector((state) => state.auth);
+  const { fetchPermisos } = useFetchData(token);
   const navigate = useNavigate()
   const location = useLocation();
   const [data, setData] = useState([])
@@ -29,10 +31,38 @@ const Roles = ({ moduleName }) => {
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
+  const [permisos, setPermisos] = useState([]);
+  const [permisosAgrupados, setPermisosAgrupados] = useState([])
 
   useEffect(() => {
-    fetchData(location.search || undefined);
+    fetchData(location.search || '');
   }, [location.search, Update])
+
+  useEffect(() => {
+    fetchPermisos().then((res) => {
+      const permisos = res.data;
+
+      const permisosAgrupados = permisos.reduce((acc, permiso) => {
+        // Excluir el permiso 'all_system_access'
+        if (permiso.nombre === 'all_system_access') return acc;
+
+        const modulo = permiso.nombre.split('_')[1]; // Obtener el módulo (por ejemplo: "asistencia", "cargo", etc.)
+
+        // Si el módulo no existe en el acumulador, lo inicializamos como un array vacío
+        if (!acc[modulo]) {
+          acc[modulo] = [];
+        }
+
+        // Añadir el permiso al módulo correspondiente
+        acc[modulo].push(permiso);
+
+        return acc;
+      }, {});
+
+      setPermisos(permisos);
+      setPermisosAgrupados(permisosAgrupados);
+    });
+  }, [])
 
 
   const handleSearchChange = (event) => {
@@ -54,11 +84,11 @@ const Roles = ({ moduleName }) => {
   }
 
 
-  const fetchData = async () => {
+  const fetchData = async (urlParams) => {
     setLoading(true)
 
     try {
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, token)
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol/${urlParams}`, token)
       setCount(response.data.data.totalCount)
       const dataFormated = response.data.data.data.map((item) => {
         return {
@@ -110,7 +140,7 @@ const Roles = ({ moduleName }) => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  {canCreate && <AddRol refreshData={refreshData} />}
+                  {canCreate && <AddRol refreshData={refreshData} permisosAgrupados={permisosAgrupados}/>}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -140,8 +170,7 @@ const Roles = ({ moduleName }) => {
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditRol Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
-
+      {canEdit && <EditRol Selected={Selected} setSelected={setSelected} refreshData={refreshData} permisos={permisos} permisosAgrupados={permisosAgrupados} />}
     </>
   )
 }

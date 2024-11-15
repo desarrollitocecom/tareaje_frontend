@@ -36,11 +36,7 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
                 }, {})
             };
         });
-        console.log({
-            ...initialIds
-        });
         
-
         setIds({
             ...initialIds, 'all-system-access': {
                 moduloId: uuidv4(),

@@ -4,43 +4,15 @@ import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useFormik } from 'formik';
-import useFetchData from '../../Components/hooks/useFetchData';
 import { useSelector } from 'react-redux';
 import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal from '../../helpers/swalConfig';
 import TablaPermisos from '../../Components/Table/TablaPermisos';
 
-const AddRol = ({ refreshData }) => {
+const AddRol = ({ refreshData, permisosAgrupados }) => {
     const [Open, setOpen] = useState(false)
     const { token } = useSelector((state) => state.auth);
-    const { fetchPermisos } = useFetchData(token);
     const { postData } = useFetch();
-    const [permisosAgrupados, setPermisosAgrupados] = useState([])
-
-    useEffect(() => {
-        fetchPermisos().then((res) => {
-            const permisos = res.data;
-
-            const permisosAgrupados = permisos.reduce((acc, permiso) => {
-                // Excluir el permiso 'all_system_access'
-                if (permiso.nombre === 'all_system_access') return acc;
-
-                const modulo = permiso.nombre.split('_')[1]; // Obtener el módulo (por ejemplo: "asistencia", "cargo", etc.)
-
-                // Si el módulo no existe en el acumulador, lo inicializamos como un array vacío
-                if (!acc[modulo]) {
-                    acc[modulo] = [];
-                }
-
-                // Añadir el permiso al módulo correspondiente
-                acc[modulo].push(permiso);
-
-                return acc;
-            }, {});
-
-            setPermisosAgrupados(permisosAgrupados);
-        });
-    }, [])
 
 
     const handleClose = () => {
@@ -88,26 +60,12 @@ const AddRol = ({ refreshData }) => {
                     });
                     refreshData();
                     handleClose();
-                }else{
-                    CustomSwal.fire({
-                        icon: 'error',
-                        title: res.error.response.data.message || 'Error al crear el rol',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000
-                    });
+                } else {
+                    throw (response.error);
                 }
-                
+
             }).catch((err) => {
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: err.response.data.message,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
-                })
+                swalError(err.response?.data);
                 console.error(err);
             }).finally(() => {
                 formik.setSubmitting(false);
