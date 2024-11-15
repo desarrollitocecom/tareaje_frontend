@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import useDataSeguimiento from "../Components/hooks/useDataSeguimiento"; // Importa el hook
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { Accordion, AccordionDetails, AccordionSummary, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Tooltip } from "@mui/material";
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import {  Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -14,13 +14,19 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import dayjs from "dayjs";
 import { DateRange } from 'react-date-range';
-import CustomSwal from "../helpers/swalConfig";
+import CustomSwal, { swalError } from "../helpers/swalConfig";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { da, es } from "date-fns/locale";
+import { FormatoEnvioFecha } from "../helpers/GeneralFunctions";
+import useFetch from "../Components/hooks/useFetch";
+import { useSelector } from "react-redux";
+import CustomTablePagination from "./Pagination/TablePagination";
 
 const SeguimientoAsistencia = () => {
   const navigate = useNavigate()
+  const { postData } = useFetch()
+  const { token } = useSelector((state) => state.auth);
   const [Fecha, setFecha] = useState(new Date());
   const [weekRange, setWeekRange] = useState([null, null]);
   const [startDate, setStartDate] = useState(null);
@@ -31,33 +37,32 @@ const SeguimientoAsistencia = () => {
     endDate: new Date(),
     key: 'selection'
   }]);
+  const [dataAsistencias, setDataAsistencias] = useState([])
+  const [isLoadingAsistencia, setisLoadingAsistencia] = useState(false)
   const [isPrevDisabled, setIsPrevDisabled] = useState(false);
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const [editCalendar, setEditCalendar] = useState(false)
 
   const [showDatePicker, setshowDatePicker] = useState(false)
-
-  const { datosAsistencias, meses, anios, turnos } = useDataSeguimiento();
+  const [RefreshData, setRefreshData] = useState(false)
 
   const today = new Date();
 
   useEffect(() => {
-    // Función para obtener el lunes de la semana
-    const getMonday = (date) => {
-      const day = date.getDay(); // Día de la semana (0 = domingo, 1 = lunes, etc.)
-      const diff = day === 0 ? -6 : 1 - day; // Si es domingo, restar 6, de lo contrario calcular diferencia al lunes
-      const monday = new Date(date);
-      monday.setDate(date.getDate() + diff);
-      return monday;
-    };
-
     // Obtener el lunes y el domingo de la semana
     const startOfWeek = getMonday(Fecha);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6); // Sumamos 6 días para obtener el domingo
 
+    const isBetween = (dayjs(Fecha).isAfter(dayjs(weekRange[0])) || dayjs(Fecha).isSame(dayjs(weekRange[0]))) && (dayjs(Fecha).isBefore(dayjs(weekRange[1])) || dayjs(Fecha).isSame(dayjs(weekRange[1])));
+
+    if (isBetween) return
+
     // Actualizamos el estado con el rango de la semana
     setWeekRange([startOfWeek, endOfWeek]);
+
+
+    getAsistenciaDiaria(FormatoEnvioFecha(startOfWeek), FormatoEnvioFecha(endOfWeek));
 
     setWeekDates(Array.from({ length: 7 }, (_, i) => {
       const newDate = new Date(startOfWeek);
@@ -65,6 +70,60 @@ const SeguimientoAsistencia = () => {
       return newDate;
     }));
   }, [Fecha]);
+
+  useEffect(() => {
+    const startOfWeek = getMonday(Fecha);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // Sumamos 6 días para obtener el domingo
+
+    getAsistenciaDiaria(FormatoEnvioFecha(startOfWeek), FormatoEnvioFecha(endOfWeek), true);
+  }, [RefreshData])
+
+  const getAsistenciaDiaria = (inicio, fin, forceUpdate = false) => {
+    const cacheKey = `asistencia_${inicio}_${fin}`;
+    const cachedItem = JSON.parse(localStorage.getItem(cacheKey));
+    const currentTime = new Date().getTime();
+    const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 horas para 
+
+    if (!forceUpdate && cachedItem && (currentTime - cachedItem.timestamp) < CACHE_EXPIRATION_TIME) {
+      // Si el flag no está activado y la caché es válida, usamos la data en caché
+      setDataAsistencias(cachedItem.data);
+      return;
+    }
+
+    // Si el flag está activado o la caché ha expirado, hacemos una solicitud al servidor
+    setisLoadingAsistencia(true);
+    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias`, { inicio, fin }, token, true)
+      .then((res) => {
+        if (res.status) {
+          const dataToCache = {
+            data: res.data.data,
+            timestamp: currentTime // Guardamos la hora de almacenamiento
+          };
+          setDataAsistencias(res.data.data);
+          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
+        } else {
+          throw res.error;
+        }
+      })
+      .catch((err) => {
+        swalError(err.response?.data);
+      })
+      .finally(() => {
+        setisLoadingAsistencia(false);
+      });
+  };
+
+
+  // Función para obtener el lunes de la semana
+  const getMonday = (date) => {
+    const day = date.getDay(); // Día de la semana (0 = domingo, 1 = lunes, etc.)
+    const diff = day === 0 ? -6 : 1 - day; // Si es domingo, restar 6, de lo contrario calcular diferencia al lunes
+    const monday = new Date(date);
+    monday.setDate(date.getDate() + diff);
+    return monday;
+  };
+
 
   // Función para cambiar a la semana anterior
   const handleSemanaAnterior = () => {
@@ -151,7 +210,7 @@ const SeguimientoAsistencia = () => {
     const isToday = formattedFecha.getTime() === today.getTime();
     const isOutOfRange = startDate && endDate && (new Date(fecha) < new Date(startDate) || new Date(fecha) > new Date(endDate));
 
-    const baseClasses = 'py-2 px-4 !text-xs';
+    const baseClasses = 'py-2 px-2 !text-xs';
     const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
     const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1 !border-b-2' : 'border-r-0';
 
@@ -287,6 +346,16 @@ const SeguimientoAsistencia = () => {
                   }
                 </Button>
               </Tooltip>
+              <Tooltip title={`Refrescar Calendario`} placement='top' arrow>
+                <Button
+                  color="inherit"
+                  className="p-2 rounded-lg flex items-center justify-center gap-1 "
+                  onClick={() => setRefreshData((prev) => !prev)}
+                  sx={{ textTransform: 'none', minWidth: '30px' }}
+                >
+                  <RefreshRoundedIcon/>
+                </Button>
+              </Tooltip>
             </div>
             <div className="flex w-full sm:w-auto justify-between sm:justify-center">
               <Tooltip title="Anterior Semana" placement='top' arrow>
@@ -331,65 +400,83 @@ const SeguimientoAsistencia = () => {
         </div> */}
 
         {/* Tabla de asistencias */}
-        <div className="overflow-x-auto !select-none">
-          <table className="min-w-full bg-white border text-xs text-nowrap">
-            <thead>
-              <tr>
-                <th className="py-2 px-4 border">APELLIDO</th>
-                <th className="py-2 px-4 border">DNI</th>
-                <th className="py-2 px-4 border">TURNO</th>
-                {weekDates.map((fecha, i) => {
-                  const formattedFecha = new Date(fecha);
-                  today.setHours(0, 0, 0, 0);
-                  formattedFecha.setHours(0, 0, 0, 0);
+        <div className="flex flex-col h-full">
+          <div className="!select-none flex flex-1 bg-slate-500">
+            <table className="min-w-full bg-white border text-xs text-nowrap">
+              <thead>
+                <tr>
+                  <th className="py-2 px-2 border">NOMBRE</th>
+                  <th className="py-2 px-2 border">APELLIDO</th>
+                  {/* <th className="py-2 px-2 border">DNI</th> */}
+                  <th className="py-2 px-2 border">TURNO</th>
+                  {weekDates.map((fecha, i) => {
+                    const formattedFecha = new Date(fecha);
+                    today.setHours(0, 0, 0, 0);
+                    formattedFecha.setHours(0, 0, 0, 0);
 
-                  // Comparar las fechas
-                  const isToday = formattedFecha.getTime() === today.getTime();
-                  const isOutOfRange = startDate && endDate && dayjs(fecha).isBefore(dayjs(startDate)) || dayjs(fecha).isAfter(dayjs(endDate));
+                    // Comparar las fechas
+                    const isToday = formattedFecha.getTime() === today.getTime();
+                    const isOutOfRange = startDate && endDate && dayjs(fecha).isBefore(dayjs(startDate)) || dayjs(fecha).isAfter(dayjs(endDate));
 
-                  const getClassName = () => {
-                    const baseClasses = 'py-2 px-4 border';
-                    const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
-                    const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1' : 'border-r-0';
+                    const getClassName = () => {
+                      const baseClasses = 'py-2 px-2 border';
+                      const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
+                      const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1' : 'border-r-0';
 
-                    return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
-                  };
+                      return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
+                    };
 
-                  return (
-                    <th
-                      key={i}
-                      className={getClassName()}
-                    >
-                      {fecha.toLocaleString("es-ES", { weekday: "short" }).toUpperCase()}
-                      <br />
-                      {formatDate(fecha)}
-                    </th>
+                    return (
+                      <th
+                        key={i}
+                        className={getClassName()}
+                      >
+                        {fecha.toLocaleString("es-ES", { weekday: "short" }).toUpperCase()}
+                        <br />
+                        {formatDate(fecha)}
+                      </th>
 
-                  );
-                })}
-                <th className="py-2 px-4 border">ACCIÓN</th>
-              </tr>
-            </thead>
-            <tbody>
-              {datosAsistencias.map((asistencia, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4 border">{asistencia.apellido}</td>
-                  <td className="py-2 px-4 border">{asistencia.dni}</td>
-                  <td className="py-2 px-4 border">{asistencia.turno}</td>
-                  {asistencia.dias.map((dia, diaIndex) => (
-                    <td key={diaIndex} className="py-2 px-4 border text-center">
-                      {dia}
-                    </td>
-                  ))}
-                  <td className="py-2 px-4 border text-center">
-                    <button className="bg-blue-500 text-white p-2 rounded-lg">
-                      Más info
-                    </button>
-                  </td>
+                    );
+                  })}
+                  <th className="py-2 px-2 border">ACCIÓN</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {isLoadingAsistencia ? (
+                  // Renderiza un loader en lugar de celdas mientras se cargan los datos
+                  <tr>
+                    <td colSpan={weekDates.length + 4} className="py-4 text-center">
+                      <CircularProgress />
+                      <p>Cargando asistencia...</p>
+                    </td>
+                  </tr>
+                ) : (
+                  // Renderiza los datos reales cuando se cargan
+                  dataAsistencias.map((asistencia) => (
+                    <tr key={asistencia.id_empleado}>
+                      <td className="py-2 px-2 border">{asistencia.nombres}</td>
+                      <td className="py-2 px-2 border">{asistencia.apellidos}</td>
+                      <td className="py-2 px-2 border">{asistencia.turno}</td>
+                      {asistencia.estados.map((asistencia) => (
+                        <td key={asistencia.id_empleado + asistencia.fecha} className="py-2 px-2 border text-center">
+                          {asistencia.asistencia ? asistencia.asistencia : '-'}
+                        </td>
+                      ))}
+                      <td className="py-2 px-2 border text-center">
+                        <button className="bg-blue-500 text-white p-2 rounded-lg">
+                          Más info
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+
+            </table>
+          </div>
+          <div className='flex justify-end pt-4'>
+            <CustomTablePagination />
+          </div>
         </div>
       </div>
 
