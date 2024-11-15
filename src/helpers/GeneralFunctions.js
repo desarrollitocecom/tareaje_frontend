@@ -27,3 +27,11 @@ export const hasPermissionFunction = (user, permission) => {
     const hasSpecificPermission = user?.permissions?.includes(`read_${permission}`);
     return hasAllAccess || !permission || hasSpecificPermission;
 }
+
+export const FormatoEnvioFecha = (fecha) => {
+    const date = new Date(fecha);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+}

@@ -4,32 +4,31 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
 import { useSelector } from 'react-redux';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import TablaPermisos from '../../Components/Table/TablaPermisos';
 import useFetchData from '../../Components/hooks/useFetchData';
 import { useFormik } from 'formik';
 
-const EditRol = ({ Selected, setSelected, refreshData }) => {
+const EditRol = ({ Selected, setSelected, refreshData, permisos, permisosAgrupados }) => {
     const [Open, setOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
-    const { fetchPermisos,fetchPermisosRol } = useFetchData(token);
+    const { fetchPermisosRol } = useFetchData(token);
     const { patchData } = useFetch();
-    const [permisos, setPermisos] = useState([]);
-    const [permisosAgrupados, setPermisosAgrupados] = useState([])
+
     const [isLoading, setisLoading] = useState(null)
 
     useEffect(() => {
         setOpen(Selected !== null);
-        if (Selected) {  
-            setisLoading(true)          
+        if (Selected) {
+            setisLoading(true)
             fetchPermisosRol(Selected.id).then((res) => {
                 const data = res.data;
                 const permisos = data.permisos.map((permiso) => permiso.id);
-                                
+
                 formik.setFieldValue('nombre', data.nombre);
                 formik.setFieldValue('descripcion', data.descripcion);
-                formik.setFieldValue('permisos', permisos);                
-                
+                formik.setFieldValue('permisos', permisos);
+
             }).catch((err) => {
                 CustomSwal.fire({
                     title: 'Error al obtener la información del rol',
@@ -42,35 +41,9 @@ const EditRol = ({ Selected, setSelected, refreshData }) => {
             }).finally(() => {
                 setisLoading(false)
             })
-                        
+
         }
     }, [Selected])
-
-    useEffect(() => {
-        fetchPermisos().then((res) => {
-            const permisos = res.data;
-            
-            const permisosAgrupados = permisos.reduce((acc, permiso) => {
-                // Excluir el permiso 'all_system_access'
-                if (permiso.nombre === 'all_system_access') return acc;
-
-                const modulo = permiso.nombre.split('_')[1]; // Obtener el módulo (por ejemplo: "asistencia", "cargo", etc.)
-
-                // Si el módulo no existe en el acumulador, lo inicializamos como un array vacío
-                if (!acc[modulo]) {
-                    acc[modulo] = [];
-                }
-
-                // Añadir el permiso al módulo correspondiente
-                acc[modulo].push(permiso);
-
-                return acc;
-            }, {});
-
-            setPermisos(permisos);
-            setPermisosAgrupados(permisosAgrupados);
-        });
-    }, [])
 
 
 
@@ -108,10 +81,8 @@ const EditRol = ({ Selected, setSelected, refreshData }) => {
             return errors;
         },
         onSubmit: (values) => {
-            
+
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol/${Selected.id}`, values, token, true).then((res) => {
-                console.log(res);
-                
                 if (res.status) {
                     CustomSwal.fire({
                         icon: 'success',
@@ -124,25 +95,12 @@ const EditRol = ({ Selected, setSelected, refreshData }) => {
                     refreshData();
                     handleClose();
                 } else {
-                    CustomSwal.fire({
-                        icon: 'error',
-                        title: res.error.response.data.message,
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000
-                    });
+                    throw (response.error);
                 }
 
             }).catch((err) => {
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: err.response.data.message || 'Error al editar el rol',
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
-                })
+                swalError(err.response?.data);
+                
                 console.error(err);
             }).finally(() => {
                 formik.setSubmitting(false);

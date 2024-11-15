@@ -1,11 +1,10 @@
 import React, { memo, useEffect, useState } from 'react';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider, TablePagination } from '@mui/material';
+import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 import { SortData } from '../../helpers/GeneralFunctions';
-import { useLocation, useNavigate } from 'react-router-dom';
-import UseUrlParamsManager from '../hooks/UseUrlParamsManager';
+import CustomTablePagination from '../../Pages/Pagination/TablePagination';
 
 const CRUDTable = memo(({
     data = [],
@@ -19,13 +18,6 @@ const CRUDTable = memo(({
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
         : [];
-
-    const { addParams } = UseUrlParamsManager();
-
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const page = parseInt(queryParams.get('page')) || 1;
-    const limit = parseInt(queryParams.get('limit')) || 20;
 
     const [orderBy, setOrderBy] = useState('id');
     const [orderDirection, setOrderDirection] = useState('asc');
@@ -127,23 +119,7 @@ const CRUDTable = memo(({
                                     </Table>
                                 </div>
                                 <div className='flex justify-end pt-4'>
-                                    <TablePagination
-                                        className='select-none'
-                                        component="div"
-                                        count={count}
-                                        page={page - 1}
-                                        onPageChange={(event, newPage) => {
-                                            addParams({ page: newPage + 1, limit });
-                                        }}
-                                        rowsPerPage={limit}
-                                        onRowsPerPageChange={(event) => {
-                                            const newLimit = parseInt(event.target.value);
-                                            addParams({ page: 1, limit: newLimit });
-                                        }}
-                                        labelRowsPerPage="Filas por página"
-                                        labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-                                        rowsPerPageOptions={[20, 50, 100]}
-                                    />
+                                    <CustomTablePagination count={count}/>
                                 </div>
                             </div>
                         ) :
