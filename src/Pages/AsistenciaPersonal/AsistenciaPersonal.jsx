@@ -1,32 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from "formik";
-import useData from "../Components/Hooks/UseDB";
 import axios from 'axios';
-import CRUDTable from '../Components/Table/CRUDTable';
+import CRUDTable from '../../Components/Table/CRUDTable';
 import { Link, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import FiltroSelect from "../Components/Filtroselect/Filtro";
+import FiltroSelect from "../../Components/Filtroselect/Filtro";
 import { TextField } from "@mui/material";
 import dayjs from 'dayjs';
-import ZoomImage from '../Components/Image/zoomImages';
-import CompareImages from '../Components/Image/CompareImages';
+import ZoomImage from '../../Components/Image/zoomImages';
+import CompareImages from '../../Components/Image/CompareImages';
+import { formatDate, FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
+import useFetch from '../../Components/hooks/useFetch';
+import { useSelector } from 'react-redux';
 
 const AsistenciaPersonal = () => {
-  const { data, cargos, turnos, subgerencias } = useData();
+  const { getData } = useFetch()
   const [loading, setLoading] = useState(false);
+  const { token } = useSelector((state) => state.auth);
   const [dataFormatted, setDataFormatted] = useState([]);
   const [ImagesData, setImagesData] = useState(null);
   const [OpenModal, setOpenModal] = useState(false)
+  const [date, setDate] = useState(new Date());
 
   const navigate = useNavigate();
 
   const handlerowClick = (event, row) => {
-    const item = data.find((item) => item.id === row.id)    
+    const item = data.find((item) => item.id === row.id)
     setImagesData(item);
     setOpenModal(true)
   }
-  
+
   const handleCloseModal = () => {
     setOpenModal(false)
     setTimeout(() => {
@@ -35,28 +39,18 @@ const AsistenciaPersonal = () => {
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData(date);
+  }, [date]);
 
-  const fetchData = async () => {
+  const fetchData = (date) => {
     setLoading(true);
-    try {
-      // const response = await axios.get(`/DataEjemplo.json`);
-      const formattedData = data.map((item) => ({
-        id: item.id,
-        apellidos: item.apellido,
-        nombres: item.nombre,
-        dni: item.dni,
-        cargo: item.puesto,
-        turno: item.turno,
-      }));
-      
-      setDataFormatted(formattedData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    } finally {
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
+      setDataFormatted(response.data.data);
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => {
       setLoading(false);
-    }
+    });
   };
 
   return (
@@ -73,8 +67,19 @@ const AsistenciaPersonal = () => {
       </header>
       <main className='flex-1 bg-white shadow rounded-lg p-4 h-full overflow-hidden'>
         <div className='flex flex-col w-full h-full'>
-
-          <Formik
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 text-sm'>
+            <div className="flex flex-col">
+              <DatePicker
+                label="Seleccionar Fecha"
+                value={dayjs(date)}
+                slotProps={{ textField: { size: 'small' } }}
+                maxDate={dayjs()}
+                format="DD/MM/YYYY"
+                onChange={(value) => setDate(value)}
+              />
+            </div>
+          </div>
+          {/* <Formik
             initialValues={{
               buscar: "",
               fecha: null,
@@ -89,7 +94,7 @@ const AsistenciaPersonal = () => {
             {({ handleChange, handleBlur, values, setFieldValue, errors, touched }) => (
               <Form className="flex flex-col text-nowrap">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 text-sm">
-                  {/* Buscar */}
+                
                   <div className="md:col-span-1">
                     <TextField
                       fullWidth
@@ -104,7 +109,7 @@ const AsistenciaPersonal = () => {
                     />
                   </div>
 
-                  {/* Seleccionar Fecha */}
+                
                   <div className="flex flex-col">
                     <DatePicker
                       label="Seleccionar Fecha"
@@ -118,7 +123,7 @@ const AsistenciaPersonal = () => {
                     />
                   </div>
 
-                  {/* Seleccionar Subgerencia */}
+                
                   <div>
                     <FiltroSelect
                       label="Subgerencia"
@@ -132,7 +137,7 @@ const AsistenciaPersonal = () => {
                     />
                   </div>
 
-                  {/* Seleccionar Cargo */}
+                
                   <div>
                     <FiltroSelect
                       label="Cargo"
@@ -146,7 +151,7 @@ const AsistenciaPersonal = () => {
                     />
                   </div>
 
-                  {/* Seleccionar Turno */}
+                
                   <div>
                     <FiltroSelect
                       label="Turno"
@@ -161,25 +166,26 @@ const AsistenciaPersonal = () => {
                   </div>
                 </div>
 
-                {/* Tabla de asistencia */}
+              
 
 
               </Form>
             )}
-          </Formik>
+          </Formik> */}
           <div className="my-1"></div>
 
           <CRUDTable
             data={dataFormatted}
             loading={loading}
             rowOnClick={handlerowClick}
+            noDataText={`No hay asistencias registradas para la fecha ${formatDate(date)}.`}
           />
         </div>
       </main>
       {ImagesData && (
         <CompareImages
           imagen={ImagesData.imagen}
-          captura={ImagesData.captura} 
+          captura={ImagesData.captura}
           open={OpenModal}
           handleClose={handleCloseModal}
         />

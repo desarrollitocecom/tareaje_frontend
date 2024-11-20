@@ -14,6 +14,7 @@ const CRUDTable = memo(({
     loading = false,
     rowOnClick = null,
     count = 100,
+    noDataText = 'No hay datos registrados.',
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
@@ -125,7 +126,7 @@ const CRUDTable = memo(({
                         ) :
                             (
                                 <div className='text-center text-sm mt-6 w-full'>
-                                    No hay datos registrados.
+                                    {noDataText}
                                 </div>
                             )
                     }

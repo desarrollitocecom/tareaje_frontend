@@ -11,13 +11,15 @@ export default CustomSwal;
 
 
 export const swalError = (obj) => {
+  console.log(obj);
+  
   CustomSwal.fire({
     icon: 'error',
     html: `
       <h2 class="text-2xl font-bold mb-3">${obj.data ? obj.message : 'Se encontraron los siguientes errores'}</h2>
       ${obj.data 
         ? obj.data.map((item) => `<p class="text-base mb-3 px-6">${item}</p>`).join('') 
-        :  `<p class="text-base mb-3">${obj.message}</p>`
+        :  `<p class="text-base mb-3">${obj.message || obj}</p>`
       }
     `,
   });
