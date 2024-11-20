@@ -4,8 +4,6 @@ import PublicRouter from './PublicRouter';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 import Layout from '../Pages/Layout';
 import Inicio from '../Pages/Inicio';
-import AsistenciaPersonal from "../Pages/AsistenciaPersonal";
-import SeguimientoAsistencia from "../Pages/SeguimientoAsitencia";
 import Error404 from '../Pages/Error404';
 import Buscador from '../Pages/Buscador';
 import PersonalBD from '../Pages/PersonalBD';
@@ -29,6 +27,8 @@ import RegimenLaboral from '../Pages/Regimen/Regimen';
 import Login from '../Pages/Login/Login';
 import { useSelector } from 'react-redux';
 import Loader from '../Components/Loader/Loader';
+import SeguimientoAsistencia from '../Pages/SeguimientoAsistencia/SeguimientoAsitencia';
+import AsistenciaPersonal from '../Pages/AsistenciaPersonal/AsistenciaPersonal';
 
 const AppRouter = () => {
   const { loading } = useSelector((state) => state.auth);
