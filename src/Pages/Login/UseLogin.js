@@ -9,7 +9,7 @@ const UseLogin = () => {
     const login = async (credentials) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/login/signin`, credentials);
-            
+
             if (response.status) {
                 const token = response?.data?.token;
                 
@@ -26,14 +26,13 @@ const UseLogin = () => {
                     status: true
                 };
             } else {
-                throw (response.error.response.data);
+                throw (response?.error?.response?.data || response?.error?.message);
 
             }
 
 
         } catch (err) {
             const errorMessage = err.response?.data?.message || err || 'Error de inicio de sesión';
-
             return {
                 error: errorMessage,
                 status: false

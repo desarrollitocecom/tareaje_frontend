@@ -2,34 +2,36 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
-import {  Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
+import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
-import { currentYear, isSameWeek } from "../helpers/DayJs.Confg";
-import CustomPopover from "../Components/Popover/CustomPopover";
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import dayjs from "dayjs";
 import { DateRange } from 'react-date-range';
-import CustomSwal, { swalError } from "../helpers/swalConfig";
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import { da, es } from "date-fns/locale";
-import { FormatoEnvioFecha } from "../helpers/GeneralFunctions";
-import useFetch from "../Components/hooks/useFetch";
+import { formatDate, FormatoEnvioFecha } from "../../helpers/GeneralFunctions";
+import useFetch from "../../Components/hooks/useFetch";
 import { useSelector } from "react-redux";
-import CustomTablePagination from "./Pagination/TablePagination";
+import CustomTablePagination from "../Pagination/TablePagination";
+import { isSameWeek } from "../../helpers/DayJs.Confg";
+import CustomPopover from "../../Components/Popover/CustomPopover";
+import CustomSwal, { swalError } from "../../helpers/swalConfig";
 
 const SeguimientoAsistencia = () => {
   const navigate = useNavigate()
+  const location = useLocation();
   const { postData } = useFetch()
   const { token } = useSelector((state) => state.auth);
   const [Fecha, setFecha] = useState(new Date());
   const [weekRange, setWeekRange] = useState([null, null]);
   const [startDate, setStartDate] = useState(null);
+  const [count, setCount] = useState(0)
   const [endDate, setEndDate] = useState(null);
   const [weekDates, setWeekDates] = useState([]);
   const [rangeDates, setRageDates] = useState([{
@@ -54,66 +56,156 @@ const SeguimientoAsistencia = () => {
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6); // Sumamos 6 días para obtener el domingo
 
-    const isBetween = (dayjs(Fecha).isAfter(dayjs(weekRange[0])) || dayjs(Fecha).isSame(dayjs(weekRange[0]))) && (dayjs(Fecha).isBefore(dayjs(weekRange[1])) || dayjs(Fecha).isSame(dayjs(weekRange[1])));
+    const isBetween = (
+      (dayjs(Fecha).isAfter(dayjs(weekRange[0])) || dayjs(Fecha).isSame(dayjs(weekRange[0]))) &&
+      (dayjs(Fecha).isBefore(dayjs(weekRange[1])) || dayjs(Fecha).isSame(dayjs(weekRange[1])))
+    );
 
-    if (isBetween) return
+    if (isBetween) return;
 
     // Actualizamos el estado con el rango de la semana
     setWeekRange([startOfWeek, endOfWeek]);
 
-
-    getAsistenciaDiaria(FormatoEnvioFecha(startOfWeek), FormatoEnvioFecha(endOfWeek));
+    getAsistenciaDiaria(Fecha, false);
 
     setWeekDates(Array.from({ length: 7 }, (_, i) => {
       const newDate = new Date(startOfWeek);
       newDate.setDate(startOfWeek.getDate() + i);
       return newDate;
     }));
-  }, [Fecha]);
+  }, [Fecha, rangeDates]);
 
   useEffect(() => {
     const startOfWeek = getMonday(Fecha);
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6); // Sumamos 6 días para obtener el domingo
 
-    getAsistenciaDiaria(FormatoEnvioFecha(startOfWeek), FormatoEnvioFecha(endOfWeek), true);
-  }, [RefreshData])
+    getAsistenciaDiaria(Fecha, true, location.search);
+  }, [location.search, RefreshData]);
 
-  const getAsistenciaDiaria = (inicio, fin, forceUpdate = false) => {
-    const cacheKey = `asistencia_${inicio}_${fin}`;
-    const cachedItem = JSON.parse(localStorage.getItem(cacheKey));
+  const MAX_CACHE_ITEMS = 50; // Máximo de elementos en el array de caché
+  const CACHE_EXPIRATION_TIME = 1 * 60 * 1000; // 5 minutos en milisegundos
+
+  const getAsistenciaDiaria = (Fecha, forceUpdate = false, urlParams) => {
+    const cacheKey = 'asistencia_cache'; // Clave para guardar el array de caché
     const currentTime = new Date().getTime();
-    const CACHE_EXPIRATION_TIME = 24 * 60 * 60 * 1000; // 24 horas para 
 
-    if (!forceUpdate && cachedItem && (currentTime - cachedItem.timestamp) < CACHE_EXPIRATION_TIME) {
-      // Si el flag no está activado y la caché es válida, usamos la data en caché
-      setDataAsistencias(cachedItem.data);
-      return;
-    }
+    // Obtén la caché completa desde localStorage
+    let cache = JSON.parse(localStorage.getItem(cacheKey)) || [];
 
-    // Si el flag está activado o la caché ha expirado, hacemos una solicitud al servidor
-    setisLoadingAsistencia(true);
-    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias`, { inicio, fin }, token, true)
-      .then((res) => {
-        if (res.status) {
-          const dataToCache = {
-            data: res.data.data,
-            timestamp: currentTime // Guardamos la hora de almacenamiento
-          };
-          setDataAsistencias(res.data.data);
-          localStorage.setItem(cacheKey, JSON.stringify(dataToCache));
-        } else {
-          throw res.error;
-        }
-      })
-      .catch((err) => {
-        swalError(err.response?.data);
-      })
-      .finally(() => {
-        setisLoadingAsistencia(false);
+    // Función para crear el rango de las tres semanas (una antes, actual y siguiente)
+    const createWeekRanges = (currentDate) => {
+      const startOfWeek = getMonday(currentDate);
+      const weeks = [];
+
+      // Semana actual
+      weeks.push({
+        start: startOfWeek,
+        end: new Date(startOfWeek).setDate(startOfWeek.getDate() + 6),
       });
-  };
 
+      // Semana anterior
+      const prevWeekStart = new Date(startOfWeek);
+      prevWeekStart.setDate(startOfWeek.getDate() - 7);
+      weeks.push({
+        start: prevWeekStart,
+        end: new Date(prevWeekStart).setDate(prevWeekStart.getDate() + 6),
+      });
+
+      // Semana siguiente
+      const nextWeekStart = new Date(startOfWeek);
+      nextWeekStart.setDate(startOfWeek.getDate() + 7);
+      weeks.push({
+        start: nextWeekStart,
+        end: new Date(nextWeekStart).setDate(nextWeekStart.getDate() + 6),
+      });
+
+      return weeks;
+    };
+
+    // Crea los rangos de las tres semanas alrededor de la semana actual
+    const weeksToCheck = createWeekRanges(new Date(Fecha));
+
+    // Revisa si alguna de las semanas ya está en caché y si la fecha ha expirado
+    let currentWeekData = null;
+    weeksToCheck.forEach((week, index) => {
+      const { start, end } = week;
+      const startDate = FormatoEnvioFecha(start);
+      const endDate = FormatoEnvioFecha(end);
+      const existingEntryIndex = cache.findIndex(
+        (entry) => entry.inicio === startDate && entry.fin === endDate
+      );
+
+      // Si no hay necesidad de forzar actualización y la entrada es válida, usa los datos
+      if (
+        !forceUpdate &&
+        existingEntryIndex !== -1 &&
+        (currentTime - cache[existingEntryIndex].timestamp) < CACHE_EXPIRATION_TIME
+      ) {
+        if (index === 0) {
+          // Guardamos los datos de la semana actual
+          currentWeekData = cache[existingEntryIndex].data;
+        }
+        return;
+      }
+
+      // Mostrar loader solo para la semana actual
+      if (index === 0) {
+        setisLoadingAsistencia(true);
+      }
+
+      // Si no hay caché válida o se forza la actualización, solicita los datos del servidor
+      postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
+        .then((res) => {
+          if (res.status) {            
+            setCount(res.data.totalCount);
+            
+            const newEntry = {
+              inicio: startDate,
+              fin: endDate,
+              data: res.data.data,
+              timestamp: currentTime,
+            };
+
+            // Si ya existe una entrada, reemplázala; de lo contrario, añade una nueva
+            if (existingEntryIndex !== -1) {
+              cache[existingEntryIndex] = newEntry;
+            } else {
+              cache.push(newEntry);
+            }
+
+            // Si supera el límite, elimina las entradas más antiguas
+            if (cache.length > MAX_CACHE_ITEMS) {
+              cache = cache.slice(-MAX_CACHE_ITEMS); // Mantén solo las últimas `MAX_CACHE_ITEMS`
+            }
+
+            // Actualiza la caché en localStorage
+            localStorage.setItem(cacheKey, JSON.stringify(cache));
+
+            if (index === 0) {
+              currentWeekData = res.data.data;
+              setDataAsistencias(currentWeekData);
+            }
+          } else {
+            throw res.error;
+          }
+        })
+        .catch((err) => {
+          swalError(err.response?.data);
+        })
+        .finally(() => {
+          // Solo apagar el loader para la semana actual
+          if (index === 0) {
+            setisLoadingAsistencia(false);
+          }
+        });
+    });
+
+    // Si hemos encontrado los datos de la semana actual, los mostramos
+    if (currentWeekData) {
+      setDataAsistencias(currentWeekData);
+    }
+  };
 
   // Función para obtener el lunes de la semana
   const getMonday = (date) => {
@@ -168,20 +260,14 @@ const SeguimientoAsistencia = () => {
   };
 
 
-  // Función para formatear la fecha
-  const formatDate = (DateString) => {
-    const date = new Date(DateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Los meses empiezan en 0
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${day}-${month}-${year}`;
-  };
+  
 
   const handleTodayClick = () => {
     const start = dayjs(startDate);
     const end = dayjs(endDate);
     const isSameStartEnd = (!startDate && !endDate) || start.isSame(end);
-    const isBetween = dayjs(today).isAfter(dayjs(startDate)) && dayjs(today).isBefore(dayjs(endDate));
+    const isBetween = dayjs(today).isAfter(dayjs(startDate)) || dayjs(Fecha).isSame(dayjs(startDate)) && dayjs(today).isBefore(dayjs(endDate)) || dayjs(today).isSame(dayjs(endDate));
+
 
     if (isSameStartEnd || isBetween) {
       setFecha(today);
@@ -210,15 +296,15 @@ const SeguimientoAsistencia = () => {
     const isToday = formattedFecha.getTime() === today.getTime();
     const isOutOfRange = startDate && endDate && (new Date(fecha) < new Date(startDate) || new Date(fecha) > new Date(endDate));
 
-    const baseClasses = 'py-2 px-2 !text-xs';
+    const baseClasses = 'py-2 px-2 border';
     const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
-    const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1 !border-b-2' : 'border-r-0';
+    const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1' : 'border-r-0';
 
     return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
   };
 
   return (
-    <div className="w-full bg-gray-100 p-4 h-full flex flex-col overflow-auto overflow-y-scroll">
+    <div className="w-full bg-gray-100 p-4 h-full flex flex-col">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
         <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
           <ArrowBackIosNewRoundedIcon
@@ -230,7 +316,7 @@ const SeguimientoAsistencia = () => {
         </h1>
       </header>
 
-      <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 pb-5">
+      <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 pb-5 overflow-hidden">
         <div className="pb-6 flex justify-between">
           <div>
             <CustomPopover
@@ -332,7 +418,7 @@ const SeguimientoAsistencia = () => {
           </div>
           <div className="flex gap-2">
             <div>
-              <Tooltip title={`${editCalendar ? "Guardar Ediciòn" : "Activar Ediciòn"}`} placement='top' arrow>
+              {/* <Tooltip title={`${editCalendar ? "Guardar Ediciòn" : "Activar Ediciòn"}`} placement='top' arrow>
                 <Button
                   color="inherit"
                   className="p-2 rounded-lg flex items-center justify-center gap-1 "
@@ -345,7 +431,7 @@ const SeguimientoAsistencia = () => {
                     (<EditIcon sx={{ fontSize: 20 }} />)
                   }
                 </Button>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title={`Refrescar Calendario`} placement='top' arrow>
                 <Button
                   color="inherit"
@@ -353,7 +439,7 @@ const SeguimientoAsistencia = () => {
                   onClick={() => setRefreshData((prev) => !prev)}
                   sx={{ textTransform: 'none', minWidth: '30px' }}
                 >
-                  <RefreshRoundedIcon/>
+                  <RefreshRoundedIcon />
                 </Button>
               </Tooltip>
             </div>
@@ -400,36 +486,20 @@ const SeguimientoAsistencia = () => {
         </div> */}
 
         {/* Tabla de asistencias */}
-        <div className="flex flex-col h-full">
-          <div className="!select-none flex flex-1 bg-slate-500">
+        <div className="flex flex-col h-full overflow-hidden">
+          <div className="!select-none flex flex-1 overflow-auto">
             <table className="min-w-full bg-white border text-xs text-nowrap">
               <thead>
                 <tr>
-                  <th className="py-2 px-2 border">NOMBRE</th>
-                  <th className="py-2 px-2 border">APELLIDO</th>
+                  <th className="py-2 px-2 border min-w-[72px]">NOMBRE</th>
+                  <th className="py-2 px-2 border min-w-[72px]">APELLIDO</th>
                   {/* <th className="py-2 px-2 border">DNI</th> */}
-                  <th className="py-2 px-2 border">TURNO</th>
+                  <th className={`py-2 px-2 border min-w-[72px] ${today.getDay() === 1 ? 'border-r-0' : ''}`}>TURNO</th>
                   {weekDates.map((fecha, i) => {
-                    const formattedFecha = new Date(fecha);
-                    today.setHours(0, 0, 0, 0);
-                    formattedFecha.setHours(0, 0, 0, 0);
-
-                    // Comparar las fechas
-                    const isToday = formattedFecha.getTime() === today.getTime();
-                    const isOutOfRange = startDate && endDate && dayjs(fecha).isBefore(dayjs(startDate)) || dayjs(fecha).isAfter(dayjs(endDate));
-
-                    const getClassName = () => {
-                      const baseClasses = 'py-2 px-2 border';
-                      const outOfRangeClasses = isOutOfRange ? 'bg-gray-200 border-gray-300 text-gray-400' : '';
-                      const todayClasses = isToday ? 'bg-blue-100 !border-blue-400 border-l-1 border-r-1' : 'border-r-0';
-
-                      return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
-                    };
-
                     return (
                       <th
                         key={i}
-                        className={getClassName()}
+                        className={getClassName(fecha)}
                       >
                         {fecha.toLocaleString("es-ES", { weekday: "short" }).toUpperCase()}
                         <br />
@@ -438,7 +508,7 @@ const SeguimientoAsistencia = () => {
 
                     );
                   })}
-                  <th className="py-2 px-2 border">ACCIÓN</th>
+                  {/* <th className="py-2 px-2 border">ACCIÓN</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -454,19 +524,19 @@ const SeguimientoAsistencia = () => {
                   // Renderiza los datos reales cuando se cargan
                   dataAsistencias.map((asistencia) => (
                     <tr key={asistencia.id_empleado}>
-                      <td className="py-2 px-2 border">{asistencia.nombres}</td>
-                      <td className="py-2 px-2 border">{asistencia.apellidos}</td>
-                      <td className="py-2 px-2 border">{asistencia.turno}</td>
+                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
+                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
+                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
                       {asistencia.estados.map((asistencia) => (
                         <td key={asistencia.id_empleado + asistencia.fecha} className="py-2 px-2 border text-center">
                           {asistencia.asistencia ? asistencia.asistencia : '-'}
                         </td>
                       ))}
-                      <td className="py-2 px-2 border text-center">
+                      {/* <td className="py-2 px-2 border text-center">
                         <button className="bg-blue-500 text-white p-2 rounded-lg">
                           Más info
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))
                 )}
@@ -475,7 +545,7 @@ const SeguimientoAsistencia = () => {
             </table>
           </div>
           <div className='flex justify-end pt-4'>
-            <CustomTablePagination />
+            <CustomTablePagination count={count}/>
           </div>
         </div>
       </div>

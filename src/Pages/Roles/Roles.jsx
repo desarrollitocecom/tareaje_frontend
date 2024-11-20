@@ -14,11 +14,13 @@ import usePermissions from '../../Components/hooks/usePermission';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
 import useFetchData from '../../Components/hooks/useFetchData';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 
 
 const Roles = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const { addParams } = UseUrlParamsManager();
   const { getData, deleteData } = useFetch()
   const { token } = useSelector((state) => state.auth);
   const { fetchPermisos } = useFetchData(token);
@@ -75,7 +77,8 @@ const Roles = ({ moduleName }) => {
 
     timeoutRef.current = setTimeout(() => {
 
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      addParams({ search: value.trim() });
+      
     }, 800);
   };
 
