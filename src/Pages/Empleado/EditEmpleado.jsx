@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
+import { calculateAge, handleFileChange } from '../../helpers/fileAndDateUtils';
 
 const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
     const [Open, setOpen] = useState(false);
@@ -32,17 +33,6 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         fetchLugarTrabajo, fetchFunciones,
     } = useFetchData(token);
 
-     // Calcular la edad según la fecha de nacimiento
-     const calculateAge = (birthDate) => {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--;
-        }
-        return age;
-    };
     const formik = useFormik({
         initialValues: {
             nombres: '',
@@ -191,7 +181,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                     } else {
                         const erroresArray = response?.error?.response?.data?.errores || [];
                         swalError({
-                            message: 'Ocurrió un error al modificar el cargo',
+                            message: 'Ocurrió un error al modificar el empleado',
                             data: erroresArray,
                         });
                     }
@@ -199,7 +189,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                 .catch((error) => {
                     console.error('Error en la solicitud:', error);
                     swalError({
-                        message: 'Error inesperado al modificar el cargo',
+                        message: 'Error inesperado al modificar el empleado',
                         data: [error.message],
                     });
                 })
@@ -274,17 +264,12 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         }
     }, [formik.values.f_nacimiento]);
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const allowedTypes = ['image/jpeg', 'image/png']; // Tipos permitidos
-            if (!allowedTypes.includes(file.type)) {
-                CustomSwal.fire('Error', 'Solo se permiten imágenes en formato JPG o PNG.', 'error');
-                return;
-            }
-            setFoto(file); // Guardar el archivo si es válido
-        }
+
+    const handleFileInputChange = (e) => {
+        handleFileChange(e, setFoto, CustomSwal);
     };
+
+    
 
     const handleClose = () => {
         setSelected(null);
@@ -341,7 +326,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         type="file"
                         size="small"
                         fullWidth
-                        onChange={handleFileChange}
+                        onChange={handleFileInputChange}
                         slotProps={{
                             inputLabel: { shrink: true }, // Mantener el label como "shrink"
                             htmlInput: { accept: 'image/jpeg, image/png' }, // Restricción en la selección

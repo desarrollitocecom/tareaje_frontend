@@ -8,6 +8,7 @@ import { useFormik } from 'formik';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
+import { calculateAge, handleFileChange } from '../../helpers/fileAndDateUtils';
 
 const AddEmpleado = ({ refreshData }) => {
     const { postData } = useFetch();
@@ -33,16 +34,6 @@ const AddEmpleado = ({ refreshData }) => {
     const [isLoading, setisLoading] = useState(false);
     const [foto, setFoto] = useState(null);
 
-    const calculateAge = (birthDate) => {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--; // Ajuste si no ha cumplido años este año
-        }
-        return age;
-    };
 
     useEffect(() => {
         if (open) {
@@ -79,6 +70,7 @@ const AddEmpleado = ({ refreshData }) => {
         }
     }, [open]);
 
+
     const formik = useFormik({
         initialValues: {
             nombres: '',
@@ -105,85 +97,85 @@ const AddEmpleado = ({ refreshData }) => {
         },
         validate: (values) => {
             const errors = {};
-        
+
             // Validación de nombres
-            // if (!values.nombres) {
-            //     errors.nombres = 'Campo requerido';
-            // } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombres)) {
-            //     errors.nombres = 'Debe contener solo letras y espacios';
-            // }
-        
+            if (!values.nombres) {
+                errors.nombres = 'Campo requerido';
+            } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombres)) {
+                errors.nombres = 'Debe contener solo letras y espacios';
+            }
+
             // Validación de apellidos
             if (!values.apellidos) {
                 errors.apellidos = 'Campo requerido';
             } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.apellidos)) {
                 errors.apellidos = 'Debe contener solo letras y espacios';
             }
-        
+
             // Validación de DNI
             if (!values.dni) {
                 errors.dni = 'Campo requerido';
             } else if (!/^\d{8}$/.test(values.dni)) {
                 errors.dni = 'Debe ser un número de 8 dígitos';
             }
-        
+
             // Validación de RUC
             if (values.ruc && !/^\d{11}$/.test(values.ruc)) {
                 errors.ruc = 'Debe ser un número de 11 dígitos';
             }
-        
+
             // Validación de hijos
             if (values.hijos && (isNaN(values.hijos) || values.hijos < 0)) {
                 errors.hijos = 'Debe ser un número positivo';
             }
-        
+
             // Validación de edad
             if (!values.edad) {
                 errors.edad = 'Campo requerido';
             } else if (isNaN(values.edad) || values.edad < 18 || values.edad > 100) {
                 errors.edad = 'Debe ser un número entre 18 y 100';
             }
-        
+
             // Validación de fecha de nacimiento
             if (!values.f_nacimiento) {
                 errors.f_nacimiento = 'Campo requerido';
             } else if (isNaN(Date.parse(values.f_nacimiento))) {
                 errors.f_nacimiento = 'Debe ser una fecha válida';
             }
-        
+
             // Validación de correo
             if (!values.correo) {
                 errors.correo = 'Campo requerido';
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.correo)) {
                 errors.correo = 'Debe ser un correo electrónico válido';
             }
-        
+
             // Validación de domicilio
             if (!values.domicilio) {
                 errors.domicilio = 'Campo requerido';
             } else if (values.domicilio.length < 5) {
                 errors.domicilio = 'Debe contener al menos 5 caracteres';
             }
-        
+
             // Validación de celular
             if (!values.celular) {
                 errors.celular = 'Campo requerido';
             } else if (!/^\d{9}$/.test(values.celular)) {
                 errors.celular = 'Debe ser un número de 9 dígitos';
             }
-        
+
             // Validación de fecha de inicio
             if (!values.f_inicio) {
                 errors.f_inicio = 'Campo requerido';
             } else if (isNaN(Date.parse(values.f_inicio))) {
                 errors.f_inicio = 'Debe ser una fecha válida';
             }
-        
+
             // Validación de observaciones
             if (values.observaciones && values.observaciones.length > 500) {
                 errors.observaciones = 'No puede exceder los 500 caracteres';
             }
-        
+
             // Validaciones de selecciones
             const selectionFields = [
                 { field: 'id_cargo', label: 'Cargo', options: dataSets.cargos || [] },
@@ -196,7 +188,7 @@ const AddEmpleado = ({ refreshData }) => {
                 { field: 'id_lugar_trabajo', label: 'Lugar de Trabajo', options: dataSets.lugarTrabajo || [] },
                 { field: 'id_funcion', label: 'Función', options: dataSets.funciones || [] },
             ];
-        
+
             selectionFields.forEach(({ field, label, options }) => {
                 if (!values[field]) {
                     errors[field] = `${label} es obligatorio`;
@@ -204,9 +196,11 @@ const AddEmpleado = ({ refreshData }) => {
                     errors[field] = `${label} no es válido`;
                 }
             });
-        
+
             return errors;
         },
+
+        
         onSubmit: (values) => {
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => {
@@ -217,7 +211,7 @@ const AddEmpleado = ({ refreshData }) => {
             if (foto) formData.append('photo', foto);
             postData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados`, formData, token)
                 .then((response) => {
-                    
+
                     if (response.status) {
                         CustomSwal.fire('Agregado', 'El empleado ha sido agregado correctamente.', 'success');
                         refreshData();
@@ -225,7 +219,7 @@ const AddEmpleado = ({ refreshData }) => {
                     } else {
                         const erroresArray = response?.error?.response?.data?.errores || [];
                         swalError({
-                            message: 'Ocurrió un error al agregar el grado de estudio',
+                            message: 'Ocurrió un error al agregar el empleado',
                             data: erroresArray,
                         });
                     }
@@ -233,7 +227,7 @@ const AddEmpleado = ({ refreshData }) => {
                 .catch((error) => {
                     console.error('Error en la solicitud:', error);
                     swalError({
-                        message: 'Error inesperado al agregar el grado de estudio',
+                        message: 'Error inesperado al agregar el empleado',
                         data: [error.message],
                     });
                 })
@@ -250,23 +244,18 @@ const AddEmpleado = ({ refreshData }) => {
         }
     }, [formik.values.f_nacimiento]);
 
+    const handleFileInputChange = (e) => {
+        handleFileChange(e, setFoto, CustomSwal);
+    };
+
+    
     const handleClose = () => {
         formik.resetForm();
         setFoto(null);
         setOpen(false);
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const allowedTypes = ['image/jpeg', 'image/png'];
-            if (!allowedTypes.includes(file.type)) {
-                CustomSwal.fire('Error', 'Solo se permiten imágenes en formato JPG o PNG.', 'error');
-                return;
-            }
-            setFoto(file);
-        }
-    };
+    
     return (
         <>
             <Tooltip title="Añadir" placement="top" arrow>
@@ -289,7 +278,7 @@ const AddEmpleado = ({ refreshData }) => {
                             { name: 'ruc', label: 'RUC', type: 'text' },
                             { name: 'hijos', label: 'Hijos', type: 'number' },
                             { name: 'f_nacimiento', label: 'Fecha de Nacimiento', type: 'date' },
-                            { name: 'edad', label: 'Edad', type: 'number', readOnly: true },                          
+                            { name: 'edad', label: 'Edad', type: 'number', readOnly: true },
                             { name: 'correo', label: 'Correo', type: 'email' },
                             { name: 'domicilio', label: 'Domicilio', type: 'text' },
                             { name: 'celular', label: 'Celular', type: 'text' },
@@ -310,8 +299,8 @@ const AddEmpleado = ({ refreshData }) => {
                                 error={formik.touched[name] && Boolean(formik.errors[name])}
                                 helperText={formik.touched[name] && formik.errors[name]}
                                 slotProps={{
-                                    input: { readOnly }, 
-                                    inputLabel: type === 'date' ? { shrink: true } : undefined, 
+                                    input: { readOnly },
+                                    inputLabel: type === 'date' ? { shrink: true } : undefined,
                                 }}
                             />
                         ))}
@@ -359,10 +348,10 @@ const AddEmpleado = ({ refreshData }) => {
                             type="file"
                             size="small"
                             fullWidth
-                            onChange={handleFileChange}
+                            onChange={handleFileInputChange}
                             slotProps={{
-                                inputLabel: { shrink: true }, 
-                                htmlInput: { accept: 'image/jpeg, image/png' }, 
+                                inputLabel: { shrink: true },
+                                htmlInput: { accept: 'image/jpeg, image/png' },
                             }}
                         />
                         <div className="flex justify-between pt-5">

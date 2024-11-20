@@ -81,11 +81,11 @@ const Empleados = ({ moduleName }) => {
 
     const onEdit = async (id) => {
         try {
-            // Solicitar datos del empleado por su ID
+            //empleado por su ID
             const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token);
             const empleadoData = response.data.data;
 
-            // Pasar los datos completos al componente EditEmpleado
+            // Pasar los datos 
             setSelected(empleadoData);
         } catch (error) {
             console.error('Error al obtener los datos del empleado:', error);

@@ -31,7 +31,7 @@ const EditJurisdiccion = ({ Selected, setSelected, refreshData }) => {
                 setOpen(false);
                 CustomSwal.fire(
                     'Modificado',
-                    'La juridiccion ha sido modificado correctamente.',
+                    'La juridicción ha sido modificado correctamente.',
                     'success'
                 );
                 refreshData();
@@ -40,14 +40,14 @@ const EditJurisdiccion = ({ Selected, setSelected, refreshData }) => {
             } else {
                 const erroresArray = response?.error?.response?.data?.errores || [];
                 swalError({
-                    message: 'Ocurrió un error al modificar la juridiccion',
+                    message: 'Ocurrió un error al modificar la juridicción',
                     data: erroresArray,
                 });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
             swalError({
-                message: 'Error inesperado al modificar la jurisdiccion',
+                message: 'Error inesperado al modificar la jurisdicción',
                 data: [error.message],
             });
         }finally {

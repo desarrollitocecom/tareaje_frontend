@@ -2,7 +2,7 @@ import axios from 'axios';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 
-const deleteLugarTrabajo = (obj, refreshData, token, deleteData) => {
+const deleteFuncion = (obj, refreshData, token, deleteData) => {
 
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
@@ -40,4 +40,4 @@ const deleteLugarTrabajo = (obj, refreshData, token, deleteData) => {
 };
 
 
-export default deleteLugarTrabajo;
+export default deleteFuncion;

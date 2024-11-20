@@ -85,7 +85,7 @@ const AddCargo = ({ refreshData }) => {
                     } else {
                         const erroresArray = response?.error?.response?.data?.errores || [];
                         swalError({
-                            message: 'Ocurrió un error al agregar el grado de estudio',
+                            message: 'Ocurrió un error al agregar el cargo',
                             data: erroresArray,
                         });
                     }
@@ -93,7 +93,7 @@ const AddCargo = ({ refreshData }) => {
                 .catch((error) => {
                     console.error('Error en la solicitud:', error);
                     swalError({
-                        message: 'Error inesperado al agregar el grado de estudio',
+                        message: 'Error inesperado al agregar el cargo',
                         data: [error.message],
                     });
                 })

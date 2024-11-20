@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 
 
-const Empleados = (moduleName) => {
+const Subgerencia = (moduleName) => {
 
     const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
     const location = useLocation();
@@ -154,4 +154,4 @@ const Empleados = (moduleName) => {
 
 }
 
-export default Empleados
+export default Subgerencia

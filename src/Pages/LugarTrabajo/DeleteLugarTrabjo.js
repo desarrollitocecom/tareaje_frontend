@@ -2,7 +2,7 @@ import axios from 'axios';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 
-const deleteJurisdiccion = (obj, refreshData, token, deleteData) => {
+const deleteLugarTrabajo = (obj, refreshData, token, deleteData) => {
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -26,7 +26,7 @@ const deleteJurisdiccion = (obj, refreshData, token, deleteData) => {
                     );
                     refreshData(); // Refresca los datos después de eliminar
                 } catch (error) {
-                    console.error('Error eliminando el lujar de trabajo:', error);
+                    console.error('Error eliminando el lugar de trabajo:', error);
                     swalError({
                         message: 'Hubo un problema al eliminar el lugar de trabajo.',
                         data: [error.response?.data?.message || error.message],
@@ -38,4 +38,4 @@ const deleteJurisdiccion = (obj, refreshData, token, deleteData) => {
     });
 };
 
-export default deleteJurisdiccion;
+export default deleteLugarTrabajo;
