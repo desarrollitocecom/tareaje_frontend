@@ -1,9 +1,8 @@
 import axios from 'axios';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 
 const deleteCargo = (obj, refreshData, token, deleteData) => {
-
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -15,32 +14,28 @@ const deleteCargo = (obj, refreshData, token, deleteData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //console.log(token)
-            //console.log(obj.id)
-            const eliminar = async() => {
+            const eliminar = async () => {
                 try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos/${obj.id}`,token)
-                    console.log(response)
+                    
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos/${obj.id}`, token);
+                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
-                        'El cargo ha sido eliminado correctamente.',
+                        'El cargo ha sido eliminada correctamente.',
                         'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar el cargo.',
-                        'error'
-                      );
-                      console.error('Error eliminando el cargo:', error);
-                  } 
-            }
-            eliminar()        
-            }
-            
+                    );
+                    refreshData(); // Refresca los datos después de eliminar
+                } catch (error) {
+                    console.error('Error eliminando el cargo:', error);
+                    swalError({
+                        message: 'Hubo un problema al eliminar el cargo.',
+                        data: [error.response?.data?.message || error.message],
+                    });
+                }
+            };
+            eliminar();
         }
-    );
+    });
 };
 
 export default deleteCargo;

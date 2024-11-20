@@ -5,7 +5,7 @@ import { Button, Fab, IconButton, Tooltip, TextField} from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 
 const AddSubgerencia = ({refreshData}) => {
@@ -27,42 +27,35 @@ const AddSubgerencia = ({refreshData}) => {
         return errors;
     }
 
-    const handleSubmit = async (values, { resetForm }) => {
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/subgerencias`, values, token);
     
             if (response.status) {
-
                 setOpen(false);
                 CustomSwal.fire(
                     'Agregado',
                     'La subgerencia ha sido agregado correctamente.',
                     'success'
                 );
-                // Llama a la función para refrescar los datos después de agregar 
                 refreshData();
                 resetForm();
             } else {
-                console.error('Error al agregar la subgerencia: ', response.error.response.data.error);
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.error,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                swalError({
+                    message: 'Ocurrió un error al agregar la subgerencia',
+                    data: erroresArray,
                 });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            CustomSwal.fire({
-                icon: 'error',
-                title: response.error.response.data.error,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000
+            swalError({
+                message:  'Error inesperado al agregar la subgerencia',
+                data: [error.message],
             });
+        } finally {
+            
+            setSubmitting(false);
         }
     };
 
@@ -90,6 +83,7 @@ const AddSubgerencia = ({refreshData}) => {
                                     as={TextField}
                                     label="Subgerencia"
                                     variant="outlined"
+                                    size="small"
                                     fullWidth
                                     name="nombre"
                                     error={touched.nombre && Boolean(errors.nombre)}

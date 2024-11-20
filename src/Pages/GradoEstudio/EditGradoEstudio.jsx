@@ -4,7 +4,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { Button,TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 
 const EditGradoEstudio = ({ Selected, setSelected, refreshData}) => {
@@ -24,12 +24,9 @@ const EditGradoEstudio = ({ Selected, setSelected, refreshData}) => {
     }
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log(values,Selected?.id);
-        
-        try{
-
+        try {
             const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/gradoestudios/${Selected?.id}`, values, token);
-            
+    
             if (response.status) {
                 setOpen(false);
                 CustomSwal.fire(
@@ -37,31 +34,25 @@ const EditGradoEstudio = ({ Selected, setSelected, refreshData}) => {
                     'El grado de estudio ha sido modificado correctamente.',
                     'success'
                 );
-                // Llama a la función para refrescar los datos después de agregar 
                 refreshData();
                 resetForm();
-            setSubmitting(false);
-            }else {
-                console.error('Error al modificar el grado de estudio:', response.error.response.data.error);
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.error,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
+            } else {
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                swalError({
+                    message: 'Ocurrió un error al modificar el grado de estudio',
+                    data: erroresArray,
                 });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            CustomSwal.fire({
-                icon: 'error',
-                title: response.error.response.data.error,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000
-            });        }
+            swalError({
+                message: 'Error inesperado al modificar el grado de estudio',
+                data: [error.message],
+            });
+        } finally {
+            
+            setSubmitting(false);
+        }
     };
 
     const validate = (values) => {

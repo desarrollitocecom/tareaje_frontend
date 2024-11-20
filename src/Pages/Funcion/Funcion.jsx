@@ -145,7 +145,7 @@ const Funcion = (moduleName) => {
                 </main>
             </div>
              {/* Componetnes para editar y eliminar */}
-             {/* {canEdit && <EditFuncion Selected={Selected} setSelected={setSelected}  refreshData={refreshData}  />} */}
+             {canEdit && <EditFuncion Selected={Selected} setSelected={setSelected}  refreshData={refreshData}  />} 
 
         </>
     )

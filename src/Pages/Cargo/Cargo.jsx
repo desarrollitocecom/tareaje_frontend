@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 
-const Cargo = ({moduleName}) => {
+const Cargo = ({ moduleName }) => {
 
     const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
     const location = useLocation();
@@ -55,41 +55,38 @@ const Cargo = ({moduleName}) => {
         setUpdate((prev) => !prev)
     }
 
-    
+
+
     const fetchData = async (url) => {
-        setLoading(true)
+        setLoading(true);
 
-        const urlParams = url || ''
-
-    
+        const urlParams = url || '';
         try {
-          const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos/${urlParams}`,token)
-          setCount(response.data.data.totalCount)
-          const dataFormated = response.data.data.data.map((item) =>{
-            return {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos/${urlParams}`, token);
+            setCount(response.data.data.totalCount);
+            const dataFormated = response.data.data.data.map((item) => ({
                 id: item.id,
                 nombres: item.nombre,
                 sueldo: item.sueldo,
-                subgerencia: item.id_subgerencia,
-            }
-
-          })
-          setdata(dataFormated)
+                subgerencia: item.Subgerencia.nombre, // Solo el nombre de la subgerencia
+            }));
+            setdata(dataFormated);
         } catch (error) {
-          console.log(error);
+            console.log(error);
         } finally {
-          setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
-    
+
+
 
     const onEdit = (obj) => {
-        setSelected(obj);
-    }
+        setSelected(obj); // Esto debería incluir id_subgerencia en Selected
+    };
 
     const onDelete = (obj) => {
-        deleteCargo(obj, refreshData, token, deleteData )
+        deleteCargo(obj, refreshData, token, deleteData)
     }
 
     return (
@@ -147,8 +144,8 @@ const Cargo = ({moduleName}) => {
                     </div >
                 </main>
             </div>
-             {/* Componetnes para editar y eliminar */}
-             {canEdit && <EditCargo Selected={Selected} setSelected={setSelected}  refreshData={refreshData} />}
+            {/* Componetnes para editar y eliminar */}
+            {canEdit && <EditCargo Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
 
         </>
     )

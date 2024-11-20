@@ -4,7 +4,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { Button,TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 
 const EditSexo = ({ Selected, setSelected, refreshData }) => {
@@ -23,12 +23,9 @@ const EditSexo = ({ Selected, setSelected, refreshData }) => {
     }
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log(values,Selected?.id);
-        
-        try{
-
+        try {
             const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/sexos/${Selected?.id}`, values, token);
-            
+    
             if (response.status) {
                 setOpen(false);
                 CustomSwal.fire(
@@ -36,32 +33,27 @@ const EditSexo = ({ Selected, setSelected, refreshData }) => {
                     'El sexo ha sido modificado correctamente.',
                     'success'
                 );
-                // Llama a la función para refrescar los datos después de agregar el turno
                 refreshData();
                 resetForm();
-            setSubmitting(false);
-            }else {
-                console.error('Error al modificar el sexo:', response.error.response.data.error);
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.error,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
+            } else {
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                swalError({
+                    message: 'Ocurrió un error al modificar el sexo',
+                    data: erroresArray,
                 });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            CustomSwal.fire({
-                icon: 'error',
-                title: response.error.response.data.error,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000
-            });        }
+            swalError({
+                message: 'Error inesperado al modificar el sexo',
+                data: [error.message],
+            });
+        } finally {
+            
+            setSubmitting(false);
+        }
     };
+
 
     const validate = (values) => {
         const errors = {};
@@ -72,9 +64,7 @@ const EditSexo = ({ Selected, setSelected, refreshData }) => {
         }
         return errors;
     }
-
-
-    // Usar selected para sacar los datos del empleado
+    
     return (
         <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose}>
             <div className="flex items-center mb-2">
