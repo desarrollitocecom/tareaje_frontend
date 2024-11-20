@@ -45,7 +45,17 @@ const AsistenciaPersonal = () => {
   const fetchData = (date) => {
     setLoading(true);
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
-      setDataFormatted(response.data.data);
+      console.log(response.data.data);
+      
+      const formattedData = response.data.data.map((item) => ({
+        nomrbes: item.nombres,
+        apellidos: item.apellidos,
+        dni: item.dni,
+        turno: item.turno,
+        fecha: item.fecha,
+        hora: item.hora,
+      }));
+      setDataFormatted(formattedData);
     }).catch((error) => {
       console.log(error);
     }).finally(() => {

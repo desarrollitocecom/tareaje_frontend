@@ -77,7 +77,7 @@ const CRUDTable = memo(({
                                                 <TableRow
                                                     onClick={(e) => typeof rowOnClick === 'function' && rowOnClick(e, row)}
                                                     className={`${typeof rowOnClick === 'function' ? 'cursor-pointer hover:bg-gray-100' : ''}`}
-                                                    key={row.id}
+                                                    key={row.id || row.dni}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
                                                     {headers.map((header, index) => {
