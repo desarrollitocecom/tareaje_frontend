@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
 import axios from 'axios';
@@ -12,7 +12,6 @@ import EditVacaciones from './EditVacaciones';
 import DeleteVacaciones from './DeleteVacaciones';
 import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 
 const Vacaciones = ({moduleName}) => {
@@ -27,22 +26,11 @@ const Vacaciones = ({moduleName}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
-  const [limitRows, setLimitRows] = useState(20);
-  const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const limitRows = parseInt(location.search.split('limit=')[1])
-    const page = parseInt(location.search.split('page=')[1]) + 1
-    if (limitRows && page) {
-      setLimitRows(limitRows)
-      setPage(page)
-    }
-  }, [location])
-  
-  useEffect(() => {
-    fetchData()
-  }, [Update])
+    fetchData(location.search || undefined);
+  }, [location.search, Update])
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -54,7 +42,7 @@ const Vacaciones = ({moduleName}) => {
 
     timeoutRef.current = setTimeout(() => {
 
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      addParams({ search: value.trim() });
     }, 800);
   };
 
@@ -63,11 +51,13 @@ const Vacaciones = ({moduleName}) => {
   }
 
 
-  const fetchData = async() => {
+  const fetchData = async(url) => {
     setLoading(true)
 
+    const urlParams = url || ''
+
     try {
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones?page=${page}&limit=${limitRows}`,token)
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones/${urlParams}`,token)
       setCount(response.data.data.totalCount)
       const dataFormated = response.data.data.data.map((item) =>{
         return{
@@ -75,13 +65,13 @@ const Vacaciones = ({moduleName}) => {
           nombre: item.empleado.nombres,
           apellido: item.empleado.apellidos,
           dni: item.empleado.dni,
-          f_inicio: item.f_inicio,
-          f_fin: item.f_fin
+          "fecha de inicio": item.f_inicio,
+          "fecha de fin": item.f_fin
         }
       })
       setdata(dataFormated)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false)
     }
