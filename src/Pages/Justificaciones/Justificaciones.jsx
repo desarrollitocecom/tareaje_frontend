@@ -12,10 +12,13 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+
 
 const Justificaciones = ({ moduleName }) => {
   const { canCreate, canEdit } = usePermissions(moduleName);
   const location = useLocation();
+  const { addParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
   const { getData } = useFetch();
   const navigate = useNavigate();
@@ -40,9 +43,11 @@ const Justificaciones = ({ moduleName }) => {
     }
 
     timeoutRef.current = setTimeout(() => {
-      console.error(error);
+
+      addParams({ search: value.trim() });
     }, 800);
   };
+
 
   const refreshData = () => {
     setUpdate((prev) => !prev);
@@ -55,7 +60,6 @@ const Justificaciones = ({ moduleName }) => {
 
     try {
       const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones/${urlParams}`, token);
-      console.log(response);
       setCount(response.data.data.totalCount);
       const dataFormated = response.data.data.data.map((item) => {
         return {

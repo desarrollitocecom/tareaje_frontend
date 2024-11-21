@@ -14,10 +14,13 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+
 
 const Descansos = ({ moduleName}) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
   const location = useLocation();
+  const { addParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
   const { getData, deleteData } = useFetch()
   const navigate = useNavigate()

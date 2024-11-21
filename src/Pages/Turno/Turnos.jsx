@@ -13,12 +13,15 @@ import DeleteTurno from './DeleteTurno';
 import usePermissions from '../../Components/hooks/usePermission';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+
 
 
 
 const Turnos = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
   const { getData, deleteData } = useFetch()
+  const { addParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate()
   const location = useLocation();
@@ -61,7 +64,7 @@ const Turnos = ({ moduleName }) => {
     try {
 
       const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${urlParams}`, token)
-      setCount(response.data.data.totalcount)
+      setCount(response.data.data.totalCount)
       const dataFormated = response.data.data.data.map((item) => {
         return {
           id: item.id,
