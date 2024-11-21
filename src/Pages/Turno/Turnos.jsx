@@ -44,7 +44,7 @@ const Turnos = ({ moduleName }) => {
 
     timeoutRef.current = setTimeout(() => {
 
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      addParams({ search: value.trim() });
     }, 800);
   };
 
