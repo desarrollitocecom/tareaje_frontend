@@ -1,49 +1,35 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
-import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddJustificacion from './AddJustificacion';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditJustificacion from './EditJustificacion';
-import DeleteJustificacion from './DeleteJustificacion';
 import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 
 const Justificaciones = ({ moduleName }) => {
-  const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const { canCreate, canEdit } = usePermissions(moduleName);
   const location = useLocation();
   const { token } = useSelector((state) => state.auth);
-  const { getData } = useFetch()
-  const navigate = useNavigate()
-  const [data, setData] = useState([])
-  const [Update, setUpdate] = useState(false)
-  const [Loading, setLoading] = useState(false)
+  const { getData } = useFetch();
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [Update, setUpdate] = useState(false);
+  const [Loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [Selected, setSelected] = useState(null)
+  const [Selected, setSelected] = useState(null);
   const timeoutRef = useRef(null);
-  const [limitRows, setLimitRows] = useState(20);
-  const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
 
-
-  useEffect(() => { 
-    const limitRows = parseInt(location.search.split('limit=')[1])
-    const page = parseInt(location.search.split('page=')[1]) + 1
-    if (limitRows && page) {
-      setLimitRows(limitRows)
-      setPage(page)
-    }
-  })
-  
   useEffect(() => {
-    fetchData()
-  }, [Update])
+    fetchData(location.search || undefined);
+  }, [location.search, Update]);
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -54,74 +40,82 @@ const Justificaciones = ({ moduleName }) => {
     }
 
     timeoutRef.current = setTimeout(() => {
-
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      console.error(error);
     }, 800);
   };
 
   const refreshData = () => {
-    setUpdate((prev) => !prev)
-  }
+    setUpdate((prev) => !prev);
+  };
 
+  const fetchData = async (url) => {
+    setLoading(true);
 
-  const fetchData = async() => {
-    setLoading(true)
+    const urlParams = url || '';
 
     try {
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/justificacion?page=${page}&limit=${limitRows}`,token)
-      console.log(response.data)
-      setCount(response.data.data.totalCount)
-      const dataFormated = response.data.data.data.map((item) =>{
-        return{
-          id:item.id,
-          nombre: item.nombre,
-        }
-      })
-      setData(dataFormated)
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones/${urlParams}`, token);
+      console.log(response);
+      setCount(response.data.data.totalCount);
+      const dataFormated = response.data.data.data.map((item) => {
+        return {
+          id: item.id,
+          nombre: item.empleado.nombre,
+          apellido: item.empleado.apellido,
+          dni: item.empleado.dni,
+          "fecha de inicio": item.f_inicio,
+          "fecha de fin": item.f_fin,
+          descripcion: item.descripcion
+        };
+      });
+      setData(dataFormated);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const onEdit = (obj) => {
     setSelected(obj);
-    
-  }
-  const onDelete = (obj) => {
-    DeleteJustificacion(obj, refreshData)
-  }
+  };
 
   return (
     <>
-      <div className='h-full flex flex-col w-full bg-gray-100 p-4'>
+      <div className="h-full flex flex-col w-full bg-gray-100 p-4">
         <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
-          <Link onClick={() => navigate(-1)} className='flex items-center gap-1'>
-            <ArrowBackIosNewRoundedIcon
-              className='!size-5 md:!size-6 mt-[0.1rem] absolute left-4'
-            />
+          <Link onClick={() => navigate(-1)} className="flex items-center gap-1">
+            <ArrowBackIosNewRoundedIcon className="!size-5 md:!size-6 mt-[0.1rem] absolute left-4" />
           </Link>
           <h1 className="md:text-2xl lg:text-4xl font-bold text-center">
             Justificaciones
           </h1>
         </header>
-        <main className='flex-1 bg-white shadow rounded-lg p-4 h-full overflow-hidden'>
-          <div className='flex flex-col w-full h-full'>
-            <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
-              <div className='w-full flex items-center gap-2'>
-                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+        <main className="flex-1 bg-white shadow rounded-lg p-4 h-full overflow-hidden">
+          <div className="flex flex-col w-full h-full">
+            <div className="w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3">
+              <div className="w-full flex items-center gap-2">
+                <span className="text-gray-600">
+                  Total de filas:{' '}
+                  <span id="rowCount" className="font-bold">
+                    {data ? data.length : 0}
+                  </span>
+                </span>
               </div>
-              <div className='w-full flex items-center justify-end gap-3'>
-                <div className='flex items-center'>
-                  <Tooltip title="Refrescar" placement='top' arrow>
+              <div className="w-full flex items-center justify-end gap-3">
+                <div className="flex items-center">
+                  <Tooltip title="Refrescar" placement="top" arrow>
                     <IconButton aria-label="refresh" onClick={refreshData}>
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddJustificacion />
+                  {canCreate && <AddJustificacion refreshData={refreshData} />}
                 </div>
-                <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
+                <FormControl
+                  variant="standard"
+                  size="small"
+                  className="w-full max-w-full md:max-w-sm"
+                >
                   <InputLabel htmlFor="input-with-icon-adornment">
                     Buscar
                   </InputLabel>
@@ -141,18 +135,16 @@ const Justificaciones = ({ moduleName }) => {
             <CRUDTable
               data={data}
               loading={Loading}
-              onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
             />
-          </div >
+          </div>
         </main>
       </div>
-      {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditJustificacion Selected={Selected} setSelected={setSelected} />}
-      
+      {/* Componente para editar */}
+      {canEdit && <EditJustificacion Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
     </>
-  )
-}
+  );
+};
 
-export default Justificaciones
+export default Justificaciones;

@@ -3,64 +3,60 @@ import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Tooltip, TextField } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
+import { useFormik } from 'formik';
 import { useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 const AddRegimen = ({ refreshData }) => {
-    const { postData } = useFetch();
     const [Open, setOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
+    const { postData } = useFetch();
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        formik.resetForm();
+        setOpen(false);
+    };
 
-    const handleSubmit = async (values, { resetForm }) => {
-        try {
-            const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales`, values, token);
-            if (response.status) {
-                CustomSwal.fire('Agregado', 'El regimen laboral ha sido agregado correctamente.', 'success');
-                setOpen(false);
-                refreshData();
-                resetForm();
-            } else {
-                const message = response?.error?.response?.data?.message || 'Ocurrió un error';
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                const errores = erroresArray.length > 0
-                    ? erroresArray.join(', ') 
-                    : 'No se encontraron detalles del error';
-
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: `${message}: ${errores}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
-
+    const formik = useFormik({
+        initialValues: {
+            nombre: '',
+        },
+        validate: (values) => {
+            const errors = {};
+            if (!values.nombre) {
+                errors.nombre = 'Este campo es obligatorio';
+            } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
+                errors.nombre = 'El nombre solo debe contener letras';
             }
-        } catch (error) {
-            CustomSwal.fire({
-                icon: 'error',
-                title: 'Error en la solicitud',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-            });
-        }
-    };
-
-    const validate = (values) => {
-        const errors = {};
-        if (!values.nombre) {
-            errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
-            errors.nombre = 'El nombre solo debe contener letras';
-        }
-        return errors;
-    };
+            return errors;
+        },
+        onSubmit: (values) => {
+            postData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales`, values, token, true)
+                .then((res) => {
+                    if (res.status) {
+                        CustomSwal.fire({
+                            icon: 'success',
+                            title: 'El régimen laboral ha sido agregado correctamente.',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                        });
+                        refreshData();
+                        handleClose();
+                    } else {
+                        throw res.error;
+                    }
+                })
+                .catch((err) => {
+                    swalError(err.response?.data);
+                    console.error(err);    
+                }).finally(() => {
+                    formik.setSubmitting(false);
+                });
+        },
+    });
 
     return (
         <>
@@ -69,53 +65,46 @@ const AddRegimen = ({ refreshData }) => {
                     <AddIcon fontSize="small" />
                 </IconButton>
             </Tooltip>
-            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} disableEnforceFocus={true}
-            >
+            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={formik.isSubmitting}>
                 <div className="flex items-center mb-2">
                     <SecurityIcon className="w-6 h-6 mr-2" />
-                    <h1 className="text-lg font-bold">Añadir un Regimen</h1>
+                    <h1 className="text-lg font-bold">Añadir un Régimen</h1>
                 </div>
-                <Formik
-                    initialValues={{ nombre: '' }}
-                    validate={validate}
-                    onSubmit={handleSubmit}
-                >
-                    {({ errors, touched }) => (
-                        <Form>
-                            <div className="mb-3">
-                                <Field
-                                    as={TextField}
-                                    label="Nombre"
-                                    variant="outlined"
-                                    fullWidth
-                                    size="small"
-                                    name="nombre"
-                                    error={touched.nombre && Boolean(errors.nombre)}
-                                    helperText={touched.nombre && errors.nombre}
-                                />
-                            </div>
-                            <div className="flex justify-between pt-5">
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    variant="contained"
-                                    color="inherit"
-                                    onClick={handleClose}
-                                >
-                                    Cerrar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    size="small"
-                                    variant="contained"
-                                    color="success"
-                                >
-                                    Agregar
-                                </Button>
-                            </div>
-                        </Form>
-                    )}
-                </Formik>
+                <form onSubmit={formik.handleSubmit}>
+                    <div className="mb-3">
+                        <TextField
+                            label="Nombre"
+                            variant="outlined"
+                            fullWidth
+                            size="small"
+                            name="nombre"
+                            value={formik.values.nombre}
+                            onChange={formik.handleChange}
+                            error={formik.touched.nombre && Boolean(formik.errors.nombre)}
+                            helperText={formik.touched.nombre && formik.errors.nombre}
+                        />
+                    </div>
+                    <div className="flex justify-between pt-5">
+                        <Button
+                            type="button"
+                            size="small"
+                            variant="contained"
+                            color="inherit"
+                            onClick={handleClose}
+                        >
+                            Cerrar
+                        </Button>
+                        <Button
+                            type="submit"
+                            size="small"
+                            variant="contained"
+                            color="success"
+                            disabled={formik.isSubmitting}
+                        >
+                            Agregar
+                        </Button>
+                    </div>
+                </form>
             </CustomModal>
         </>
     );
