@@ -1,17 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link, useNavigate } from 'react-router-dom';
-import { TextField, Card, CardActionArea, CardMedia, CardContent, Typography, Avatar, IconButton } from '@mui/material';
+import { TextField, Card, CardActionArea, CardMedia, CardContent, Typography, Avatar, IconButton, Button, Collapse, InputBase, Popover, Grid, FormControl, InputLabel, Select, Slider } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import FilterListIcon from '@mui/icons-material/FilterAlt';
-import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import useData from '../Components/Hooks/UseDB';
 import FiltroSelect from '../Components/Filtroselect/Filtro';
+import SearchInput from '../Components/Inputs/SearchInput';
+import UseUrlParamsManager from '../Components/hooks/UseUrlParamsManager';
+import { MenuItem } from 'react-pro-sidebar';
 
 const PersonalBD = () => {
   const { data, cargos, turnos, sexos, edades, regimens, cants_hijos, Jurisdicciones, subgerencias } = useData();
   const navigate = useNavigate();
-  const [showFilters, setShowFilters] = useState(false);
+  const { addParams, getParams, removeParams } = UseUrlParamsManager();
+  const params = getParams();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col overflow-auto">
@@ -23,144 +35,154 @@ const PersonalBD = () => {
           BUSCADOR
         </h1>
       </header>
-      <IconButton style={{ justifyContent: 'left' }}
-        onClick={() => setShowFilters(!showFilters)}
-        className="md:hidden text-white flex items-left "
-      >
-        {showFilters ? <FilterListIcon /> : <FilterListOffIcon />}
-        <h2 className='font-bold text-black'>Filtros</h2>
-      </IconButton>
-      {showFilters && (
-        <Formik
-          initialValues={{ buscar: '', cargo: '', turnos: '', sexos: '', edades: '', regimens: '', cants_hijos: '', Jurisdicciones: '', subgerencias: '' }}
-          onSubmit={(values) => {
-            console.log(values);
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className='flex justify-start w-full'>
+          <Button
+            onClick={handleClick}
+            className="flex items-center gap-1 !capitalize !text-black"
+          >
+            {open ? <FilterAltOffIcon sx={{ fontSize: '1.2rem' }} /> : <FilterListIcon sx={{ fontSize: '1.2rem' }} />}
+            Filtros
+          </Button>
+        </div>
+        <SearchInput />
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
           }}
         >
-          {({ handleChange, handleBlur, values, errors, touched }) => (
-            <Form>
-              <div className="text-nowrap mb-6">
-                <div className="flex flex-col lg:flex-row gap-4">
-                  <div className="w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-11 gap-4">
-                      <div className='md:col-span-5'>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Buscar"
-                          name="buscar"
-                          size="small"
-                          className="bg-white grid-cols-2"
-                          value={values.buscar}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                      </div>
-                      <div className='md:col-span-3'>
-                        <FiltroSelect
-                          label="Cargo"
-                          name="cargo"
-                          value={values.cargo}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={cargos}
-                          error={errors.cargo}
-                          touched={touched.cargo}
-                        />
-                      </div>
-                      <div className='md:col-span-3'>
-                        <FiltroSelect
-                          label="Turno"
-                          name="turnos"
-                          value={values.turnos}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={turnos}
-                          error={errors.turnos}
-                          touched={touched.turnos}
-                        />
-                      </div>
-                      <div className='md:col-span-2'>
-                        <FiltroSelect
-                          label="Sexo"
-                          name="sexos"
-                          value={values.sexos}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={sexos}
-                          error={errors.sexos}
-                          touched={touched.sexos}
-                        />
-                      </div>
-                      <div className='md:col-span-1'>
-                        <FiltroSelect
-                          label="Edad"
-                          name="edades"
-                          value={values.edades}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={edades}
-                          error={errors.edades}
-                          touched={touched.edades}
-                        />
-                      </div>
-                      <div className='md:col-span-2'>
-                        <FiltroSelect
-                          label="Subgerencia"
-                          name="subgerencias"
-                          value={values.subgerencias}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={subgerencias}
-                          error={errors.subgerencias}
-                          touched={touched.subgerencias}
-                        />
-                      </div>
-                      <div className='md:col-span-2'>
-                        <FiltroSelect
-                          label="Regimen"
-                          name="regimens"
-                          value={values.regimens}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={regimens}
-                          error={errors.regimens}
-                          touched={touched.regimens}
-                        />
-                      </div>
-                      <div className='md:col-span-2'>
-                        <FiltroSelect
-                          label="Cantidad de Hijos"
-                          name="cants_hijos"
-                          value={values.cants_hijos}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={cants_hijos}
-                          error={errors.cants_hijos}
-                          touched={touched.cants_hijos}
-                        />
-                      </div>
-                      <div className='md:col-span-2'>
-                        <FiltroSelect
-                          label="Jurisdicción"
-                          name="Jurisdicciones"
-                          value={values.Jurisdicciones}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          options={Jurisdicciones}
-                          error={errors.Jurisdicciones}
-                          touched={touched.Jurisdicciones}
-                        />
-                      </div>
-                    </div>
-                  </div>
+          <div className="p-6">
+            <h1 className="text-xl font-bold text-gray-700 ">Filtros</h1>
+            <div className="flex flex-wrap justify-center max-w-[500px] mx-auto">
+              {/* Cargo */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="cargo-label">Cargo</label>
+                <FiltroSelect
+                  name="cargo"
+                  placeholder={'Seleccione un cargo'}
+                  onChange={(e) => addParams({ cargo: e.target.value })}
+                  value={params.cargo || ''}
+                  options={cargos}
+                />
+              </div>
+
+              {/* Turno */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="turno-label">Turno</label>
+                <FiltroSelect
+                  name="turnos"
+                  placeholder={'Seleccione un turno'}
+                  onChange={(e) => addParams({ turno: e.target.value })}
+                  value={params.turno || ''}
+                  options={turnos}
+                />
+              </div>
+
+              {/* Sexo */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                <FiltroSelect
+                  name="sexos"
+                  placeholder={'Seleccione un sexo'}
+                  onChange={(e) => addParams({ sexo: e.target.value })}
+                  value={params.sexo || ''}
+                  options={sexos}
+                />
+              </div>
+
+              {/* Subgerencia */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
+                <FiltroSelect
+                  name="subgerencias"
+                  placeholder={'Seleccione una subgerencia'}
+                  onChange={(e) => addParams({ subgerencia: e.target.value })}
+                  value={params.subgerencia || ''}
+                  options={subgerencias}
+                />
+              </div>
+
+              {/* Regimen */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="regimen-label">Regimen</label>
+                <FiltroSelect
+                  name="regimens"
+                  placeholder={'Seleccione un regimen'}
+                  onChange={(e) => addParams({ regimen: e.target.value })}
+                  value={params.regimen || ''}
+                  options={regimens}
+                />
+              </div>
+
+              {/* Hijos */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="hijos-label">Hijos</label>
+                <FiltroSelect
+                  name="cants_hijos"
+                  placeholder={'Seleccione la cantidad de hijos'}
+                  onChange={(e) => addParams({ cant_hijos: e.target.value })}
+                  value={params.cant_hijos || ''}
+                  options={cants_hijos}
+                />
+              </div>
+
+              {/* Jurisdicción */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Jurisdicción</label>
+                <FiltroSelect
+                  name="Jurisdicciones"
+                  placeholder={'Seleccione una jurisdicción'}
+                  onChange={(e) => addParams({ jurisdiccion: e.target.value })}
+                  value={params.jurisdiccion || ''}
+                  options={Jurisdicciones}
+                />
+              </div>
+
+              {/* Rango de Edad */}
+              <div className="w-full px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Edad</label>
+                <div className="pt-2 px-2">
+                  <Slider
+                    className="min-w-[12rem]"
+                    getAriaLabel={() => 'Edad'}
+                    defaultValue={[0, 100]}
+                    valueLabelDisplay="auto"
+                    onChange={(e, value) => addParams({ edad: `${value[0]}-${value[1]}` })}
+                    value={[params.edad?.split('-')[0] || 0, params.edad?.split('-')[1] || 100]}
+                    marks={[
+                      { value: 0, label: '0' },
+                      { value: 100, label: '100' },
+                    ]}
+                  />
                 </div>
               </div>
-            </Form>
-          )}
-        </Formik>
-      )}
+            </div>
 
+            {/* Botón para limpiar filtros */}
+            <div className="flex justify-end mt-6">
+              <Button
+                className="!capitalize"
+                onClick={removeParams}
+                variant="outlined"
+                color="error"
+                size="small"
+              >
+                Limpiar filtros
+              </Button>
+            </div>
+          </div>
+
+        </Popover>
+      </div>
       <div className="flex flex-wrap flex-col md:flex-row justify-center gap-4 p-4">
         {data.map((item) => (
           <Link to={`/buscar/${item.id}`} key={item.id}>
