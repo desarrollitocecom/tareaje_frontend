@@ -13,10 +13,13 @@ import DeleteVacaciones from './DeleteVacaciones';
 import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux'
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+
 
 const Vacaciones = ({moduleName}) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
   const location = useLocation();
+  const { addParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
   const { getData, deleteData } = useFetch();
   const navigate = useNavigate()

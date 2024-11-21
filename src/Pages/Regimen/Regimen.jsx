@@ -13,15 +13,18 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+
 
 const Regimen = ({ moduleName }) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+  const { addParams } = UseUrlParamsManager();
   const location = useLocation();
   const {token} = useSelector((state) => state.auth);
   const { getData, deleteData } = useFetch();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const [update, setUpdate] = useState(false);
+  const [Update, setUpdate] = useState(false);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selected, setSelected] = useState(null);
@@ -32,11 +35,11 @@ const Regimen = ({ moduleName }) => {
     if(location.search){
       fetchData(location.search)
     }
-  }, [location.search])
+  }, [location.search, Update])
   
   useEffect(() => {
     fetchData();
-  }, [update]);
+  }, [Update]);
 
 
   const handleSearchChange = (event) => {
@@ -48,6 +51,7 @@ const Regimen = ({ moduleName }) => {
     }
 
     timeoutRef.current = setTimeout(() => {
+
       addParams({ search: value.trim() });
     }, 800);
   };

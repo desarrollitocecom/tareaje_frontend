@@ -18,7 +18,7 @@ const AddJustificacion = ({ refreshData }) => {
     const { token } = useSelector((state) => state.auth);
     const [file, setFile] = useState(null);
     const { postData } = useFetch();
-    const { fetchEmpleados, fetchAsistencia } = useFetchData(token);
+    const { fetchEmpleados } = useFetchData(token);
     const [empleados, setEmpleados] = useState([]);
     const [dniInputValue, setDniInputValue] = useState('');
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
@@ -34,11 +34,6 @@ const AddJustificacion = ({ refreshData }) => {
         });
     }, []);
 
-    useEffect(() => {
-        fetchAsistencia().then((response) => {
-            setAsistencia   (response.data);
-        });
-    }, []);
 
     const handleClose = () => {
         setOpen(false);
@@ -123,7 +118,7 @@ const AddJustificacion = ({ refreshData }) => {
                     <h1 className="text-lg font-bold">Añadir una Justificación</h1>
                 </div>
                 <Formik
-                    initialValues={{ idEmpleado: '', idAsistencia: '', descripcion: '', nombre: '', apellido: '' }}
+                    initialValues={{ idEmpleado: '', descripcion: '', nombre: '', apellido: '' }}
                     validate={validate}
                     onSubmit={handleConvertAndSubmit}
                 >
