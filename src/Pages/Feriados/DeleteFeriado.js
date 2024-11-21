@@ -1,4 +1,3 @@
-import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
 const deleteFeriado = (obj, refreshData, token, deleteData) => {
@@ -10,29 +9,35 @@ const deleteFeriado = (obj, refreshData, token, deleteData) => {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
     }).then((result) => {
         if (result.isConfirmed) {
-            const eliminar = async() => {
-
-                try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/feriados/${obj.id}`,token)
-                    CustomSwal.fire(
-                        'Eliminado',
-                        'El regimen laboral ha sido eliminado correctamente.',
-                        'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar el regimen laboral.',
-                        'error'
-                      );
-                      console.error('Error eliminando el regimen laboral:', error);
-                  } 
-            }
-            eliminar()        
+            deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/feriados/${obj.id}`, token)
+                .then((res) => {
+                    if (res.status) {
+                        CustomSwal.fire({
+                            icon: 'success',
+                            title: res.data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                        });
+                        refreshData();
+                    } else {
+                        CustomSwal.fire({
+                            icon: 'error',
+                            title: res.error.response.data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
         }
     });
 };

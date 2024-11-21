@@ -44,7 +44,7 @@ const Feriados = ({moduleName}) => {
 
     timeoutRef.current = setTimeout(() => {
 
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      addParams({ search: value.trim() });
     }, 800);
   };
 
@@ -70,7 +70,7 @@ const Feriados = ({moduleName}) => {
       })
       setData(dataFormated)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false)
     }

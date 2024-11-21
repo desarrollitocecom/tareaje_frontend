@@ -19,7 +19,7 @@ const Descansos = ({ moduleName}) => {
   const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
   const location = useLocation();
   const { token } = useSelector((state) => state.auth);
-  const { getData } = useFetch()
+  const { getData, deleteData } = useFetch()
   const navigate = useNavigate()
   const [data, setData] = useState([])
   const [Update, setUpdate] = useState(false)
@@ -27,22 +27,12 @@ const Descansos = ({ moduleName}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [Selected, setSelected] = useState(null)
   const timeoutRef = useRef(null);
-  const [limitRows, setLimitRows] = useState(20);
-  const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const limitRows = parseInt(location.search.split('limit=')[1])
-    const page = parseInt(location.search.split('page=')[1]) + 1
-    if (limitRows && page) {
-      setLimitRows(limitRows)
-      setPage(page)
-    }
-  }, [location])
+    fetchData(location.search || undefined);
+  }, [location.search, Update])
   
-  useEffect(() => {
-    fetchData()
-  }, [Update])
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -54,7 +44,7 @@ const Descansos = ({ moduleName}) => {
 
     timeoutRef.current = setTimeout(() => {
 
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+      addParams({ search: value.trim() });
     }, 800);
   };
 
@@ -63,13 +53,13 @@ const Descansos = ({ moduleName}) => {
   }
 
 
-  const fetchData = async() => {
+  const fetchData = async(url) => {
     setLoading(true)
+    
+    const urlParams = url || ''
 
     try {
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/descansos?page=${page}&limit=${limitRows}`,token)
-      console.log(response.data)
-
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/descansos/${urlParams}`,token)
       setCount(response.data.data.totalCount)
       const dataFormated = response.data.data.data.map((item) =>{
         return{
@@ -83,7 +73,7 @@ const Descansos = ({ moduleName}) => {
       })
       setData(dataFormated)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false)
     }
@@ -94,7 +84,7 @@ const Descansos = ({ moduleName}) => {
     
   }
   const onDelete = (obj) => {
-    DeleteDescanso(obj, refreshData)
+    DeleteDescanso(obj, refreshData, token, deleteData)
   }
 
   return (
@@ -123,7 +113,7 @@ const Descansos = ({ moduleName}) => {
                       <RefreshRoundedIcon />
                     </IconButton>
                   </Tooltip>
-                  <AddDescanso />
+                  {canCreate && <AddDescanso refreshData={refreshData} />}
                 </div>
                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                   <InputLabel htmlFor="input-with-icon-adornment">
@@ -153,7 +143,7 @@ const Descansos = ({ moduleName}) => {
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditDescanso Selected={Selected} setSelected={setSelected} />}
+      {canEdit && <EditDescanso Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
       
     </>
   )

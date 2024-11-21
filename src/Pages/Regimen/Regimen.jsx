@@ -48,7 +48,7 @@ const Regimen = ({ moduleName }) => {
     }
 
     timeoutRef.current = setTimeout(() => {
-      console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de búsqueda
+      addParams({ search: value.trim() });
     }, 800);
   };
 
@@ -72,7 +72,7 @@ const Regimen = ({ moduleName }) => {
       })
       setData(dataFormated)
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false)
     }

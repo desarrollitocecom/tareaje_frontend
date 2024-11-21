@@ -2,152 +2,129 @@ import React, { useEffect, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Button, TextField } from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import { useFormik } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 const EditFeriado = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();
     const [Open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const { token } = useSelector((state) => state.auth);
 
+    // Manejo del modal al seleccionar un feriado
     useEffect(() => {
-        setOpen(Selected !== null);
+        if (Selected) {
+            setOpen(true);
+            formik.setFieldValue('nombre', Selected.nombre || '');
+            formik.setFieldValue('fecha', dayjs(Selected.fecha));
+
+        }
     }, [Selected]);
 
+    // Cerrar Modal
     const handleClose = () => {
         setSelected(null);
+        formik.resetForm();
+        setOpen(false);
     };
 
-    const validate = (values) => {
-        const errors = {};
-        if (!values.nombre) {
-            errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
-            errors.nombre = 'El nombre solo debe contener letras';
-        }
-        if (!values.fecha) {
-            errors.fecha = 'Campo requerido';
-        }
-        return errors;
-    };
+    // Formulario con Formik
+    const formik = useFormik({
+        initialValues: {
+            nombre: '',
+            fecha: dayjs(),
+        },
 
-    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        try {
-            const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/feriados/${Selected?.id}`, values, token);
-            if (response.status) {
-                setOpen(false);
-                CustomSwal.fire(
-                    'Modificado',
-                    'El feriado ha sido modificado correctamente.',
-                    'success'
-                );
-                refreshData();
-                resetForm();
-                setSubmitting(false);
-            } else {
-                const message = response?.error?.response?.data?.message || 'Ocurrió un error';
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                const errores = erroresArray.length > 0
-                    ? erroresArray.join(', ') 
-                    : 'No se encontraron detalles del error';
-
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: `${message}: ${errores}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
-
+        validate: (values) => {
+            const errors = {};
+            if (!values.nombre) {
+                errors.nombre = 'Debe escribir un nombre';
+            } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
+                errors.nombre = 'El nombre solo debe contener letras y espacios';
             }
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-            CustomSwal.fire({
-                icon: 'error',
-                title: 'Error en la solicitud',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000
-            });
-        }
-    };
+            if (!values.fecha) {
+                errors.fecha = 'Debe seleccionar una fecha';
+            }
+            return errors;
+        },
+        onSubmit: (values) => {
+            const data = {
+                nombre: values.nombre,
+                fecha: values.fecha.format('YYYY-MM-DD'),
+            };
+            patchData(`${import.meta.env.VITE_APP_ENDPOINT}/feriados/${Selected.id}`, data, token, true)
+                .then((res) => {
+                    CustomSwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                    });
+                    refreshData();
+                    handleClose();
+                })
+                .catch((error) => {
+                    swalError(error);
+
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        },
+    });
 
     return (
-        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose}>
+        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting}>
             <div className="flex items-center mb-2">
                 <SecurityIcon className="w-6 h-6 mr-2" />
-                <h1 className='text-lg font-bold'>Editar un feriado</h1>
+                <h1 className="text-lg font-bold">Editar Feriado</h1>
             </div>
-            {Selected && (
-                <Formik
-                    initialValues={{
-                        nombre: Selected?.nombre || '',
-                        fecha: Selected?.fecha ? dayjs(Selected.fecha) : null,
-                    }}
-                    enableReinitialize
-                    validate={validate}
-                    onSubmit={handleSubmit}
-                >
-                    {({ errors, touched, isSubmitting, setFieldValue }) => (
-                        <Form>
-                            <div className="mb-3">
-                                <Field
-                                    as={TextField}
-                                    label="Nombre"
-                                    variant="outlined"
-                                    fullWidth
-                                    size="small"
-                                    name="nombre"
-                                    error={touched.nombre && Boolean(errors.nombre)}
-                                    helperText={touched.nombre && errors.nombre}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <DatePicker
-                                    label="Fecha"
-                                    value={Selected?.fecha ? dayjs(Selected.fecha) : null}
-                                    onChange={(value) => setFieldValue('fecha', value)}
-                                    fullWidth
-                                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            error={touched.fecha && Boolean(errors.fecha)}
-                                            helperText={touched.fecha && errors.fecha}
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <div className="flex justify-between pt-5">
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    variant="contained"
-                                    color="inherit"
-                                    onClick={handleClose}
-                                >
-                                    Cerrar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    size="small"
-                                    variant="contained"
-                                    color="success"
-                                    disabled={isSubmitting}
-                                >
-                                    Actualizar
-                                </Button>
-                            </div>
-                        </Form>
-                    )}
-                </Formik>
-            )}
+            <form onSubmit={formik.handleSubmit} className="mt-8">
+                <div className="flex flex-col gap-3">
+                    {/* Campo de Nombre del Feriado */}
+                    <TextField
+                        label="Nombre"
+                        value={formik.values.nombre}
+                        onChange={(e) => {
+                            formik.setFieldValue('nombre', e.target.value);
+                            formik.setTouched({ ...formik.touched, nombre: true }); // Marcar el campo como tocado
+                        }}
+                        variant="outlined"
+                        size="small"
+                        multiline
+                        fullWidth
+                        error={formik.touched.nombre && Boolean(formik.errors.nombre)}
+                        helperText={formik.touched.nombre && formik.errors.nombre}
+                    />
+
+
+                    {/* Selector de Fecha */}
+                        <StaticDatePicker
+                            displayStaticWrapperAs="desktop"
+                            openTo="day"
+                            value={formik.values.fecha}
+                            onChange={(value) => formik.setFieldValue('fecha', value)}
+                            renderInput={(params) => <TextField {...params} />}
+                        />
+                </div>
+
+                <div className="flex justify-between pt-5">
+                    <Button type="button" size="small" variant="contained" color="inherit" onClick={handleClose}>
+                        Cerrar
+                    </Button>
+                    <Button type="submit" size="small" variant="contained" color="success" disabled={formik.isSubmitting || isLoading}>
+                        Actualizar
+                    </Button>
+                </div>
+            </form>
         </CustomModal>
     );
 };

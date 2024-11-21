@@ -1,7 +1,10 @@
+// DeleteRegimen.js
 import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
-const deleteRegimen = (obj, refreshData, token, deleteData) => {
+const DeleteRegimen = (obj, refreshData, token, deleteData) => {
+    // const dispatch = useDispatch();
+
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -13,28 +16,34 @@ const deleteRegimen = (obj, refreshData, token, deleteData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const eliminar = async() => {
 
-                try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales/${obj.id}`,token)
-                    CustomSwal.fire(
-                        'Eliminado',
-                        'El regimen laboral ha sido eliminado correctamente.',
-                        'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar el regimen laboral.',
-                        'error'
-                      );
-                      console.error('Error eliminando el regimen laboral:', error);
-                  } 
-            }
-            eliminar()        
+            deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales/${obj.id}`, token).then((res) => {
+                if (res.status) {
+                    CustomSwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                    refreshData();
+                } else {
+                    CustomSwal.fire({
+                        icon: 'error',
+                        title: res.error.response.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000
+                    });
+                }
+            }).catch((err) => {
+                console.error(err);
+            })
+
         }
     });
 };
 
-export default deleteRegimen;
+export default DeleteRegimen;
