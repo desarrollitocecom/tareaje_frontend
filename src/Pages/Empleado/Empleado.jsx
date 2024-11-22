@@ -12,13 +12,14 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 const Empleados = ({ moduleName }) => {
     const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
     const location = useLocation();
     const { token } = useSelector((state) => state.auth);
     const { getData, deleteData } = useFetch();
-
+    const { addParams } = UseUrlParamsManager();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [update, setUpdate] = useState(false);
@@ -42,7 +43,8 @@ const Empleados = ({ moduleName }) => {
         }
 
         timeoutRef.current = setTimeout(() => {
-            console.log('Realizando búsqueda con:', value);
+
+            addParams({ search: value.trim() });
         }, 800);
     };
 
@@ -67,10 +69,10 @@ const Empleados = ({ moduleName }) => {
                 subgerencia: item.subgerencia?.nombre || 'Sin Subgerencia',
                 turno: item.turno?.nombre || 'Sin Turno',
                 estado: item.state ? 'Trabajando' : 'Cesado',
-                
+
 
             }));
-            
+
             setData(dataFormated); // Se guarda todo el objeto
         } catch (error) {
             console.error(error);
@@ -81,16 +83,39 @@ const Empleados = ({ moduleName }) => {
 
     const onEdit = async (id) => {
         try {
-            //empleado por su ID
+            // Obtén los datos del empleado desde el backend
             const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token);
             const empleadoData = response.data.data;
 
-            // Pasar los datos 
+            // Si existe una foto, usa fetch para obtenerla con el token en el header
+            if (empleadoData.foto) {
+                const fotoUrl = `${import.meta.env.VITE_APP_ENDPOINT}/${empleadoData.foto}`;
+                try {
+                    const fotoResponse = await fetch(fotoUrl, {
+                        headers: {
+                            Authorization: `Bearer ${token}`, // Encabezado con el token
+                        },
+                    });
+            
+                    if (!fotoResponse.ok) {
+                        throw new Error('Error al cargar la foto');
+                    }
+            
+                    // Asigna la URL directamente si la respuesta es válida
+                    empleadoData.foto = fotoUrl;
+                } catch (error) {
+                    console.error('Error al cargar la foto:', error);
+                    empleadoData.foto = 'https://via.placeholder.com/128'; // Imagen de respaldo
+                }
+            }
+
+            // Establece los datos seleccionados en el estado
             setSelected(empleadoData);
         } catch (error) {
             console.error('Error al obtener los datos del empleado:', error);
         }
     };
+
 
     const onDelete = (obj) => {
         deleteEmpleado(obj, refreshData, token, deleteData);
@@ -156,8 +181,8 @@ const Empleados = ({ moduleName }) => {
                         </div>
                         <CRUDTable
                             data={data.map((item) => ({
-                                ...item, 
-                                estado: <StatusButton estado={item.estado} />, 
+                                ...item,
+                                estado: <StatusButton estado={item.estado} />,
                             }))}
                             loading={loading}
                             onDelete={canDelete ? onDelete : null}

@@ -14,6 +14,7 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 
 const LugarTrabajo = (moduleName) => {
@@ -29,6 +30,7 @@ const LugarTrabajo = (moduleName) => {
     const [Loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [Selected, setSelected] = useState(null)
+    const { addParams } = UseUrlParamsManager();
     const timeoutRef = useRef(null)
 
     const [count, setCount] = useState(0);
@@ -40,17 +42,16 @@ const LugarTrabajo = (moduleName) => {
     const handleSearchChange = (event) => {
         const value = event.target.value;
         setSearchTerm(value);
-
+    
         if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
+          clearTimeout(timeoutRef.current);
         }
-
+    
         timeoutRef.current = setTimeout(() => {
-
-            console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+    
+          addParams({ search: value.trim() });
         }, 800);
-
-    };
+      };
 
     const refreshData = () => {
         setUpdate((prev) => !prev)

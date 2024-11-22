@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import SecurityIcon from '@mui/icons-material/Security';
-import { Button, TextField, MenuItem } from '@mui/material';
+import { Button, TextField, MenuItem, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
@@ -11,7 +11,8 @@ import { calculateAge, handleFileChange } from '../../helpers/fileAndDateUtils';
 
 const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
     const [Open, setOpen] = useState(false);
-    const [foto, setFoto] = useState(null); // State for handling the photo
+    const [foto, setFoto] = useState(null);
+
     const [dataSets, setDataSets] = useState({
         cargos: [],
         turnos: [],
@@ -59,80 +60,80 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         },
         validate: (values) => {
             const errors = {};
-        
+
             // Validación de nombres
             if (!values.nombres) {
                 errors.nombres = 'Campo requerido';
             } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombres)) {
                 errors.nombres = 'Debe contener solo letras y espacios';
             }
-        
+
             // Validación de apellidos
             if (!values.apellidos) {
                 errors.apellidos = 'Campo requerido';
             } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.apellidos)) {
                 errors.apellidos = 'Debe contener solo letras y espacios';
             }
-        
+
             // Validación de DNI
             if (!values.dni) {
                 errors.dni = 'Campo requerido';
             } else if (!/^\d{8}$/.test(values.dni)) {
                 errors.dni = 'Debe ser un número de 8 dígitos';
             }
-        
+
             // Validación de RUC
             if (values.ruc && !/^\d{11}$/.test(values.ruc)) {
                 errors.ruc = 'Debe ser un número de 11 dígitos';
             }
-        
+
             // Validación de hijos
             if (values.hijos && (isNaN(values.hijos) || values.hijos < 0)) {
                 errors.hijos = 'Debe ser un número positivo';
             }
-        
+
             // Validación de edad
             if (!values.edad) {
                 errors.edad = 'Campo requerido';
             } else if (isNaN(values.edad) || values.edad < 18 || values.edad > 100) {
                 errors.edad = 'Debe ser un número entre 18 y 100';
             }
-        
+
             // Validación de fecha de nacimiento
             if (!values.f_nacimiento) {
                 errors.f_nacimiento = 'Campo requerido';
             } else if (isNaN(Date.parse(values.f_nacimiento))) {
                 errors.f_nacimiento = 'Debe ser una fecha válida';
             }
-        
+
             // Validación de correo
             if (!values.correo) {
                 errors.correo = 'Campo requerido';
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.correo)) {
                 errors.correo = 'Debe ser un correo electrónico válido';
             }
-        
+
             // Validación de domicilio
             if (!values.domicilio) {
                 errors.domicilio = 'Campo requerido';
             } else if (values.domicilio.length < 5) {
                 errors.domicilio = 'Debe contener al menos 5 caracteres';
             }
-        
+
             // Validación de celular
             if (!values.celular) {
                 errors.celular = 'Campo requerido';
             } else if (!/^\d{9}$/.test(values.celular)) {
                 errors.celular = 'Debe ser un número de 9 dígitos';
             }
-        
+
             // Validación de fecha de inicio
             if (!values.f_inicio) {
                 errors.f_inicio = 'Campo requerido';
             } else if (isNaN(Date.parse(values.f_inicio))) {
                 errors.f_inicio = 'Debe ser una fecha válida';
             }
-        
+
             // Validación de observaciones
             if (values.observaciones && values.observaciones.length > 500) {
                 errors.observaciones = 'No puede exceder los 500 caracteres';
@@ -149,31 +150,42 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                 { field: 'id_lugar_trabajo', label: 'Lugar de Trabajo', options: dataSets.lugarTrabajo },
                 { field: 'id_funcion', label: 'Función', options: dataSets.funciones },
             ].forEach(({ field, label, options }) => {
-                // Buscar el ID asociado al nombre actual
-                const selectedOption = options.find((option) => option.nombre === values[field]);
-        
-                // Validar que exista un ID válido
                 if (!values[field]) {
                     errors[field] = `${label} es requerido`;
-                } else if (!selectedOption || !options.some((option) => option.id === selectedOption.id)) {
+                } else if (!options.some((option) => option.nombre === values[field])) {
                     errors[field] = `${label} no es válido`;
                 }
             });
-        
-           
-        
+
+
+
             return errors;
         },
         onSubmit: (values) => {
             const formData = new FormData();
-            Object.entries(values).forEach(([key, value]) => {
+            // Convertir nombres a IDs
+            const mappedValues = {
+                ...values,
+                id_cargo: dataSets.cargos.find((option) => option.nombre === values.id_cargo)?.id || '',
+                id_turno: dataSets.turnos.find((option) => option.nombre === values.id_turno)?.id || '',
+                id_regimen_laboral: dataSets.regimenLaborales.find((option) => option.nombre === values.id_regimen_laboral)?.id || '',
+                id_sexo: dataSets.sexos.find((option) => option.nombre === values.id_sexo)?.id || '',
+                id_jurisdiccion: dataSets.jurisdicciones.find((option) => option.nombre === values.id_jurisdiccion)?.id || '',
+                id_grado_estudios: dataSets.gradoEstudios.find((option) => option.nombre === values.id_grado_estudios)?.id || '',
+                id_subgerencia: dataSets.subgerencias.find((option) => option.nombre === values.id_subgerencia)?.id || '',
+                id_lugar_trabajo: dataSets.lugarTrabajo.find((option) => option.nombre === values.id_lugar_trabajo)?.id || '',
+                id_funcion: dataSets.funciones.find((option) => option.nombre === values.id_funcion)?.id || '',
+            };
+            Object.entries(mappedValues).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-            if (foto) formData.append('photo', foto);
+
+            if (foto && typeof foto !== 'string') formData.append('photo', foto); // Solo añadir la foto si es nueva
+
 
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token)
                 .then((response) => {
-                    
+
                     if (response.status) {
                         CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
                         refreshData();
@@ -238,7 +250,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         celular: Selected.celular || '',
                         f_inicio: Selected.f_inicio || '',
                         observaciones: Selected.observaciones || '',
-                        id_cargo: Selected.cargo?.nombre || '',
+                        id_cargo: Selected.cargo?.nombre || '', // Mostrar nombre
                         id_turno: Selected.turno?.nombre || '',
                         id_regimen_laboral: Selected.regimenLaboral?.nombre || '',
                         id_sexo: Selected.sexo?.nombre || '',
@@ -248,6 +260,8 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         id_lugar_trabajo: Selected.lugarTrabajo?.nombre || '',
                         id_funcion: Selected.funcion?.nombre || '',
                     });
+                    // Asignar la foto directamente desde Selected
+                    setFoto(Selected.foto || null);
                 })
                 .catch((err) => {
                     CustomSwal.fire('Error', 'Error al cargar los datos', 'error');
@@ -269,7 +283,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         handleFileChange(e, setFoto, CustomSwal);
     };
 
-    
+
 
     const handleClose = () => {
         setSelected(null);
@@ -277,7 +291,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         formik.resetForm();
     };
 
-    
+
 
     return (
         <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting}>
@@ -300,7 +314,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         { name: 'celular', label: 'Celular', type: 'text' },
                         { name: 'f_inicio', label: 'Fecha de Inicio', type: 'date' },
                         { name: 'observaciones', label: 'Observaciones', multiline: true, rows: 3 },
-                    ].map(({ name, label, type, multiline, rows,readOnly }) => (
+                    ].map(({ name, label, type, multiline, rows, readOnly }) => (
                         <TextField
                             key={name}
                             label={label}
@@ -315,23 +329,12 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             error={formik.touched[name] && Boolean(formik.errors[name])}
                             helperText={formik.touched[name] && formik.errors[name]}
                             slotProps={{
-                                input: { readOnly }, 
-                                inputLabel: type === 'date' ? { shrink: true } : undefined, 
+                                input: { readOnly },
+                                inputLabel: type === 'date' ? { shrink: true } : undefined,
                             }}
                         />
                     ))}
-                    <TextField
-                        label="Foto"
-                        name="foto"
-                        type="file"
-                        size="small"
-                        fullWidth
-                        onChange={handleFileInputChange}
-                        slotProps={{
-                            inputLabel: { shrink: true }, // Mantener el label como "shrink"
-                            htmlInput: { accept: 'image/jpeg, image/png' }, // Restricción en la selección
-                        }}
-                    />
+
                     {[
                         { name: 'id_cargo', label: 'Cargo', options: dataSets.cargos },
                         { name: 'id_turno', label: 'Turno', options: dataSets.turnos },
@@ -350,11 +353,12 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             label={label}
                             name={name}
                             fullWidth
-                            value={formik.values[name]}
+                            value={formik.values[name] || ''}
                             onChange={formik.handleChange}
                             error={formik.touched[name] && Boolean(formik.errors[name])}
                             helperText={formik.touched[name] && formik.errors[name]}
                         >
+                            <MenuItem value="" disabled>selecciona una opcion</MenuItem>
                             {options.map((option) => (
                                 <MenuItem key={option.id} value={option.nombre}>
                                     {option.nombre}
@@ -362,6 +366,33 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             ))}
                         </TextField>
                     ))}
+
+                    {foto && (
+                        <div className="mb-4">
+                            <Typography variant="body2" gutterBottom>
+                                Vista previa de la foto:
+                            </Typography>
+                            <img
+                                src={foto}
+                                alt="Foto del empleado"
+                                className="w-32 h-32 object-cover rounded"
+                                
+                            />
+                        </div>
+                    )}
+                    <TextField
+                        label="Foto"
+                        name="foto"
+                        type="file"
+                        size="small"
+                        fullWidth
+                        onChange={handleFileInputChange}
+                        slotProps={{
+                            inputLabel: { shrink: true }, // Mantener el label como "shrink"
+                            htmlInput: { accept: 'image/jpeg, image/png' }, // Restricción en la selección
+                        }}
+                    />
+
                     <div className="flex justify-between pt-5">
                         <Button type="button" size="small" variant="contained" color="inherit" onClick={handleClose}>
                             Cerrar
