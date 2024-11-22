@@ -31,6 +31,15 @@ import SeguimientoAsistencia from '../Pages/SeguimientoAsistencia/SeguimientoAsi
 import AsistenciaPersonal from '../Pages/AsistenciaPersonal/AsistenciaPersonal';
 
 const AppRouter = () => {
+  const future = {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true,
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+    v7_partialHydration: true,
+    v7_skipActionErrorRevalidation: true
+  }
+
   const { loading } = useSelector((state) => state.auth);
   const router = createBrowserRouter([
     {
@@ -142,12 +151,17 @@ const AppRouter = () => {
       ]
     },
 
-  ]);
+  ], {
+    future: future
+  });
 
   return (
     <>
       {loading && <Loader />}
-      <RouterProvider router={router} />
+      <RouterProvider
+        router={router}
+        future={future}
+      />
     </>
   )
 }
