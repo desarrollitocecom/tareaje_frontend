@@ -163,7 +163,7 @@ const SeguimientoAsistencia = () => {
             const newEntry = {
               inicio: startDate,
               fin: endDate,
-              data: res.data.data,
+              data: res.data.data.asistencias,
               timestamp: currentTime,
             };
 
