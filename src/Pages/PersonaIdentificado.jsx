@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Table,
@@ -16,6 +16,9 @@ import WorkIcon from '@mui/icons-material/Work';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import SchoolIcon from '@mui/icons-material/School';
 import CommentIcon from '@mui/icons-material/Comment';
+import useFetch from "../Components/hooks/useFetch";
+import { useSelector } from "react-redux";
+import ImageComponent from "../Components/Image/ImageComponent";
 
 const personasData = [
   {
@@ -47,11 +50,16 @@ const personasData = [
 const PersonaIdentificado = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getData } = useFetch()
+  const { token } = useSelector((state) => state.auth);
 
-  const persona = personasData.find((p) => p.id === id);
+  const [persona, setPersona] = useState(null)
 
   useEffect(() => {
-    if (!persona) {
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token).then((response) => {
+      console.log(response.data.data);
+      setPersona(response.data.data)
+    }).catch((error) => {
       navigate("/buscar");
       CustomSwal.fire({
         icon: "error",
@@ -63,12 +71,22 @@ const PersonaIdentificado = () => {
         timer: 2000,
         timerProgressBar: true,
       })
+    })
+
+  }, [])
+
+  function calcularEdad(fechaNacimiento) {
+    const hoy = new Date(); // Obtiene la fecha actual
+    const nacimiento = new Date(fechaNacimiento); // Convierte la fecha de nacimiento a un objeto Date
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear(); // Calcula la diferencia de años
+    const mes = hoy.getMonth() - nacimiento.getMonth(); // Calcula la diferencia de meses
+
+    // Si el mes actual es menor al mes de nacimiento o es el mismo pero el día actual es menor, ajusta la edad
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
     }
-
-  }, [persona])
-
-  if (!persona) {
-    return null; // No renderizar nada mientras se redirige
+    return edad;
   }
 
 
@@ -90,14 +108,14 @@ const PersonaIdentificado = () => {
           <div className="container">
             <div className="md:mt-5 md:ml-7">
               <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
-                <img
-                  src={persona.imagen}
+                <ImageComponent
+                  path={persona?.foto}
                   alt="Persona"
                   className="w-24 h-24 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
                 />
                 <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
-                  <h2 className="text-xl md:text-2xl font-semibold">{persona.nombres}</h2>
-                  <p className="text-gray-500 text-md md:text-base">{persona.subgerencia}</p>
+                  <h2 className="text-xl md:text-2xl font-semibold">{persona?.nombres} {persona?.apellidos}</h2>
+                  <p className="text-gray-500 text-md md:text-base">{persona?.subgerencia.nombre}</p>
                 </div>
               </div>
             </div>
@@ -109,42 +127,42 @@ const PersonaIdentificado = () => {
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">Nombre:</p>
-                    <p className="text-base text-gray-800">{persona.nombres}</p>
+                    <p className="text-base text-gray-800">{persona?.nombres} {persona?.apellidos}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Sexo:</p>
-                    <p className="text-base text-gray-800">{persona.sexo}</p>
+                    <p className="text-base text-gray-800">{persona?.sexo.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Edad:</p>
-                    <p className="text-base text-gray-800">{persona.edad}</p>
+                    <p className="text-base text-gray-800">{calcularEdad(persona?.f_nacimiento)}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Hijos:</p>
-                    <p className="text-base text-gray-800">{persona.hijos}</p>
+                    <p className="text-base text-gray-800">{persona?.hijos}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Fecha de Nacimiento:</p>
-                    <p className="text-base text-gray-800">{persona.fechaNacimiento}</p>
+                    <p className="text-base text-gray-800">{persona?.f_nacimiento}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Correo:</p>
-                    <p className="text-base text-gray-800">{persona.correo}</p>
+                    <p className="text-base text-gray-800">{persona?.correo}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Domicilio:</p>
-                    <p className="text-base text-gray-800">{persona.domicilio}</p>
+                    <p className="text-base text-gray-800">{persona?.domicilio}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Celular:</p>
-                    <p className="text-base text-gray-800">{persona.celular}</p>
+                    <p className="text-base text-gray-800">{persona?.celular}</p>
                   </div>
                 </div>
               </div>
@@ -157,37 +175,37 @@ const PersonaIdentificado = () => {
 
                   <div>
                     <p className="text-sm font-medium">Subgerencia:</p>
-                    <p className="text-base text-gray-800">{persona.subgerencia}</p>
+                    <p className="text-base text-gray-800">{persona?.subgerencia.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Lugar de Trabajo:</p>
-                    <p className="text-base text-gray-800">{persona.lugarTrabajo}</p>
+                    <p className="text-base text-gray-800">{persona?.lugarTrabajo.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Cargo:</p>
-                    <p className="text-base text-gray-800">{persona.cargo}</p>
+                    <p className="text-base text-gray-800">{persona?.cargo.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Turno:</p>
-                    <p className="text-base text-gray-800">{persona.turno}</p>
+                    <p className="text-base text-gray-800">{persona?.turno.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Régimen:</p>
-                    <p className="text-base text-gray-800">{persona.regimen}</p>
+                    <p className="text-base text-gray-800">{persona?.regimenLaboral.nombre}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Fecha de Inicio:</p>
-                    <p className="text-base text-gray-800">{persona.fechaInicio}</p>
+                    <p className="text-base text-gray-800">{persona?.f_inicio}</p>
                   </div>
 
                   <div>
                     <p className="text-sm font-medium">Jurisdicción:</p>
-                    <p className="text-base text-gray-800">{persona.jurisdiccion}</p>
+                    <p className="text-base text-gray-800">{persona?.jurisdiccion.nombre}</p>
                   </div>
 
                 </div>
@@ -203,11 +221,11 @@ const PersonaIdentificado = () => {
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">DNI:</p>
-                    <p className="text-base text-gray-800">{persona.dni}</p>
+                    <p className="text-base text-gray-800">{persona?.dni}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium">RUC:</p>
-                    <p className="text-base text-gray-800">{persona.ruc}</p>
+                    <p className="text-base text-gray-800">{persona?.ruc}</p>
                   </div>
                 </div>
               </div>
@@ -222,7 +240,7 @@ const PersonaIdentificado = () => {
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">Grado de Estudios:</p>
-                    <p className="text-base text-gray-800">{persona.gradoEstudios}</p>
+                    <p className="text-base text-gray-800">{persona?.gradoEstudios.nombre}</p>
                   </div>
                 </div>
               </div>
@@ -235,7 +253,7 @@ const PersonaIdentificado = () => {
               </div>
               <div className="flex justify-center pl-8 md:pl-10">
                 <div className="w-full">
-                  <p className="text-base text-gray-800">{persona.observaciones}</p>
+                  <p className="text-base text-gray-800">{persona?.observaciones}</p>
                 </div>
               </div>
             </div>

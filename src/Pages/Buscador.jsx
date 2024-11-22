@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { TextField, Card, CardActionArea, CardMedia, CardContent, Typography, Avatar, IconButton, Button, Collapse, InputBase, Popover, Grid, FormControl, InputLabel, Select, Slider } from '@mui/material';
@@ -13,32 +13,73 @@ import ErrImg from "../assets/logos/notFoundImage.webp"
 import { MenuItem } from 'react-pro-sidebar';
 import useFetch from '../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
+import ImageComponent from '../Components/Image/ImageComponent';
+import CustomTablePagination from './Pagination/TablePagination';
+import useFetchData from '../Components/hooks/useFetchData';
 
 const PersonalBD = () => {
-  const { data, cargos, turnos, sexos, edades, regimens, cants_hijos, Jurisdicciones, subgerencias } = useData();
+  const [DataSelects, setDataSelects] = useState([])
   const navigate = useNavigate();
   const location = useLocation()
   const { addParams, getParams, removeParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
+  const { fetchCargos, fetchTurnos, fetchSubgerencias, fetchRegimenLaboral, fetchSexos, fetchJurisdicciones } = useFetchData(token);
   const { getData } = useFetch()
   const params = getParams();
   const [anchorEl, setAnchorEl] = useState(null);
   const [Data, setData] = useState([])
   const [count, setCount] = useState(0);
-
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     fetchEmpleados(location.search || '')
   }, [location.search])
-
   const fetchEmpleados = async (urlParams) => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token).then((response) => {
+      console.log(response);
+      
       setCount(response.data.data.totalCount)
       setData(response.data.data.data)
     }).catch((error) => {
       console.error(error);
     })
   };
+
+
+  useEffect(() => {
+    loadFiltersData();
+  }, [])
+
+  const loadFiltersData = async () => {
+    try {
+      const [subgerenciasData, turnosData, cargosData, regimenLaboralData, sexosData, JurisdiccionesData] = await Promise.all([
+        fetchSubgerencias(),
+        fetchTurnos(),
+        fetchCargos(),
+        fetchRegimenLaboral(),
+        fetchSexos(),
+        fetchJurisdicciones()
+      ]);
+
+      setDataSelects({
+        subgerencias: mapToSelectOptions(subgerenciasData?.data),
+        turnos: mapToSelectOptions(turnosData?.data),
+        cargos: mapToSelectOptions(cargosData?.data),
+        regimenLaboral: mapToSelectOptions(regimenLaboralData?.data),
+        sexos: mapToSelectOptions(sexosData?.data),
+        jurisdicciones: mapToSelectOptions(JurisdiccionesData?.data),
+      });
+
+    } catch (error) {
+      console.error('Error al cargar los datos de filtros:', error);
+    }
+  };
+
+  const mapToSelectOptions = (data) => {
+    if (!data) return []
+
+    return data.map((item) => ({ value: item.id, label: item.nombre }))
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,7 +98,7 @@ const PersonalBD = () => {
           BUSCADOR
         </h1>
       </header>
-      <div className="flex flex-col md:flex-row justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-center fflex-1">
         <div className='flex justify-start w-full'>
           <Button
             onClick={handleClick}
@@ -93,7 +134,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione una subgerencia'}
                   onChange={(e) => addParams({ subgerencia: e.target.value })}
                   value={params.subgerencia || ''}
-                  options={subgerencias}
+                  options={DataSelects.subgerencias}
                 />
               </div>
 
@@ -105,7 +146,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione un cargo'}
                   onChange={(e) => addParams({ cargo: e.target.value })}
                   value={params.cargo || ''}
-                  options={cargos}
+                  options={DataSelects.cargos}
                 />
               </div>
 
@@ -113,11 +154,11 @@ const PersonalBD = () => {
               <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
                 <label className="text-sm font-semibold text-gray-600" htmlFor="regimen-label">Regimen</label>
                 <FiltroSelect
-                  name="regimens"
+                  name="regimen"
                   placeholder={'Seleccione un regimen'}
                   onChange={(e) => addParams({ regimen: e.target.value })}
                   value={params.regimen || ''}
-                  options={regimens}
+                  options={DataSelects.regimenLaboral}
                 />
               </div>
 
@@ -129,7 +170,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione un turno'}
                   onChange={(e) => addParams({ turno: e.target.value })}
                   value={params.turno || ''}
-                  options={turnos}
+                  options={DataSelects.regimenLaboral}
                 />
               </div>
 
@@ -141,7 +182,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione un sexo'}
                   onChange={(e) => addParams({ sexo: e.target.value })}
                   value={params.sexo || ''}
-                  options={sexos}
+                  options={DataSelects.sexos}
                 />
               </div>
 
@@ -155,7 +196,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione una jurisdicción'}
                   onChange={(e) => addParams({ jurisdiccion: e.target.value })}
                   value={params.jurisdiccion || ''}
-                  options={Jurisdicciones}
+                  options={DataSelects.jurisdicciones}
                 />
               </div>
 
@@ -164,6 +205,7 @@ const PersonalBD = () => {
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Hijos</label>
                 <div className="pt-2 px-2">
                   <Slider
+                    disabled
                     className="min-w-[12rem]"
                     getAriaLabel={() => 'Hijos'}
                     defaultValue={[0, 30]}
@@ -185,6 +227,7 @@ const PersonalBD = () => {
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Edad</label>
                 <div className="pt-2 px-2">
                   <Slider
+                    disabled
                     className="min-w-[12rem]"
                     getAriaLabel={() => 'Edad'}
                     defaultValue={[0, 100]}
@@ -218,46 +261,50 @@ const PersonalBD = () => {
 
         </Popover>
       </div>
-      <div className="grid gap-4 py-4 w-full"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          justifyContent: 'start',
-        }}>
-        {Data.map((item) => (
-          <Link to={`/buscar/${item.id}`} key={item.id}>
-            <Card sx={{ width: '100%' }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={item.imagen || ErrImg}
-                  alt={`Imagen de ${item.nombres}`}
-                  className="w-full h-48 object-cover"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" style={{ margin: "0" }}>
-                    {`${item.apellidos}`}
-                  </Typography>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {`${item.nombres}`}
-                  </Typography>
-                  <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                    DNI: {item.dni}
-                  </Typography>
-                  <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                    Puesto: {item.subgerencia.nombre}
-                  </Typography>
-                  <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                    Turno: {item.turno.nombre}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Link>
-        ))}
-      </div>
-
+      <main className='flex-1 flex flex-col bg-white shadow rounded-lg p-4 h-full overflow-hidden mt-4'>
+        <div className='flex flex-1 overflow-auto pr-1'>
+          <div className='gap-4 w-full'
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+              justifyContent: 'start',
+            }}>
+            {Data.map((item) => (
+              <div className='w-full' key={item.id}>
+                <Link to={`/buscar/${item.id}`}>
+                  <Card sx={{ width: '100%' }} className='border'>
+                    <CardActionArea >
+                      <ImageComponent
+                        className="w-full h-48 min-h-48 object-cover"
+                        path={item.foto}
+                        alt={`Imagen de ${item.nombres}`}
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div" style={{ margin: "0" }}>
+                          {`${item.apellidos}`}
+                        </Typography>
+                        <Typography gutterBottom variant="h5" component="div">
+                          {`${item.nombres}`}
+                        </Typography>
+                        <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                          DNI: {item.dni}
+                        </Typography>
+                        <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                          subgerencia: {item.subgerencia.nombre}
+                        </Typography>
+                        <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                          Turno: {item.turno.nombre}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+        <CustomTablePagination count={count} />
+      </main>
     </div>
   );
 };
