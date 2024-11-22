@@ -76,6 +76,7 @@ const PersonaIdentificado = () => {
   }, [])
 
   function calcularEdad(fechaNacimiento) {
+    if (!fechaNacimiento) return ''
     const hoy = new Date(); // Obtiene la fecha actual
     const nacimiento = new Date(fechaNacimiento); // Convierte la fecha de nacimiento a un objeto Date
 
@@ -86,8 +87,10 @@ const PersonaIdentificado = () => {
     if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
       edad--;
     }
-    return edad;
-  }
+
+    return edad.toString(); // Convierte la edad a string antes de devolverla
+}
+
 
 
   return (
