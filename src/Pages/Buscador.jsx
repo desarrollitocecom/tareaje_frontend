@@ -263,11 +263,10 @@ const PersonalBD = () => {
       </div>
       <main className='flex-1 flex flex-col bg-white shadow rounded-lg p-4 h-full overflow-hidden mt-4'>
         <div className='flex flex-1 overflow-auto pr-1'>
-          <div className='gap-4 w-full grid grid-cols-[repeat(auto-fill,_minmax(230px,_1fr))] justify-start'>
+          {Data.length > 0 ? (
+            <div className='gap-4 w-full grid grid-cols-[repeat(auto-fill,_minmax(230px,_1fr))] justify-start'>
 
-
-            {Data.length > 0 ? (
-              Data.map((item) => (
+              {Data.map((item) => (
                 <div className='w-full flex justify-center'>
                   <div className='w-full max-w-[300px]' key={item.id}>
                     <Link to={`/buscar/${item.id}`}>
@@ -299,15 +298,14 @@ const PersonalBD = () => {
                       </Card>
                     </Link>
                   </div>
-                </div>
-              ))
-            ) :
-              (
-                <div className='flex justify-center items-center w-full h-full'>
-                  <h1 className='text-sm font-bold'>No se encontraron resultados</h1>
-                </div>
-              )}
-          </div>
+                </div>))}
+            </div>
+          ) :
+            (
+              <div className='flex justify-center items-center w-full h-full'>
+                <h1 className='text-sm font-bold'>No se encontraron resultados</h1>
+              </div>
+            )}
         </div>
         <CustomTablePagination count={count} />
       </main>
