@@ -83,7 +83,7 @@ const PersonalBD = () => {
     setLoading(true);
     const urlParams = url || ''
     try {
-      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token);
+      const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token, true);
       setCount(response.data.data.totalCount);
       const formattedData = response.data.data.data.map((item) => ({
         id: item.id,
@@ -144,7 +144,7 @@ const PersonalBD = () => {
                     />
                   </Box>
                   <FiltroSelect
-                    label="Subgerencia"
+                    placeholder="Seleccionar Subgerencia"
                     name="subgerencias"
                     value={params.subgerencia || ''}
                     onChange={(e) => addParams({ subgerencia: e.target.value })}
@@ -156,7 +156,7 @@ const PersonalBD = () => {
                     
                   />
                   <FiltroSelect
-                    label="Cargo"
+                    placeholder="Seleccionar Cargo"
                     name="cargos"
                     value={params.cargo || ''}
                     onChange={(e) => addParams({ cargo: e.target.value })}
@@ -168,7 +168,7 @@ const PersonalBD = () => {
                     
                   />
                   <FiltroSelect
-                    label="Turno"
+                    placeholder="Seleccionar Turno"
                     name="turnos"
                     value={params.turno || ''}
                     onChange={(e) => addParams({ turno: e.target.value })}
