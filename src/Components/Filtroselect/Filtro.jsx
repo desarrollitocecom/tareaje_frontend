@@ -19,7 +19,7 @@ const Filtro = ({ label, placeholder, name, value, onChange, onBlur, options, er
           value={value}
           onChange={onChange}
           onBlur={onBlur}
-          displayEmpty
+          displayEmpty={Boolean(placeholder)}
           MenuProps={{
             PaperProps: {
               style: {
