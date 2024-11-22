@@ -10,10 +10,12 @@ const ImageComponent = ({ path, alt, ...props }) => {
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    getImage();
-  }, []);
+    if (path) {
+      getImage(path);
+    }
+  }, [path]);
 
-  const getImage = async () => {
+  const getImage = async (path) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_APP_ENDPOINT}/${path}`,
