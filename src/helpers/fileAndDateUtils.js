@@ -13,12 +13,16 @@ export const calculateAge = (birthDate) => {
 // Manejar el cambio de archivo
 export const handleFileChange = (e, setFoto, CustomSwal) => {
     const file = e.target.files[0];
+
     if (file) {
         const allowedTypes = ['image/jpeg', 'image/png']; // Tipos permitidos
         if (!allowedTypes.includes(file.type)) {
             CustomSwal.fire('Error', 'Solo se permiten imágenes en formato JPG o PNG.', 'error');
             return;
         }
-        setFoto(file); 
+        setFoto(file); // Actualiza el estado con el nuevo archivo
+    } else {
+        // Si no se selecciona un archivo, mantener el estado anterior
+        console.log('No se seleccionó un archivo nuevo. La imagen actual se mantiene.');
     }
 };

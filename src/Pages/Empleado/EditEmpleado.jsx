@@ -8,6 +8,7 @@ import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
 import { calculateAge, handleFileChange } from '../../helpers/fileAndDateUtils';
+import ImageComponent from '../../Components/Image/ImageComponent';
 
 const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
     const [Open, setOpen] = useState(false);
@@ -161,8 +162,11 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
 
             return errors;
         },
+
         onSubmit: (values) => {
             const formData = new FormData();
+            setIsLoading(true); // Activa el estado de carga durante el envío
+        
             // Convertir nombres a IDs
             const mappedValues = {
                 ...values,
@@ -176,17 +180,58 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                 id_lugar_trabajo: dataSets.lugarTrabajo.find((option) => option.nombre === values.id_lugar_trabajo)?.id || '',
                 id_funcion: dataSets.funciones.find((option) => option.nombre === values.id_funcion)?.id || '',
             };
+        
             Object.entries(mappedValues).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-
-            if (foto && typeof foto !== 'string') formData.append('photo', foto); // Solo añadir la foto si es nueva
-
-
+        
+            // Manejar la imagen (nueva o existente)
+            if (foto && typeof foto !== 'string') {
+                formData.append('photo', foto); // Si hay una nueva imagen, adjúntala directamente
+            } else if (typeof foto === 'string') {
+                // Si la imagen es existente, conviértela a un archivo (blob)
+                fetch(`${import.meta.env.VITE_APP_ENDPOINT}/${foto}`, {
+                    headers: {
+                        Authorization: `Bearer___${token}`,
+                    },
+                })
+                    .then((response) => response.blob()) // Obtén la imagen como Blob
+                    .then((blob) => {
+                        const fileName = foto.split('/').pop(); // Extrae el nombre de la imagen
+                        const existingFile = new File([blob], fileName, { type: blob.type });
+                        formData.append('photo', existingFile); // Adjunta la imagen convertida como archivo
+        
+                        // Llama al backend con el FormData que incluye la imagen
+                        return patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token);
+                    })
+                    .then((response) => {
+                        if (response?.status) {
+                            CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
+                            refreshData();
+                            handleClose();
+                        } else {
+                            const erroresArray = response?.error?.response?.data?.errores || [];
+                            swalError({
+                                message: 'Ocurrió un error al modificar el empleado',
+                                data: erroresArray,
+                            });
+                        }
+                    })
+                    .catch((err) => {
+                        console.error('Error al convertir la imagen existente en archivo:', err);
+                        swalError({
+                            message: 'No se pudo procesar la imagen existente',
+                            data: [err.message],
+                        });
+                    })
+                    .finally(() => setIsLoading(false));
+                return; // Detiene la ejecución para esperar el fetch
+            }
+        
+            // Si no hay que convertir una imagen existente, continúa con la llamada al backend
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token)
                 .then((response) => {
-
-                    if (response.status) {
+                    if (response?.status) {
                         CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
                         refreshData();
                         handleClose();
@@ -205,14 +250,15 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         data: [error.message],
                     });
                 })
-                .finally(() => formik.setSubmitting(false));
+                .finally(() => setIsLoading(false));
         },
+        
     });
 
     useEffect(() => {
         setOpen(Selected !== null);
         if (Selected) {
-            setIsLoading(true);
+            setIsLoading(true); // Comienza cargando
             Promise.all([
                 fetchCargos(),
                 fetchTurnos(),
@@ -225,7 +271,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                 fetchFunciones(),
             ])
                 .then(([cargosRes, turnosRes, regimenLaboralesRes, sexosRes, jurisdiccionesRes, gradoEstudiosRes, subgerenciasRes, lugarTrabajoRes, funcionesRes]) => {
-                    setDataSets({
+                    const fetchedDataSets = {
                         cargos: cargosRes.data || [],
                         turnos: turnosRes.data || [],
                         regimenLaborales: regimenLaboralesRes.data || [],
@@ -235,7 +281,9 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         subgerencias: subgerenciasRes.data || [],
                         lugarTrabajo: lugarTrabajoRes.data || [],
                         funciones: funcionesRes.data || [],
-                    });
+                    };
+
+                    setDataSets(fetchedDataSets);
 
                     formik.setValues({
                         nombres: Selected.nombres || '',
@@ -250,24 +298,26 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         celular: Selected.celular || '',
                         f_inicio: Selected.f_inicio || '',
                         observaciones: Selected.observaciones || '',
-                        id_cargo: Selected.cargo?.nombre || '', // Mostrar nombre
-                        id_turno: Selected.turno?.nombre || '',
-                        id_regimen_laboral: Selected.regimenLaboral?.nombre || '',
-                        id_sexo: Selected.sexo?.nombre || '',
-                        id_jurisdiccion: Selected.jurisdiccion?.nombre || '',
-                        id_grado_estudios: Selected.gradoEstudios?.nombre || '',
-                        id_subgerencia: Selected.subgerencia?.nombre || '',
-                        id_lugar_trabajo: Selected.lugarTrabajo?.nombre || '',
-                        id_funcion: Selected.funcion?.nombre || '',
+                        id_cargo: fetchedDataSets.cargos.find(opt => opt.nombre === Selected.cargo?.nombre)?.nombre || '',
+                        id_turno: fetchedDataSets.turnos.find(opt => opt.nombre === Selected.turno?.nombre)?.nombre || '',
+                        id_regimen_laboral: fetchedDataSets.regimenLaborales.find(opt => opt.nombre === Selected.regimenLaboral?.nombre)?.nombre || '',
+                        id_sexo: fetchedDataSets.sexos.find(opt => opt.nombre === Selected.sexo?.nombre)?.nombre || '',
+                        id_jurisdiccion: fetchedDataSets.jurisdicciones.find(opt => opt.nombre === Selected.jurisdiccion?.nombre)?.nombre || '',
+                        id_grado_estudios: fetchedDataSets.gradoEstudios.find(opt => opt.nombre === Selected.gradoEstudios?.nombre)?.nombre || '',
+                        id_subgerencia: fetchedDataSets.subgerencias.find(opt => opt.nombre === Selected.subgerencia?.nombre)?.nombre || '',
+                        id_lugar_trabajo: fetchedDataSets.lugarTrabajo.find(opt => opt.nombre === Selected.lugarTrabajo?.nombre)?.nombre || '',
+                        id_funcion: fetchedDataSets.funciones.find(opt => opt.nombre === Selected.funcion?.nombre)?.nombre || '',
                     });
-                    // Asignar la foto directamente desde Selected
-                    setFoto(Selected.foto || null);
+
+                    if (Selected?.foto) {
+                        setFoto(Selected.foto); // Asegúrate de que `foto` esté disponible en `Selected`
+                    }
                 })
                 .catch((err) => {
                     CustomSwal.fire('Error', 'Error al cargar los datos', 'error');
                     console.error(err);
                 })
-                .finally(() => setIsLoading(false));
+                .finally(() => setIsLoading(false)); // Asegura que el estado de carga se actualice
         }
     }, [Selected]);
 
@@ -366,33 +416,40 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             ))}
                         </TextField>
                     ))}
-
                     {foto && (
                         <div className="mb-4">
                             <Typography variant="body2" gutterBottom>
                                 Vista previa de la foto:
                             </Typography>
-                            <img
-                                src={foto}
-                                alt="Foto del empleado"
-                                className="w-32 h-32 object-cover rounded"
-                                
-                            />
+                            {typeof foto === 'string' ? (
+                                <ImageComponent
+                                    path={foto} // La imagen existente se obtiene del servidor
+                                    alt="Foto del empleado"
+                                    className="w-32 h-32 object-cover rounded"
+                                />
+                            ) : (
+                                <img
+                                    src={URL.createObjectURL(foto)} // La nueva imagen seleccionada se previsualiza localmente
+                                    alt="Foto del empleado"
+                                    className="w-32 h-32 object-cover rounded"
+                                />
+                            )}
                         </div>
                     )}
+
+                    {/* Campo para cargar nueva foto */}
                     <TextField
-                        label="Foto"
+                        label="Cambiar Foto"
                         name="foto"
                         type="file"
                         size="small"
                         fullWidth
-                        onChange={handleFileInputChange}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => handleFileInputChange(e)} // Actualiza solo si se selecciona un nuevo archivo
                         slotProps={{
-                            inputLabel: { shrink: true }, // Mantener el label como "shrink"
-                            htmlInput: { accept: 'image/jpeg, image/png' }, // Restricción en la selección
+                            htmlInput: { accept: 'image/jpeg, image/png' }, // Restringe los tipos de archivo permitidos
                         }}
                     />
-
                     <div className="flex justify-between pt-5">
                         <Button type="button" size="small" variant="contained" color="inherit" onClick={handleClose}>
                             Cerrar
