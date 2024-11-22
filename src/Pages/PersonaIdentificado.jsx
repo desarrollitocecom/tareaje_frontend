@@ -111,7 +111,7 @@ const PersonaIdentificado = () => {
                 <ImageComponent
                   path={persona?.foto}
                   alt="Persona"
-                  className="w-24 h-24 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
+                  className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg"
                 />
                 <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
                   <h2 className="text-xl md:text-2xl font-semibold">{persona?.nombres} {persona?.apellidos}</h2>
