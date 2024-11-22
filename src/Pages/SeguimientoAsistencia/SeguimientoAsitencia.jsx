@@ -183,7 +183,8 @@ const SeguimientoAsistencia = () => {
             localStorage.setItem(cacheKey, JSON.stringify(cache));
 
             if (index === 0) {
-              currentWeekData = res.data.data;
+              currentWeekData = res.data.data.asistencias;
+              
               setDataAsistencias(currentWeekData);
             }
           } else {
