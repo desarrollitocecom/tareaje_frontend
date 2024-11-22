@@ -76,6 +76,7 @@ const PersonaIdentificado = () => {
   }, [])
 
   function calcularEdad(fechaNacimiento) {
+    if (!fechaNacimiento) return ''
     const hoy = new Date(); // Obtiene la fecha actual
     const nacimiento = new Date(fechaNacimiento); // Convierte la fecha de nacimiento a un objeto Date
 
@@ -86,8 +87,10 @@ const PersonaIdentificado = () => {
     if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
       edad--;
     }
-    return edad;
-  }
+
+    return edad.toString(); // Convierte la edad a string antes de devolverla
+}
+
 
 
   return (
@@ -111,7 +114,7 @@ const PersonaIdentificado = () => {
                 <ImageComponent
                   path={persona?.foto}
                   alt="Persona"
-                  className="w-24 h-24 md:w-40 md:h-40 rounded-full object-cover shadow-lg"
+                  className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg"
                 />
                 <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
                   <h2 className="text-xl md:text-2xl font-semibold">{persona?.nombres} {persona?.apellidos}</h2>
