@@ -37,7 +37,7 @@ const PersonalBD = () => {
   const fetchEmpleados = async (urlParams) => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token).then((response) => {
       console.log(response);
-      
+
       setCount(response.data.data.totalCount)
       setData(response.data.data.data)
     }).catch((error) => {
@@ -263,51 +263,50 @@ const PersonalBD = () => {
       </div>
       <main className='flex-1 flex flex-col bg-white shadow rounded-lg p-4 h-full overflow-hidden mt-4'>
         <div className='flex flex-1 overflow-auto pr-1'>
-          <div className='gap-4 w-full'
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              justifyContent: 'start',
-            }}>
+          <div className='gap-4 w-full grid grid-cols-[repeat(auto-fill,_minmax(230px,_1fr))] justify-start'>
+
+
             {Data.length > 0 ? (
               Data.map((item) => (
-                <div className='w-full' key={item.id}>
-                  <Link to={`/buscar/${item.id}`}>
-                    <Card sx={{ width: '100%' }} className='border'>
-                      <CardActionArea >
-                        <ImageComponent
-                          className="w-full h-48 min-h-48 object-cover"
-                          path={item.foto}
-                          alt={`Imagen de ${item.nombres}`}
-                        />
-                        <CardContent>
-                          <Typography gutterBottom variant="h5" component="div" style={{ margin: "0" }}>
-                            {`${item.apellidos}`}
-                          </Typography>
-                          <Typography gutterBottom variant="h5" component="div">
-                            {`${item.nombres}`}
-                          </Typography>
-                          <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                            DNI: {item.dni}
-                          </Typography>
-                          <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                            subgerencia: {item.subgerencia.nombre}
-                          </Typography>
-                          <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
-                            Turno: {item.turno.nombre}
-                          </Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                  </Link>
+                <div className='w-full flex justify-center'>
+                  <div className='w-full max-w-[300px]' key={item.id}>
+                    <Link to={`/buscar/${item.id}`}>
+                      <Card sx={{ width: '100%' }} className='border'>
+                        <CardActionArea >
+                          <ImageComponent
+                            className="w-full h-48 min-h-48 object-cover"
+                            path={item.foto}
+                            alt={`Imagen de ${item.nombres}`}
+                          />
+                          <CardContent>
+                            <Typography gutterBottom variant="h5" component="div" style={{ margin: "0" }}>
+                              {`${item.apellidos}`}
+                            </Typography>
+                            <Typography gutterBottom variant="h5" component="div">
+                              {`${item.nombres}`}
+                            </Typography>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                              DNI: {item.dni}
+                            </Typography>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                              subgerencia: {item.subgerencia.nombre}
+                            </Typography>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                              Turno: {item.turno.nombre}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </Link>
+                  </div>
                 </div>
               ))
-            ):
-            (
-              <div className='flex justify-center items-center w-full h-full'>
-                <h1 className='text-sm font-bold'>No se encontraron resultados</h1>
-              </div>
-            )}
+            ) :
+              (
+                <div className='flex justify-center items-center w-full h-full'>
+                  <h1 className='text-sm font-bold'>No se encontraron resultados</h1>
+                </div>
+              )}
           </div>
         </div>
         <CustomTablePagination count={count} />

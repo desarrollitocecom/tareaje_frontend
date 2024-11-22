@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { FormControl, InputAdornment, InputLabel, Input } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import UseUrlParamsManager from '../hooks/UseUrlParamsManager';
@@ -10,20 +10,26 @@ const SearchInput = () => {
     const { addParams } = UseUrlParamsManager();
     const inputId = uiu4d();
 
-
     const handleSearchChange = (event) => {
         const value = event.target.value;
         setSearchTerm(value);
-
+    
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
-
+    
         timeoutRef.current = setTimeout(() => {
-            addParams({ search: value.trim() });
+            if (!value.trim()) {
+                // Si el campo está vacío, elimina ambos parámetros (dni y search)
+                addParams({ dni: '', search: '' });
+            } else {
+                const firstChar = value.trim().charAt(0);
+                const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                addParams({ [paramKey]: value.trim() });
+            }
         }, 800);
     };
-
+    
     return (
         <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
             <InputLabel htmlFor={inputId}>
