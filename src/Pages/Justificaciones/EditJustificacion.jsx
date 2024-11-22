@@ -17,6 +17,8 @@ const EditJustificacion = ({ Selected, setSelected }) => {
         setOpen(Selected !== null);
         if (Selected) {
             setisLoading(true)
+            console.log(Selected);
+            
             const data = res.data;
 
             formik.setFieldValue('descripcion', data.descripcion);
