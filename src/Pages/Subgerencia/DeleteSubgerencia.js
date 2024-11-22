@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 const deleteSubgerencia = (obj, refreshData,token, deleteData) => {
     CustomSwal.fire({
@@ -14,32 +14,28 @@ const deleteSubgerencia = (obj, refreshData,token, deleteData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const eliminar = async() => {
-                //console.log(obj)
-
+            const eliminar = async () => {
                 try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/subgerencias/${obj.id}`,token)
-                    console.log(response)
+                    
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/subgerencias/${obj.id}`, token);
+                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
-                        'La subgerencia ha sido eliminado correctamente.',
+                        'La subgerencia ha sido eliminada correctamente.',
                         'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar la subgerencia.',
-                        'error'
-                      );
-                      console.error('Error eliminando la subgerencia:', error);
-                  } 
-            }
-            eliminar()        
-            }
-            
+                    );
+                    refreshData(); // Refresca los datos después de eliminar
+                } catch (error) {
+                    console.error('Error eliminando la subgerencia:', error);
+                    swalError({
+                        message: 'Hubo un problema al eliminar la subgerencia.',
+                        data: [error.response?.data?.message || error.message],
+                    });
+                }
+            };
+            eliminar();
         }
-    );
+    });
 };
 
 export default deleteSubgerencia;

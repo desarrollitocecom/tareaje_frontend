@@ -1,8 +1,9 @@
-
 import axios from 'axios';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
-const deleteFuncion = (obj, refreshData,token, deleteData) => {
+
+const deleteFuncion = (obj, refreshData, token, deleteData) => {
+
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -14,32 +15,29 @@ const deleteFuncion = (obj, refreshData,token, deleteData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            const eliminar = async() => {
-                //console.log(obj)
-
+            const eliminar = async () => {
                 try {
-                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/funciones/${obj.id}`,token)
-                    console.log(response)
+                    
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/funciones/${obj.id}`, token);
+                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
-                        'La función ha sido eliminado correctamente.',
+                        'La función ha sido eliminada correctamente.',
                         'success'
-                      );
-                      refreshData(); // Refresca los datos después de eliminar
-                  } catch (error) {
-                    CustomSwal.fire(
-                        'Error',
-                        'Hubo un problema al eliminar la función.',
-                        'error'
-                      );
-                      console.error('Error eliminando la función:', error);
-                  } 
-            }
-            eliminar()        
-            }
-            
+                    );
+                    refreshData(); // Refresca los datos después de eliminar
+                } catch (error) {
+                    console.error('Error eliminando la función:', error);
+                    swalError({
+                        message: 'Hubo un problema al eliminar la función.',
+                        data: [error.response?.data?.message || error.message],
+                    });
+                }
+            };
+            eliminar();
         }
-    );
+    });
 };
+
 
 export default deleteFuncion;

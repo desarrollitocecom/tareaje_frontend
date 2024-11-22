@@ -10,9 +10,19 @@ import AddLugarTrabajo from './AddLugarTrabajo';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditLugarTrabajo from './EditLugarTrabajo';
 import deleteLugarTrabajo from './DeleteLugarTrabjo';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 
-const Empleados = () => {
+const LugarTrabajo = (moduleName) => {
+
+    const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+    const location = useLocation();
+    const { token } = useSelector((state) => state.auth);
+    const { getData, deleteData } = useFetch()
 
     const navigate = useNavigate()
     const [data, setdata] = useState([])
@@ -20,55 +30,54 @@ const Empleados = () => {
     const [Loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [Selected, setSelected] = useState(null)
+    const { addParams } = UseUrlParamsManager();
     const timeoutRef = useRef(null)
 
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
-        fetchData()
-    }, [Update])
+        fetchData(location.search || undefined);
+    }, [location.search, Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
         setSearchTerm(value);
-
+    
         if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
+          clearTimeout(timeoutRef.current);
         }
-
+    
         timeoutRef.current = setTimeout(() => {
-
-            console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
+    
+          addParams({ search: value.trim() });
         }, 800);
-
-    };
+      };
 
     const refreshData = () => {
         setUpdate((prev) => !prev)
     }
 
-    const fetchData = () => {
-
+    const fetchData = async (url) => {
         setLoading(true)
 
-        setTimeout(() => {//Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-            axios.get(`/DataEjemplo.json`).then((res) => {
-                const dataFormated = res.data.data.map((item) => {
-                    return {
-                        id: item.member,
-                        nombres: item.nombres,
-                        apellidos: item.apellidos,
-                        DNI: item.dni,
-                        telefono: item.telefono,
-                    }
-                })
-                setdata(dataFormated)
+        const urlParams = url || ''
 
-                // setdata(res.data.data)
-            }).catch((err) => {
-                console.error(err)
-            }).finally(() => {
-                setLoading(false)
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/lugarestrabajos/${urlParams}`, token)
+            setCount(response.data.data.totalCount)
+            const dataFormated = response.data.data.data.map((item) => {
+                return {
+                    id: item.id,
+                    nombre: item.nombre
+                }
+
             })
-        }, 1000);
+            setdata(dataFormated)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
     }
 
     const onEdit = (obj) => {
@@ -76,7 +85,7 @@ const Empleados = () => {
     }
 
     const onDelete = (obj) => {
-        deleteLugarTrabajo(obj, refreshData)
+        deleteLugarTrabajo(obj, refreshData, token, deleteData)
     }
 
     return (
@@ -96,7 +105,7 @@ const Empleados = () => {
                     <div className='flex flex-col w-full h-full'>
                         <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
                             <div className='w-full flex items-center gap-2'>
-                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{count || 0}</span></span>
                             </div>
                             <div className='w-full flex items-center justify-end gap-3'>
                                 <div className='flex items-center'>
@@ -105,7 +114,7 @@ const Empleados = () => {
                                             <RefreshRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
-                                    <AddLugarTrabajo />
+                                    {canCreate && <AddLugarTrabajo refreshData={refreshData} />}
                                 </div>
                                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                                     <InputLabel htmlFor="input-with-icon-adornment">
@@ -124,12 +133,18 @@ const Empleados = () => {
                                 </FormControl>
                             </div>
                         </div>
-                        <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+                        <CRUDTable
+                            data={data}
+                            loading={Loading}
+                            onDelete={canDelete ? onDelete : null}
+                            onEdit={canEdit ? onEdit : null}
+                            count={count}
+                        />
                     </div >
                 </main>
             </div>
             {/* Componetnes para editar y eliminar */}
-            <EditLugarTrabajo Selected={Selected} setSelected={setSelected} />
+             {canEdit && <EditLugarTrabajo Selected={Selected} setSelected={setSelected}  refreshData={refreshData}/>} 
 
         </>
     )
@@ -138,4 +153,4 @@ const Empleados = () => {
 
 }
 
-export default Empleados
+export default LugarTrabajo

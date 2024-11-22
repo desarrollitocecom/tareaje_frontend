@@ -14,15 +14,16 @@ import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 
-const Empleados = (moduleName) => {
+const Subgerencia = (moduleName) => {
 
     const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
     const location = useLocation();
     const { token } = useSelector((state) => state.auth);
     const { getData, deleteData } = useFetch()
-
+    const { addParams } = UseUrlParamsManager();
     const navigate = useNavigate()
     const [data, setdata] = useState([])
     const [Update, setUpdate] = useState(false)
@@ -48,8 +49,8 @@ const Empleados = (moduleName) => {
 
         timeoutRef.current = setTimeout(() => {
 
-            console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
-        }, 800);
+            addParams({ search: value.trim() });
+          }, 800);
 
     };
 
@@ -154,4 +155,4 @@ const Empleados = (moduleName) => {
 
 }
 
-export default Empleados
+export default Subgerencia

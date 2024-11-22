@@ -11,7 +11,13 @@ const Filtro = ({ label, placeholder, name, value, onChange, onBlur, options, er
         className="bg-white"
         error={touched && Boolean(error)}
       >
-        <InputLabel id={`${name}-label`} sx={{ fontSize: '0.75rem' }}>{label}</InputLabel> {/* Reducir tamaño de la etiqueta */}
+
+        <InputLabel
+          id={`${name}-label`}
+          shrink={true}
+        >
+          {label}
+        </InputLabel>
         <Select
           labelId={`${name}-label`}
           label={label}
@@ -34,8 +40,12 @@ const Filtro = ({ label, placeholder, name, value, onChange, onBlur, options, er
             <em>{placeholder || 'Seleccione una opción'}</em>
           </MenuItem>
           {options.map((option) => (
-            <MenuItem key={option.id} value={option.id} sx={{ fontSize: '0.9rem' }}> {/* Reducir tamaño de las opciones */}
-              {option.valor}
+            <MenuItem
+              key={option.id || option.value} // Asigna un key único basado en `id` o `value`
+              value={option.value}
+              sx={{ fontSize: '0.9rem' }}
+            >
+              {option.label || option.valor} {/* Usa `label` como texto, o `valor` si está definido */}
             </MenuItem>
           ))}
         </Select>

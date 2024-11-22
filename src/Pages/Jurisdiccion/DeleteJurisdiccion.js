@@ -1,8 +1,8 @@
-
 import axios from 'axios';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
-const deleteJurisdiccion = (obj, refreshData) => {
+
+const deleteJurisdiccion = (obj, refreshData, token, deleteData) => {
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -14,29 +14,26 @@ const deleteJurisdiccion = (obj, refreshData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //   axios.delete(`https://yourapiendpoint.com/delete/${obj.id}`)
-            //     .then(() => {
-            //       Swal.fire(
-            //         'Eliminado',
-            //         'El rol ha sido eliminado correctamente.',
-            //         'success'
-            //       );
-            //       refreshData(); // Refresca los datos después de eliminar
-            //     })
-            //     .catch((error) => {
-            //       Swal.fire(
-            //         'Error',
-            //         'Hubo un problema al eliminar el rol.',
-            //         'error'
-            //       );
-            //       console.error('Error eliminando el rol:', error);
-            //     });
-            CustomSwal.fire(
-                'Eliminado',
-                'La Jurisdicción ha sido eliminado correctamente.',
-                'success'
-            );
-            refreshData(); // Refresca los datos después de eliminar
+            const eliminar = async () => {
+                try {
+                    
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones/${obj.id}`, token);
+                    console.log(response);
+                    CustomSwal.fire(
+                        'Eliminado',
+                        'La jurisdicción ha sido eliminada correctamente.',
+                        'success'
+                    );
+                    refreshData(); // Refresca los datos después de eliminar
+                } catch (error) {
+                    console.error('Error eliminando la jurisdicción:', error);
+                    swalError({
+                        message: 'Hubo un problema al eliminar la jurisdicción.',
+                        data: [error.response?.data?.message || error.message],
+                    });
+                }
+            };
+            eliminar();
         }
     });
 };

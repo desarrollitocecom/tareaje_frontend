@@ -1,8 +1,9 @@
-
 import axios from 'axios';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
-const deleteEmpleado = (obj, refreshData) => {
+
+const deleteCargo = (obj, refreshData, token, deleteData) => {
+
     CustomSwal.fire({
         title: '¿Seguro que quieres eliminar?',
         text: 'Esta acción no se puede deshacer.',
@@ -14,31 +15,32 @@ const deleteEmpleado = (obj, refreshData) => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            //   axios.delete(`https://yourapiendpoint.com/delete/${obj.id}`)
-            //     .then(() => {
-            //       Swal.fire(
-            //         'Eliminado',
-            //         'El rol ha sido eliminado correctamente.',
-            //         'success'
-            //       );
-            //       refreshData(); // Refresca los datos después de eliminar
-            //     })
-            //     .catch((error) => {
-            //       Swal.fire(
-            //         'Error',
-            //         'Hubo un problema al eliminar el rol.',
-            //         'error'
-            //       );
-            //       console.error('Error eliminando el rol:', error);
-            //     });
-            CustomSwal.fire(
-                'Eliminado',
-                'El empleado ha sido eliminado correctamente.',
-                'success'
-            );
-            refreshData(); // Refresca los datos después de eliminar
+            //console.log(token)
+            //console.log(obj.id)
+            const eliminar = async() => {
+                try {
+                    
+                    const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${obj.id}`,token)
+                    console.log(response)
+                    CustomSwal.fire(
+                        'Eliminado',
+                        'El empleado ha sido eliminado correctamente.',
+                        'success'
+                      );
+                      refreshData(); // Refresca los datos después de eliminar
+                    } catch (error) {
+                        console.error('Error eliminando el empleado:', error);
+                        swalError({
+                            message: 'Hubo un problema al eliminar el empleado.',
+                            data: [error.response?.data?.message || error.message],
+                        });
+                    }
+            }
+            eliminar()        
+            }
+            
         }
-    });
+    );
 };
 
-export default deleteEmpleado;
+export default deleteCargo;

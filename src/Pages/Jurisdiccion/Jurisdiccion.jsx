@@ -10,9 +10,21 @@ import AddJurisdiccion from './AddJurisdiccion';
 import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditJurisdiccion from './EditJurisdiccion';
 import deleteJurisdiccion from './DeleteJurisdiccion';
+import usePermissions from '../../Components/hooks/usePermission';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import useFetch from '../../Components/hooks/useFetch';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 
 
-const Jurisdiccion = () => {
+
+const Jurisdiccion = (moduleName) => {
+
+    const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
+    const location = useLocation();
+    const { token } = useSelector((state) => state.auth);
+    const { getData, deleteData } = useFetch()
+    const { addParams } = UseUrlParamsManager();
 
     const navigate = useNavigate()
     const [data, setdata] = useState([])
@@ -22,9 +34,11 @@ const Jurisdiccion = () => {
     const [Selected, setSelected] = useState(null)
     const timeoutRef = useRef(null)
 
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
-        fetchData()
-    }, [Update])
+        fetchData(location.search || undefined);
+    }, [location.search, Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
@@ -36,8 +50,8 @@ const Jurisdiccion = () => {
 
         timeoutRef.current = setTimeout(() => {
 
-            console.log('Realizando búsqueda con:', value);  // Ejecutar Fetch de busqueda
-        }, 800);
+            addParams({ search: value.trim() });
+          }, 800);
 
     };
 
@@ -45,30 +59,27 @@ const Jurisdiccion = () => {
         setUpdate((prev) => !prev)
     }
 
-    const fetchData = () => {
-
+    const fetchData = async (url) => {
         setLoading(true)
 
-        setTimeout(() => {//Borrar timeout para que se ejecute en tiempo real cuando tengamos los endpoints
-            axios.get(`/DataEjemplo.json`).then((res) => {
-                const dataFormated = res.data.data.map((item) => {
-                    return {
-                        id: item.member,
-                        nombres: item.nombres,
-                        apellidos: item.apellidos,
-                        DNI: item.dni,
-                        telefono: item.telefono,
-                    }
-                })
-                setdata(dataFormated)
+        const urlParams = url || ''
 
-                // setdata(res.data.data)
-            }).catch((err) => {
-                console.error(err)
-            }).finally(() => {
-                setLoading(false)
+        try {
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones/${urlParams}`, token)
+            setCount(response.data.data.totalCount)
+            const dataFormated = response.data.data.data.map((item) => {
+                return {
+                    id: item.id,
+                    nombre: item.nombre,
+                }
+
             })
-        }, 1000);
+            setdata(dataFormated)
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false)
+        }
     }
 
     const onEdit = (obj) => {
@@ -76,7 +87,7 @@ const Jurisdiccion = () => {
     }
 
     const onDelete = (obj) => {
-        deleteJurisdiccion(obj, refreshData)
+        deleteJurisdiccion(obj, refreshData, token, deleteData)
     }
 
     return (
@@ -96,7 +107,7 @@ const Jurisdiccion = () => {
                     <div className='flex flex-col w-full h-full'>
                         <div className='w-full flex flex-col md:flex-row justify-space-between pb-6 gap-3'>
                             <div className='w-full flex items-center gap-2'>
-                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{data ? data.length : 0}</span></span>
+                                <span className='text-gray-600'>Total de filas: <span id="rowCount" className='font-bold'>{count || 0}</span></span>
                             </div>
                             <div className='w-full flex items-center justify-end gap-3'>
                                 <div className='flex items-center'>
@@ -105,7 +116,7 @@ const Jurisdiccion = () => {
                                             <RefreshRoundedIcon />
                                         </IconButton>
                                     </Tooltip>
-                                    <AddJurisdiccion />
+                                    {canCreate && <AddJurisdiccion refreshData={refreshData} />}
                                 </div>
                                 <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
                                     <InputLabel htmlFor="input-with-icon-adornment">
@@ -124,12 +135,18 @@ const Jurisdiccion = () => {
                                 </FormControl>
                             </div>
                         </div>
-                        <CRUDTable data={data} loading={Loading} onDelete={onDelete} onEdit={onEdit} />
+                        <CRUDTable
+                            data={data}
+                            loading={Loading}
+                            onDelete={canDelete ? onDelete : null}
+                            onEdit={canEdit ? onEdit : null}
+                            count={count}
+                        />
                     </div >
                 </main>
             </div>
             {/* Componetnes para editar y eliminar */}
-            <EditJurisdiccion Selected={Selected} setSelected={setSelected} />
+            <EditJurisdiccion Selected={Selected} setSelected={setSelected} refreshData={refreshData} />
 
         </>
     )

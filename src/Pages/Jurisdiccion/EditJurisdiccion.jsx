@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import CustomModal from '../../Components/Modal/CustomModal'
 import SecurityIcon from '@mui/icons-material/Security';
-import { Button } from '@mui/material';
+import { Button,TextField } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
+import useFetch from '../../Components/hooks/useFetch';
 
-const EditJurisdiccion = ({ Selected, setSelected }) => {
+const EditJurisdiccion = ({ Selected, setSelected, refreshData }) => {
     const [Open, setOpen] = useState(false);
+    const { token } = useSelector((state) => state.auth);
+    const { patchData } = useFetch();
 
     useEffect(() => {        
         setOpen(Selected !== null);
@@ -15,28 +21,107 @@ const EditJurisdiccion = ({ Selected, setSelected }) => {
     const handleClose = () => {
         setSelected(null);
     }
+    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+        console.log(values, Selected?.id);
+    
+        try {
+            const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones/${Selected?.id}`, values, token);
+    
+            if (response.status) {
+                setOpen(false);
+                CustomSwal.fire(
+                    'Modificado',
+                    'La juridicción ha sido modificado correctamente.',
+                    'success'
+                );
+                refreshData();
+                resetForm();
+                
+            } else {
+                const erroresArray = response?.error?.response?.data?.errores || [];
+                swalError({
+                    message: 'Ocurrió un error al modificar la juridicción',
+                    data: erroresArray,
+                });
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            swalError({
+                message: 'Error inesperado al modificar la jurisdicción',
+                data: [error.message],
+            });
+        }finally {
+            
+            setSubmitting(false);
+        }
+    };
+    
 
-    // Usar selected para sacar los datos del empleado
+    const validate = (values) => {
+        const errors = {};
+        if (!values.nombre) {
+            errors.nombre = 'Campo requerido';
+        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { 
+            errors.nombre = 'El nombre solo debe contener letras';
+        }
+        return errors;
+    }
+
+   
     return (
         <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose}>
             <div className="flex items-center mb-2">
                 <SecurityIcon className="w-6 h-6 mr-2" />
                 <h1 className='text-lg font-bold fl'>Editar una Jurisdicción</h1>
             </div>
-            <form>
-                <div>
-                    {/* Inputs para la jurisdiccion */}
-                    {/* Ejemplo para poner valores {Selected?.nombres} poner el '?' para que no de error */}
-                </div>
-
-                <div className='flex justify-between pt-5'>
-                    <div></div>
-                    <div className='flex gap-3'>
-                        <Button type='button' size='small' variant="contained" color="inherit" onClick={handleClose}>Cerrar</Button>
-                        {/* <Button type='submit' size='small' variant="contained" color="success" disabled={formik.isSubmitting}>Agregar</Button> */}
-                    </div>
-                </div>
-            </form>
+            {Selected && (
+                <Formik
+                    initialValues={{
+                        nombre: Selected.nombre || '',
+                        
+                    }}
+                    enableReinitialize
+                    validate={validate}
+                    onSubmit={handleSubmit}
+                >
+                    {({ errors, touched, isSubmitting }) => (
+                        <Form>
+                            <div className="mb-3">
+                                <Field
+                                    as={TextField}
+                                    label="Nombre"
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    name="nombre"
+                                    error={touched.nombre && Boolean(errors.nombre)}
+                                    helperText={touched.nombre && errors.nombre}
+                                />
+                            </div>
+                            <div className="flex justify-between pt-5">
+                                <Button
+                                    type="button"
+                                    size="small"
+                                    variant="contained"
+                                    color="inherit"
+                                    onClick={handleClose}
+                                >
+                                    Cerrar
+                                </Button>
+                                <Button
+                                    type="submit"
+                                    size="small"
+                                    variant="contained"
+                                    color="success"
+                                    disabled={isSubmitting}
+                                >
+                                    Actualizar
+                                </Button>
+                            </div>
+                        </Form>
+                    )}
+                </Formik>
+            )}
         </CustomModal>
     )
 }
