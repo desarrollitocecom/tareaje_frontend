@@ -87,28 +87,7 @@ const Empleados = ({ moduleName }) => {
             const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token);
             const empleadoData = response.data.data;
 
-            // Si existe una foto, usa fetch para obtenerla con el token en el header
-            if (empleadoData.foto) {
-                const fotoUrl = `${import.meta.env.VITE_APP_ENDPOINT}/${empleadoData.foto}`;
-                try {
-                    const fotoResponse = await fetch(fotoUrl, {
-                        headers: {
-                            Authorization: `Bearer ${token}`, // Encabezado con el token
-                        },
-                    });
-            
-                    if (!fotoResponse.ok) {
-                        throw new Error('Error al cargar la foto');
-                    }
-            
-                    // Asigna la URL directamente si la respuesta es válida
-                    empleadoData.foto = fotoUrl;
-                } catch (error) {
-                    console.error('Error al cargar la foto:', error);
-                    empleadoData.foto = 'https://via.placeholder.com/128'; // Imagen de respaldo
-                }
-            }
-
+        
             // Establece los datos seleccionados en el estado
             setSelected(empleadoData);
         } catch (error) {
