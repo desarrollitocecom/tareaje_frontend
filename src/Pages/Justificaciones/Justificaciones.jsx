@@ -13,6 +13,8 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import PlagiarismIcon from '@mui/icons-material/Plagiarism';
+import useFetchData from '../../Components/hooks/useFetchData';
 
 
 const Justificaciones = ({ moduleName }) => {
@@ -20,6 +22,7 @@ const Justificaciones = ({ moduleName }) => {
   const location = useLocation();
   const { addParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
+  const { fetchPDF } = useFetchData(token)
   const { getData } = useFetch();
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -29,6 +32,7 @@ const Justificaciones = ({ moduleName }) => {
   const [Selected, setSelected] = useState(null);
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
+  const [documentSelected, setdocumentSelected] = useState(null)
 
   useEffect(() => {
     fetchData(location.search || undefined);
@@ -62,13 +66,22 @@ const Justificaciones = ({ moduleName }) => {
       const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones/${urlParams}`, token);
       setCount(response.data.data.totalCount);
       const dataFormated = response.data.data.data.map((item) => {
+        const arrDocumentos = item.documentos.map((path) => {
+          return {
+            icon: <PlagiarismIcon />,
+            action: () => viewDocJustificacion(path),
+            label: 'Ver Documento',
+          }
+        })
+        
         return {
           id: item.id,
-          nombre: item.empleado.nombre,
-          apellido: item.empleado.apellido,
+          nombre: item.empleado.nombres,
+          apellido: item.empleado.apellidos,
           dni: item.empleado.dni,
           "fecha de inicio": item.f_inicio,
           "fecha de fin": item.f_fin,
+          documentos: arrDocumentos,
           descripcion: item.descripcion
         };
       });
@@ -82,6 +95,11 @@ const Justificaciones = ({ moduleName }) => {
 
   const onEdit = (obj) => {
     setSelected(obj);
+  };
+
+  const viewDocJustificacion = async(path) => {
+    const file = await fetchPDF(path)
+    window.open(file, '_blank');
   };
 
   return (

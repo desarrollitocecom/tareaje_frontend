@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider } from '@mui/material';
+import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, CircularProgress, TableSortLabel, Stack, Pagination, createTheme, ThemeProvider, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -17,10 +17,10 @@ const CRUDTable = memo(({
     noDataText = 'No hay datos registrados.',
 }) => {
     const headers = data.length > 0
-        ? Object.keys(data[0]).filter((key) => key !== 'isDisabled')
+        ? Object.keys(data[0]).filter((key) => key !== 'id')
         : [];
 
-    const [orderBy, setOrderBy] = useState('id');
+    const [orderBy, setOrderBy] = useState('index');
     const [orderDirection, setOrderDirection] = useState('asc');
     const [sortedData, setSortedData] = useState([]);
 
@@ -31,15 +31,18 @@ const CRUDTable = memo(({
     };
 
     useEffect(() => {
-        setSortedData(SortData(data, orderBy, orderDirection))
-
-    }, [data, orderBy, orderDirection])
+        const dataWithIndex = data.map((item, index) => ({
+            ...item,
+            index: index + 1, // Agrega el índice (puedes empezar desde 1)
+        }));
+        setSortedData(SortData(dataWithIndex, orderBy, orderDirection));
+    }, [data, orderBy, orderDirection]);
 
     return (
         <div className='flex flex-1 overflow-hidden'>
             {loading ?
                 <div className='flex justify-center pt-4 h-full w-full'>
-                    <CircularProgress  size={30} thickness={5}/>
+                    <CircularProgress size={30} thickness={5} />
                 </div>
                 :
                 <>
@@ -50,7 +53,22 @@ const CRUDTable = memo(({
                                     <Table size='small' className='text-nowrap'>
                                         <TableHead className='bg-green-600 sticky top-0 z-10'>
                                             <TableRow>
-                                                {headers.map((header, index) => (
+                                                <TableCell
+                                                    sx={{ fontWeight: 600 }}
+                                                    align={'left'}
+
+                                                >
+                                                    <TableSortLabel
+                                                        sx={headerStyles}
+                                                        align={'left'}
+                                                        active={orderBy === 'index'}
+                                                        direction={orderBy === 'index' ? orderDirection : 'asc'}
+                                                        onClick={() => handleSortRequest('index')}
+                                                    >
+                                                        #
+                                                    </TableSortLabel>
+                                                </TableCell>
+                                                {headers.map((header) => (
                                                     <TableCell
                                                         key={header}
                                                         sx={{ fontWeight: 600 }}
@@ -80,18 +98,36 @@ const CRUDTable = memo(({
                                                     key={row.id || row.dni}
                                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                 >
-                                                    {headers.map((header, index) => {
-                                                        const lookup = ArrLookup.find(item => item.key === header)
-                                                        const value = lookup ? getValueById(row[header], lookup.obj) : row[header]
+                                                    <TableCell>{row.index}</TableCell>
+                                                    {headers.map((header) => {
+                                                        const lookup = ArrLookup.find(item => item.key === header);
+                                                        const value = lookup ? getValueById(row[header], lookup.obj) : row[header];
+
                                                         return (
                                                             <TableCell
                                                                 key={header}
                                                                 align={'left'}
-                                                                className='capitalize '
+                                                                className='capitalize'
                                                             >
-                                                                {value}
+                                                                {/* Verificar si el valor es un arreglo */}
+                                                                {Array.isArray(value) ? (
+                                                                    value.map((item, index) => (
+                                                                        <Tooltip
+                                                                            title={item.label}
+                                                                            key={index}
+                                                                            arrow
+                                                                            placement='top'
+                                                                            onClick={item.action}
+                                                                            className='cursor-pointer text-gray-500'
+                                                                        >
+                                                                            {item.icon}
+                                                                        </Tooltip>
+                                                                    ))
+                                                                ) : (
+                                                                    value
+                                                                )}
                                                             </TableCell>
-                                                        )
+                                                        );
                                                     })}
                                                     {(typeof onEdit === 'function' || typeof onDelete === 'function') && (
                                                         <TableCell align="right">
@@ -120,7 +156,7 @@ const CRUDTable = memo(({
                                     </Table>
                                 </div>
                                 <div className='flex justify-end pt-4'>
-                                    <CustomTablePagination count={count}/>
+                                    <CustomTablePagination count={count} />
                                 </div>
                             </div>
                         ) :
@@ -138,16 +174,6 @@ const CRUDTable = memo(({
 })
 
 export default CRUDTable
-
-const themePagination = {
-    '& .MuiPaginationItem-root': {
-        color: '#16a34a', // Color del texto de los elementos
-    },
-    '& .MuiPaginationItem-root.Mui-selected': {
-        backgroundColor: '#16a34a !important', // Color de fondo del elemento seleccionado
-        color: '#FFFFFF', // Color del texto del elemento seleccionado
-    },
-}
 
 const headerStyles = {
     color: 'white',
