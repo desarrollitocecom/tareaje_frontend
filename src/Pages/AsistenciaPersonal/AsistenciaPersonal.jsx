@@ -9,10 +9,11 @@ import FiltroSelect from "../../Components/Filtroselect/Filtro";
 import { TextField } from "@mui/material";
 import dayjs from 'dayjs';
 import ZoomImage from '../../Components/Image/zoomImages';
-import CompareImages from '../../Components/Image/CompareImages';
 import { formatDate, FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
+import CompareImages from '../../Components/Image/CompareImages';
+import CustomSwal from '../../helpers/swalConfig';
 
 const AsistenciaPersonal = () => {
   const { getData } = useFetch()
@@ -25,9 +26,25 @@ const AsistenciaPersonal = () => {
 
   const navigate = useNavigate();
 
-  const handlerowClick = (event, row) => {
-    const item = data.find((item) => item.id === row.id)
-    setImagesData(item);
+  const handleRowClick = (event, row) => {
+    const photo_id = row.notShow.photo_id
+    const foto = row.notShow.foto
+
+    if (photo_id === 'Asistencia manual') {
+      CustomSwal.fire({
+        icon: 'info',
+        title: 'Asistencia manual no visible.',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+      })
+      return
+    }
+    setImagesData({
+      photo_id,
+      foto
+    });
     setOpenModal(true)
   }
 
@@ -45,7 +62,6 @@ const AsistenciaPersonal = () => {
   const fetchData = (date) => {
     setLoading(true);
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
-      
       const formattedData = response.data.data.asistencias.map((item) => ({
         nomrbes: item.nombres,
         apellidos: item.apellidos,
@@ -53,6 +69,11 @@ const AsistenciaPersonal = () => {
         turno: item.turno,
         fecha: item.fecha,
         hora: item.hora,
+        tipo : item.photo_id === 'Asistencia manual' ? '🔴': '🟢',
+        notShow:{
+          photo_id: item.photo_id,
+          foto: item.foto
+        }
       }));
       setDataFormatted(formattedData);
     }).catch((error) => {
@@ -186,19 +207,19 @@ const AsistenciaPersonal = () => {
           <CRUDTable
             data={dataFormatted}
             loading={loading}
-            rowOnClick={handlerowClick}
+            rowOnClick={handleRowClick}
             noDataText={`No hay asistencias registradas para la fecha ${formatDate(date)}.`}
           />
         </div>
       </main>
-      {ImagesData && (
         <CompareImages
-          imagen={ImagesData.imagen}
-          captura={ImagesData.captura}
+          imagen={ImagesData?.foto}
+          captura={ImagesData?.photo_id}
+          // imagen={'https://image-compare-viewer.netlify.app/public/before-3.jpg'}
+          // captura={'https://image-compare-viewer.netlify.app/public/after-3.jpg'}
           open={OpenModal}
           handleClose={handleCloseModal}
         />
-      )}
     </div>
   );
 };

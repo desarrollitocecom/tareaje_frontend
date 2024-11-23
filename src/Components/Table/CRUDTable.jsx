@@ -17,7 +17,7 @@ const CRUDTable = memo(({
     noDataText = 'No hay datos registrados.',
 }) => {
     const headers = data.length > 0
-        ? Object.keys(data[0]).filter((key) => key !== 'id')
+        ? Object.keys(data[0]).filter((key) => key !== 'id' && key !== 'notShow')
         : [];
 
     const [orderBy, setOrderBy] = useState('index');
