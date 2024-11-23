@@ -102,6 +102,7 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                     timer: 4000,
                 });
                 handleClose();
+                refreshData();
             } catch (error) {
                 console.error('Error al editar vacaciones:', error);
                 CustomSwal.fire({

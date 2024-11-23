@@ -144,7 +144,7 @@ const Vacaciones = ({moduleName}) => {
         </main>
       </div>
       {/* Componetnes para editar y eliminar */}
-      {canEdit && <EditVacaciones Selected={Selected} setSelected={setSelected} />}
+      {canEdit && <EditVacaciones Selected={Selected} setSelected={setSelected} refreshData={refreshData} />}
       
     </>
   )

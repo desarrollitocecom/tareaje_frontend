@@ -3,10 +3,10 @@ import CustomModal from '../../Components/Modal/CustomModal';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Button, TextField, Autocomplete } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import { useFormik } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
 import useFetchData from '../../Components/hooks/useFetchData';
+import CustomSwal from '../../helpers/swalConfig';
 
 const EditUsuario = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();
@@ -14,178 +14,191 @@ const EditUsuario = ({ Selected, setSelected, refreshData }) => {
     const [roles, setRoles] = useState([]);
     const { token } = useSelector((state) => state.auth);
     const { fetchRoles } = useFetchData(token);
+    const [rolInputValue, setRolInputValue] = useState('');
+    const [selectedRol, setSelectedRol] = useState(null);
 
+    // Cargar roles al montar el componente
     useEffect(() => {
-        setOpen(Selected !== null);
-        if (token) {
-            fetchRoles().then((rolesData) => setRoles(rolesData.data));
+        const loadRoles = async () => {
+            const result = await fetchRoles();
+            if (!result.error) {
+                const uniqueRoles = Array.from(new Map(result.data.map(role => [role.id, role])).values());
+                setRoles(uniqueRoles);
+            } else {
+                console.error("Error al cargar roles:", result.error);
+            }
+        };
+        
+        loadRoles();
+    }, []);
+
+    // Manejo de datos al abrir el formulario de edición
+    useEffect(() => {
+        if (Selected && roles.length > 0) {
+            setOpen(true);
+
+            const rolSeleccionado = roles.find(role => role.nombre  === Selected.rol);
+            setSelectedRol(rolSeleccionado || null);
+            formik.setFieldValue('usuario', Selected.usuario || '');
+            formik.setFieldValue('correo', Selected.correo || '');
+            formik.setFieldValue('rol', rolSeleccionado?.nombre || '');
+            formik.setFieldValue('id_rol', rolSeleccionado?.id || '');
         }
-    }, [Selected, token]);
+    }, [Selected]);
+
 
     const handleClose = () => {
         setSelected(null);
+        setOpen(false);
+        formik.resetForm();
     };
 
-    const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log(values);
-        try {
-            const response = await patchData(
-                `${import.meta.env.VITE_APP_ENDPOINT}/login/modifyuser/`,
-                values,
-                token
-            );
-            console.log(response);
-            if (response.status) {
-                CustomSwal.fire('Modificado', 'El usuario ha sido modificado correctamente.', 'success');
-                resetForm();
-                setSubmitting(false);
-                handleClose();
+    const formik = useFormik({
+        initialValues: {
+            usuario: '',
+            correo: '',
+            rol: '',
+            id_rol: '',
+        },
+        validate: (values) => {
+            const errors = {};
+            if (!values.usuario) {
+                errors.usuario = 'Debe ingresar un usuario';
+            }
+            if (!values.correo) {
+                errors.correo = 'Debe ingresar un correo';
+            } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(values.correo)) {
+                errors.correo = 'Correo no válido';
+            }
+            if (!values.rol) {
+                errors.rol = 'Debe seleccionar un rol';
+            }
+            return errors;
+        },
+        onSubmit: async (values) => {
+            try {
+                const data = {
+                    usuario: values.usuario,
+                    correo: values.correo,
+                    id_rol: values.id_rol,
+                };
 
-                // Llamada a `refreshData` para recargar la lista de usuarios
-                if (refreshData) {
-                    refreshData();
-                }
-            } else {
+                const res = await patchData(
+                    `${import.meta.env.VITE_APP_ENDPOINT}/login/modifyuser/`,
+                    data,
+                    token,
+                    true
+                );
+
                 CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.message || 'Error al modificar el usuario',
+                    icon: 'success',
+                    title: res.data.message,
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 4000
+                    timer: 4000,
                 });
-                setSubmitting(false);
+                handleClose();
+                if (refreshData) refreshData();
+            } catch (error) {
+                console.error('Error al modificar usuario:', error);
+                CustomSwal.fire({
+                    icon: 'error',
+                    title: 'Error en la solicitud',
+                    text: error.response?.data?.message || 'Hubo un problema al procesar tu solicitud.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                });
             }
-        } catch (error) {
-            console.error('Error en la solicitud:', error);
-            CustomSwal.fire({
-                icon: 'error',
-                title: 'Error al modificar el usuario',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000
-            });
-            setSubmitting(false);
-        }
-    };
-
-    const validate = (values) => {
-        const errors = {};
-        if (!values.usuario) {
-            errors.usuario = 'Campo requerido';
-        }
-        if (!values.correo) {
-            errors.correo = 'Campo requerido';
-        } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(values.correo)) {
-            errors.correo = 'Correo no válido';
-        }
-        if (!values.rol) {
-            errors.rol = 'Campo requerido';
-        }
-        return errors;
-    };
+        },
+    });
 
     return (
         <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose}>
             <div className="flex items-center mb-2">
                 <SecurityIcon className="w-6 h-6 mr-2" />
-                <h1 className='text-lg font-bold'>Editar un usuario</h1>
+                <h1 className="text-lg font-bold">Editar Usuario</h1>
             </div>
-            <Formik
-                initialValues={{
-                    usuario: '',
-                    correo: '',
-                    rol: '',
-                    id_rol: ''
-                }}
-                enableReinitialize
-                validate={validate}
-                onSubmit={handleSubmit}
-            >
-                {({ errors, touched, setFieldValue, values, isSubmitting }) => {
-                    // Actualizar automáticamente los valores cuando se selecciona un usuario
-                    useEffect(() => {
-                        if (Selected) {
-                            setFieldValue('usuario', Selected.usuario || '');
-                            setFieldValue('correo', Selected.correo || '');
-                            setFieldValue('rol', Selected.rol || '');
-                            setFieldValue('id_rol', Selected.id_rol || '');
-                        }
-                    }, [Selected, setFieldValue]);
 
-                    return (
-                        <Form>
-                            <div className="mb-3">
-                                <Field
-                                    as={TextField}
-                                    label="Usuario"
-                                    name="usuario"
-                                    variant="outlined"
-                                    fullWidth
-                                    error={touched.usuario && Boolean(errors.usuario)}
-                                    helperText={touched.usuario && errors.usuario}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <Field
-                                    as={TextField}
-                                    label="Correo"
-                                    name="correo"
-                                    variant="outlined"
-                                    fullWidth
-                                    error={touched.correo && Boolean(errors.correo)}
-                                    helperText={touched.correo && errors.correo}
-                                />
-                            </div>
-                            <div className="mb-3">
-                                <Autocomplete
-                                    options={roles}
-                                    getOptionLabel={(option) => option.nombre}
-                                    value={roles.find((role) => role.id === values.id_rol) || null}
-                                    onChange={(event, value) => {
-                                        setFieldValue('rol', value?.nombre || '');
-                                        setFieldValue('id_rol', value?.id || '');
-                                    }}
-                                    renderOption={(props, option) => (
-                                        <li {...props} key={option.id}>{option.nombre}</li>
-                                    )}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label="Rol"
-                                            variant="outlined"
-                                            error={touched.rol && Boolean(errors.rol)}
-                                            helperText={touched.rol && errors.rol}
-                                            fullWidth
-                                        />
-                                    )}
-                                />
-                            </div>
-                            <div className="flex justify-between pt-5">
-                                <Button
-                                    type="button"
-                                    size="small"
-                                    variant="contained"
-                                    color="inherit"
-                                    onClick={handleClose}
-                                >
-                                    Cerrar
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    size="small"
-                                    variant="contained"
-                                    color="success"
-                                    disabled={isSubmitting}
-                                >
-                                    Guardar
-                                </Button>
-                            </div>
-                        </Form>
-                    );
-                }}
-            </Formik>
+            <form onSubmit={formik.handleSubmit} className="mt-8">
+                <div className="flex flex-col gap-3">
+                    <TextField
+                        id="usuario"
+                        label="Usuario"
+                        variant="outlined"
+                        size="small"
+                        name="usuario"
+                        value={formik.values.usuario}
+                        onChange={formik.handleChange}
+                        error={formik.touched.usuario && Boolean(formik.errors.usuario)}
+                        helperText={formik.touched.usuario && formik.errors.usuario}
+                        fullWidth
+                    />
+                    <TextField
+                        id="correo"
+                        label="Correo"
+                        variant="outlined"
+                        size="small"
+                        name="correo"
+                        value={formik.values.correo}
+                        onChange={formik.handleChange}
+                        error={formik.touched.correo && Boolean(formik.errors.correo)}
+                        helperText={formik.touched.correo && formik.errors.correo}
+                        fullWidth
+                    />
+                    <Autocomplete
+                        options={roles}
+                        getOptionLabel={(option) => `${option.nombre}`}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        value={selectedRol}
+                        inputValue={rolInputValue}
+                        onInputChange={(event, newInputValue) => {
+                            setRolInputValue(newInputValue);
+                        }}
+                        onChange={(event, value) => {
+                            setSelectedRol(value || null);
+                            if (value) {
+                                setRolInputValue(`${value.nombre}`);
+                                formik.setFieldValue('rol', value.nombre);
+                                formik.setFieldValue('id_rol', value.id);
+                            } else {
+                                setRolInputValue('');
+                                formik.setFieldValue('rol', '');
+                                formik.setFieldValue('id_rol', '');
+                            }
+                            formik.setTouched({ ...formik.touched, rol: true });
+                        }}
+                        renderOption={(props, option) => (
+                            <li {...props} key={option.id}>
+                                {option.nombre}
+                            </li>
+                        )}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Rol"
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                                error={formik.touched.rol && Boolean(formik.errors.rol)}
+                                helperText={formik.touched.rol && formik.errors.rol}
+                            />
+                        )}
+                    />
+
+
+                    <div className="flex justify-between pt-5">
+                        <Button type="button" size="small" variant="contained" color="inherit" onClick={handleClose}>
+                            Cerrar
+                        </Button>
+                        <Button type="submit" size="small" variant="contained" color="success" disabled={formik.isSubmitting}>
+                            Guardar
+                        </Button>
+                    </div>
+                </div>
+            </form>
         </CustomModal>
     );
 };
