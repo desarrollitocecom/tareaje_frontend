@@ -158,7 +158,7 @@ const SeguimientoAsistencia = () => {
       postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
         .then((res) => {
           if (res.status) {            
-            setCount(res.data.totalCount);
+            setCount(res.data.data.totalCount);
             
             const newEntry = {
               inicio: startDate,
@@ -489,7 +489,7 @@ const SeguimientoAsistencia = () => {
         {/* Tabla de asistencias */}
         <div className="flex flex-col h-full overflow-hidden">
           <div className="!select-none flex flex-1 overflow-auto">
-            <table className="min-w-full bg-white border text-xs text-nowrap">
+            <table className="min-w-full bg-white border text-xs text-nowrap h-max ">
               <thead>
                 <tr>
                   <th className="py-2 px-2 border min-w-[72px]">NOMBRE</th>
