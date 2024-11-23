@@ -120,7 +120,7 @@ const Justificaciones = ({ moduleName }) => {
                 <span className="text-gray-600">
                   Total de filas:{' '}
                   <span id="rowCount" className="font-bold">
-                    {data ? data.length : 0}
+                    {count ||  0}
                   </span>
                 </span>
               </div>

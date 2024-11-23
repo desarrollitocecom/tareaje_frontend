@@ -11,6 +11,7 @@ import useFetchData from '../../Components/hooks/useFetchData';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
 
 const AddJustificacion = ({ refreshData }) => {
     const [Open, setOpen] = useState(false);
@@ -79,13 +80,14 @@ const AddJustificacion = ({ refreshData }) => {
             const formData = new FormData();
             formData.append('documents', fileConvert);
             formData.append('id_empleado', values.idEmpleado);
-            formData.append('f_inicio', dateRange.startDate.toISOString());
-            formData.append('f_fin', dateRange.endDate.toISOString());
+            formData.append('f_inicio', FormatoEnvioFecha(dateRange.startDate));
+            formData.append('f_fin', FormatoEnvioFecha(dateRange.endDate));
             formData.append('id_asistencia', values.idasistencia);
             formData.append('descripcion', values.descripcion);
+            
     
             // Realiza la solicitud POST
-            const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones`, formData, token);
+            const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones/create`, formData, token);
     
             if (response.status) {
                 CustomSwal.fire('Agregado', 'La justificación se ha registrado correctamente.', 'success');
