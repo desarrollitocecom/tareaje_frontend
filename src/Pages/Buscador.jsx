@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import ImageComponent from '../Components/Image/ImageComponent';
 import CustomTablePagination from './Pagination/TablePagination';
 import useFetchData from '../Components/hooks/useFetchData';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const PersonalBD = () => {
   const [DataSelects, setDataSelects] = useState([])
@@ -123,11 +124,12 @@ const PersonalBD = () => {
             horizontal: 'left',
           }}
         >
+          <CloseRoundedIcon className='absolute top-5 right-5 cursor-pointer' onClick={() => setAnchorEl(null)} />
           <div className="p-6">
-            <h1 className="text-xl font-bold text-gray-700 ">Filtros</h1>
-            <div className="flex flex-wrap justify-center max-w-[500px] mx-auto">
+            <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
+            <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
               {/* Subgerencia */}
-              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 pb-2">
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
                 <FiltroSelect
                   name="subgerencias"
@@ -185,8 +187,6 @@ const PersonalBD = () => {
                   options={DataSelects.sexos}
                 />
               </div>
-
-
 
               {/* Jurisdicción */}
               <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
