@@ -5,13 +5,13 @@ import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/mater
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
 import { PDFDocument } from 'pdf-lib';
-import { DateRange } from 'react-date-range';  
-import 'react-date-range/dist/styles.css';  
-import 'react-date-range/dist/theme/default.css'; 
+import { DateRange } from 'react-date-range';
+import 'react-date-range/dist/styles.css';
+import 'react-date-range/dist/theme/default.css';
 
 const AddJustificacion = ({ refreshData }) => {
     const [Open, setOpen] = useState(false);
@@ -34,7 +34,6 @@ const AddJustificacion = ({ refreshData }) => {
         });
     }, []);
 
-
     const handleClose = () => {
         setOpen(false);
         setFile(null);
@@ -49,8 +48,8 @@ const AddJustificacion = ({ refreshData }) => {
 
     const validate = (values) => {
         const errors = {};
-        if (!values.dni) {
-            errors.dni = 'El DNI del empleado es requerido';
+        if (!values.idEmpleado) {
+            errors.idEmpleado = 'El DNI del empleado es requerido';
         }
         if (!values.descripcion) {
             errors.descripcion = 'La descripción es requerida';
@@ -66,42 +65,44 @@ const AddJustificacion = ({ refreshData }) => {
     };
 
     const handleConvertAndSubmit = async (values, { resetForm }) => {
-        if (file && file.type === 'application/pdf') {
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await PDFDocument.load(arrayBuffer);
-                const mergedPdf = await PDFDocument.create();
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
+        if (!file) {
+            swalError('Debe adjuntar un archivo válido.');
+            return;
+        }
 
-                const pdfBytes = await mergedPdf.save();
-                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                const fileConvert = new File([blob], file.name || 'merged.pdf', { type: 'application/pdf' });
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await PDFDocument.load(arrayBuffer);
+            const mergedPdf = await PDFDocument.create();
+            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+            copiedPages.forEach((page) => mergedPdf.addPage(page));
 
-                const formData = new FormData();
-                formData.append('documents', fileConvert);
-                formData.append('id_empleado', values.idEmpleado);
-                formData.append('start_date', dateRange.startDate.toISOString());
-                formData.append('end_date', dateRange.endDate.toISOString());
-                formData.append('descripcion', values.descripcion);
+            const pdfBytes = await mergedPdf.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const fileConvert = new File([blob], file.name || 'merged.pdf', { type: 'application/pdf' });
 
-                const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones`, formData, token).then((res)=> {
+            const formData = new FormData();
+            formData.append('documents', fileConvert);
+            formData.append('id_empleado', values.idEmpleado);
+            formData.append('f_inicio', dateRange.startDate.toISOString());
+            formData.append('f_fin', dateRange.endDate.toISOString());
+            formData.append('id_asistencia', values.idasistencia);
+            formData.append('descripcion', values.descripcion);
 
-                    if (response.status) {
-                        CustomSwal.fire('Agregado', 'La justificación se ha registrado correctamente.', 'success');
-                        refreshData();
-                        resetForm();
-                        handleClose();
-                    } else {
-                        throw (response.error);
-                    }
-                });
-            } catch (error) {
-                swalError(err.response?.data);
-                
-                console.error(err);
+            const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones`, formData, token);
 
+            if (response.status) {
+                CustomSwal.fire('Agregado', 'La justificación se ha registrado correctamente.', 'success');
+                refreshData();
+                resetForm();
+                handleClose();
+            } else {
+                throw new Error(response.error || 'Error desconocido al registrar la justificación');
             }
+        } catch (err) {
+            const errorMessage = err.response?.data?.message || err.message || 'Error desconocido';
+            swalError(errorMessage);
+            console.error(err);
         }
     };
 
@@ -118,13 +119,13 @@ const AddJustificacion = ({ refreshData }) => {
                     <h1 className="text-lg font-bold">Añadir una Justificación</h1>
                 </div>
                 <Formik
-                    initialValues={{ idEmpleado: '', descripcion: '', nombre: '', apellido: '' }}
+                    initialValues={{ idEmpleado: '', descripcion: '', nombre: '', apellido: '', idasistencia: '' }}
                     validate={validate}
                     onSubmit={handleConvertAndSubmit}
                 >
                     {({ errors, touched, setFieldValue }) => (
-                        <Form>
-                            <div className="mb-3">
+                        <Form className="space-y-4">
+                            <div>
                                 <Autocomplete
                                     options={empleados}
                                     getOptionLabel={(option) =>
@@ -150,6 +151,7 @@ const AddJustificacion = ({ refreshData }) => {
                                             {...params}
                                             label="DNI"
                                             variant="outlined"
+                                            size="small"
                                             error={touched.idEmpleado && Boolean(errors.idEmpleado)}
                                             helperText={touched.idEmpleado && errors.idEmpleado}
                                             fullWidth
@@ -157,12 +159,13 @@ const AddJustificacion = ({ refreshData }) => {
                                     )}
                                 />
                             </div>
-                            <div className="flex flex-col md:flex-row gap-4 mb-3">
+                            <div className="grid grid-cols-2 gap-4">
                                 <Field
                                     as={TextField}
                                     label="Nombre"
                                     name="nombre"
                                     variant="outlined"
+                                    size="small"
                                     fullWidth
                                     disabled
                                 />
@@ -171,22 +174,12 @@ const AddJustificacion = ({ refreshData }) => {
                                     label="Apellido"
                                     name="apellido"
                                     variant="outlined"
+                                    size="small"
                                     fullWidth
                                     disabled
                                 />
                             </div>
-                            <div className="mb-3">
-                                <Field
-                                    as={TextField}
-                                    label="Descripción"
-                                    variant="outlined"
-                                    fullWidth
-                                    name="descripcion"
-                                    error={touched.descripcion && Boolean(errors.descripcion)}
-                                    helperText={touched.descripcion && errors.descripcion}
-                                />
-                            </div>
-                            <div className="mb-3">
+                            <div>
                                 <input
                                     type="file"
                                     accept=".pdf"
@@ -197,7 +190,7 @@ const AddJustificacion = ({ refreshData }) => {
                                 />
                                 {errors.file && <p className="text-red-500 text-sm">{errors.file}</p>}
                             </div>
-                            <div className="mb-3">
+                            <div className="flex justify-center">
                                 <DateRange
                                     editableDateInputs={true}
                                     onChange={(item) => setDateRange(item.selection)}
@@ -205,22 +198,37 @@ const AddJustificacion = ({ refreshData }) => {
                                     ranges={[dateRange]}
                                 />
                             </div>
-                            <div className="flex justify-between pt-5">
+                            <Field
+                                as={TextField}
+                                label="Idasistencia"
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                                name="idasistencia"
+                                error={touched.idasistencia && Boolean(errors.idasistencia)}
+                                helperText={touched.idasistencia && errors.idasistencia}
+                            />
+                            <Field
+                                as={TextField}
+                                label="Descripción"
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                                name="descripcion"
+                                error={touched.descripcion && Boolean(errors.descripcion)}
+                                helperText={touched.descripcion && errors.descripcion}
+                            />
+                            <div className="flex justify-end gap-2">
                                 <Button
                                     type="button"
-                                    variant="contained"
+                                    variant="outlined"
                                     color="inherit"
                                     onClick={handleClose}
                                     size="small"
                                 >
                                     Cerrar
                                 </Button>
-                                <Button 
-                                type="submit" 
-                                variant="contained" 
-                                color="success" 
-                                size="small"
-                                >
+                                <Button type="submit" variant="contained" color="success" size="small">
                                     Agregar
                                 </Button>
                             </div>

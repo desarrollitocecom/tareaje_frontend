@@ -74,6 +74,7 @@ const Usuarios = ({ moduleName }) => {
           id:item.id,
           usuario: item.usuario,
           correo: item.correo,
+          rol: item.rol.nombre
         }
       })
       setdata(dataFormated)

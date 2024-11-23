@@ -5,7 +5,7 @@ import { Button, IconButton, Tooltip, TextField } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal from '../../helpers/swalConfig';
 import dayjs from 'dayjs';
@@ -109,20 +109,12 @@ const AddFeriado = ({ refreshData }) => {
                                 />
                             </div>
                             <div className="mb-3">
-                                <DatePicker
-                                    label="Fecha"
+                                <StaticDatePicker
+                                    displayStaticWrapperAs="desktop"
+                                    openTo="day"
                                     value={null}
-                                    name="fecha"
                                     onChange={(value) => setFieldValue('fecha', value)}
-                                    slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            fullWidth
-                                            error={touched.fecha && Boolean(errors.fecha)}
-                                            helperText={touched.fecha && errors.fecha}
-                                        />
-                                    )}
+                                    renderInput={(params) => <TextField {...params} />}
                                 />
                             </div>
                             <div className="flex justify-between pt-5">
