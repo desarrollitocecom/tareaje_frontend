@@ -1,38 +1,37 @@
-import React from 'react';
-import { Fade, Modal, Skeleton, Zoom } from '@mui/material';
-import ReactCompareImage from "react-compare-image";
+import React from 'react'
+import CustomModal from '../Modal/CustomModal'
+import { ReactCompareSlider, ReactCompareSliderImage } from "react-compare-slider";
+import SwapHorizRoundedIcon from '@mui/icons-material/SwapHorizRounded';
 
-function ImageComparisonModal({ open, handleClose, imagen, captura }) {
+const CompareImages = ({ open, handleClose, imagen, captura }) => {
     return (
-        <Modal
-            keepMounted
-            open={open}
-            onClose={handleClose}
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <Fade in={open}>
-                <div className="w-[95%] max-w-xl min-h-[300px] rounded-lg overflow-hidden relative">
-                    {/* Comparador de imágenes con skeleton integrado */}
-                    <ReactCompareImage
-                        leftImage={imagen}
-                        rightImage={captura}
-                        skeleton={
-                            <Skeleton
-                                animation="wave"
-                                variant="rectangular"
-                                width="100%"
-                                height="100%"
-                            />
-                        }
-                    />
-                </div>
-            </Fade>
-        </Modal>
-    );
+        <CustomModal Open={open} handleClose={handleClose} className={'max-w-md'}>
+            <div className="w-full max-w-lg mx-auto">
+                <ReactCompareSlider
+                    itemOne={<ReactCompareSliderImage src={imagen} alt="Imagen 1" />}
+                    itemTwo={<ReactCompareSliderImage src={captura} alt="Imagen 2" />}
+                    style={{
+                        width: "100%",
+                        height: "400px",
+                    }}
+                    boundsPadding={23}
+                    handle={
+                        <div className='flex items-center justify-center'>
+                            <div className='shadow-lg h-full border absolute w-[4px] bg-white'></div>
+                            <div
+                                className='shadow-lg flex items-center justify-center border border-white bg-black/[0.125] size-10 rounded-full'
+                                style={{
+                                    backdropFilter: "blur(5px)",
+                                }}
+                            >
+                                <SwapHorizRoundedIcon className='!text-white z-10 !size-5' />
+                            </div>
+                        </div>
+                    }
+                />
+            </div>
+        </CustomModal>
+    )
 }
 
-export default ImageComparisonModal;
+export default CompareImages

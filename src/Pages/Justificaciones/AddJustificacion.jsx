@@ -8,7 +8,6 @@ import { Formik, Form, Field } from 'formik';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
-import { PDFDocument } from 'pdf-lib';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -69,18 +68,14 @@ const AddJustificacion = ({ refreshData }) => {
             swalError('Debe adjuntar un archivo válido.');
             return;
         }
-
+    
         try {
+            // Obtiene el ArrayBuffer del archivo
             const arrayBuffer = await file.arrayBuffer();
-            const pdf = await PDFDocument.load(arrayBuffer);
-            const mergedPdf = await PDFDocument.create();
-            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
-
-            const pdfBytes = await mergedPdf.save();
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            const fileConvert = new File([blob], file.name || 'merged.pdf', { type: 'application/pdf' });
-
+            const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+            const fileConvert = new File([blob], file.name || 'processed.pdf', { type: 'application/pdf' });
+    
+            // Construye el FormData
             const formData = new FormData();
             formData.append('documents', fileConvert);
             formData.append('id_empleado', values.idEmpleado);
@@ -88,9 +83,10 @@ const AddJustificacion = ({ refreshData }) => {
             formData.append('f_fin', dateRange.endDate.toISOString());
             formData.append('id_asistencia', values.idasistencia);
             formData.append('descripcion', values.descripcion);
-
+    
+            // Realiza la solicitud POST
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/justificaciones`, formData, token);
-
+    
             if (response.status) {
                 CustomSwal.fire('Agregado', 'La justificación se ha registrado correctamente.', 'success');
                 refreshData();

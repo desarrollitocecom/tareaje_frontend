@@ -278,10 +278,10 @@ const PersonalBD = () => {
                             alt={`Imagen de ${item.nombres}`}
                           />
                           <CardContent>
-                            <Typography gutterBottom variant="h5" component="div" style={{ margin: "0" }}>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="h5" component="div" style={{ margin: "0" }}>
                               {`${item.apellidos}`}
                             </Typography>
-                            <Typography gutterBottom variant="h5" component="div">
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="h5" component="div">
                               {`${item.nombres}`}
                             </Typography>
                             <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
