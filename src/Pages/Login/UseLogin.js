@@ -1,13 +1,15 @@
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { socket } from '../../Components/Socket/socket';
 import useFetch from '../../Components/hooks/useFetch';
-import { stringify } from 'uuid';
+import { setIsLogin } from '../../Redux/Slices/AuthSlice';
 
 const UseLogin = () => {
     const { getData, postData } = useFetch()
+    const dispatch = useDispatch();
 
     const login = async (credentials) => {
         try {
+            dispatch(setIsLogin(true))
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/login/signin`, credentials);
 
             if (response.status) {

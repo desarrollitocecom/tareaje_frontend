@@ -6,6 +6,7 @@ const initialState = {
     loading: false,
     refresh: false,
     moduleLoading: false,
+    isLogin: false,
 }
 
 const AuthSlice = createSlice({
@@ -29,9 +30,12 @@ const AuthSlice = createSlice({
     moduleLoading: (state, action) => {
       state.moduleLoading = action.payload;
     },
+    setIsLogin: (state, action) => {
+      state.isLogin = action.payload;
+    },
   }
 });
 
-export const {loginSuccess, logout, setLoading, moduleLoading} = AuthSlice.actions
+export const {loginSuccess, logout, setLoading, moduleLoading, setIsLogin} = AuthSlice.actions
 
 export default AuthSlice.reducer
