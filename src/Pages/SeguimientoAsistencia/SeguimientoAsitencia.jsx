@@ -22,6 +22,7 @@ import CustomTablePagination from "../Pagination/TablePagination";
 import { isSameWeek } from "../../helpers/DayJs.Confg";
 import CustomPopover from "../../Components/Popover/CustomPopover";
 import CustomSwal, { swalError } from "../../helpers/swalConfig";
+import AddAsistencia from "./AddAsistencia";
 
 const SeguimientoAsistencia = () => {
   const navigate = useNavigate()
@@ -47,6 +48,8 @@ const SeguimientoAsistencia = () => {
 
   const [showDatePicker, setshowDatePicker] = useState(false)
   const [RefreshData, setRefreshData] = useState(false)
+
+  const [SelectedAsistencia, setSelectedAsistencia] = useState(null)
 
   const today = new Date();
 
@@ -157,9 +160,9 @@ const SeguimientoAsistencia = () => {
       // Si no hay caché válida o se forza la actualización, solicita los datos del servidor
       postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
         .then((res) => {
-          if (res.status) {            
+          if (res.status) {
             setCount(res.data.data.totalCount);
-            
+
             const newEntry = {
               inicio: startDate,
               fin: endDate,
@@ -184,7 +187,7 @@ const SeguimientoAsistencia = () => {
 
             if (index === 0) {
               currentWeekData = res.data.data.asistencias;
-              
+
               setDataAsistencias(currentWeekData);
             }
           } else {
@@ -261,7 +264,7 @@ const SeguimientoAsistencia = () => {
   };
 
 
-  
+
 
   const handleTodayClick = () => {
     const start = dayjs(startDate);
@@ -528,9 +531,15 @@ const SeguimientoAsistencia = () => {
                       <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
                       <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
                       <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
-                      {asistencia.estados.map((asistencia) => (
-                        <td key={asistencia.id_empleado + asistencia.fecha} className="py-2 px-2 border text-center">
-                          {asistencia.asistencia ? asistencia.asistencia : '-'}
+                      {asistencia.estados.map((asist) => (
+                        <td key={asistencia.id_empleado + asist.fecha}
+                          className={`py-2 px-2 border text-center ${asist.asistencia ? '' : 'hover:bg-gray-100 cursor-pointer'}`}
+                          onClick={!asist.asistencia ? () => setSelectedAsistencia({
+                            id_empleado: asistencia.id_empleado,
+                            fecha: asist.fecha
+                          }) : undefined}
+                        >
+                          {asist.asistencia ? asist.asistencia : '-'}
                         </td>
                       ))}
                       {/* <td className="py-2 px-2 border text-center">
@@ -546,11 +555,12 @@ const SeguimientoAsistencia = () => {
             </table>
           </div>
           <div className='flex justify-end pt-4'>
-            <CustomTablePagination count={count}/>
+            <CustomTablePagination count={count} />
           </div>
         </div>
       </div>
-
+      
+      <AddAsistencia SelectedAsistencia={SelectedAsistencia} setRefreshData={setRefreshData} />
     </div >
   );
 };
