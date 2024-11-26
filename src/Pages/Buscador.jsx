@@ -1,16 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Formik, Form } from 'formik';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { TextField, Card, CardActionArea, CardMedia, CardContent, Typography, Avatar, IconButton, Button, Collapse, InputBase, Popover, Grid, FormControl, InputLabel, Select, Slider } from '@mui/material';
+import { Card, CardActionArea, CardContent, Typography, Button, Popover, Slider } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import FilterListIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import useData from '../Components/Hooks/UseDB';
 import FiltroSelect from '../Components/Filtroselect/Filtro';
 import SearchInput from '../Components/Inputs/SearchInput';
 import UseUrlParamsManager from '../Components/hooks/UseUrlParamsManager';
-import ErrImg from "../assets/logos/notFoundImage.webp"
-import { MenuItem } from 'react-pro-sidebar';
 import useFetch from '../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
 import ImageComponent from '../Components/Image/ImageComponent';
@@ -99,7 +95,7 @@ const PersonalBD = () => {
           BUSCADOR
         </h1>
       </header>
-      <div className="flex flex-col md:flex-row justify-between items-center fflex-1">
+      <div className="flex flex-col md:flex-row justify-between items-center">
         <div className='flex justify-start w-full'>
           <Button
             onClick={handleClick}
@@ -267,8 +263,8 @@ const PersonalBD = () => {
             <div className='gap-4 w-full grid grid-cols-[repeat(auto-fill,_minmax(230px,_1fr))] justify-start'>
 
               {Data.map((item) => (
-                <div className='w-full flex justify-center'>
-                  <div className='w-full max-w-[300px]' key={item.id}>
+                <div className='w-full flex justify-center' key={item.id}>
+                  <div className='w-full max-w-[300px]'>
                     <Link to={`/buscar/${item.id}`}>
                       <Card sx={{ width: '100%' }} className='border'>
                         <CardActionArea >

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import fondo_sjl_top from '../../assets/logos/fondo_sjl_top.png';
 import fondo_sjl_bottom from '../../assets/logos/fondo_sjl_bottom.png';
 import logo from '../../assets/logos/logo_sjl.png';
-import { Container, Box, Button, TextField, Paper } from '@mui/material';
+import { Container, Box, Button, TextField } from '@mui/material';
 import { loginSuccess, setLoading } from '../../Redux/Slices/AuthSlice';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import UseLogin from './UseLogin';

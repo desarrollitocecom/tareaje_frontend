@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom';
 import { Sidebar as ProSidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import Logo from "../../assets/logos/logo_sjl.png"
 import { Fragment, useState } from 'react';
 import ProfileUser from '../../assets/logos/userimg.webp';
-import { Avatar, Box, Button, Popover, Tooltip, Typography } from '@mui/material';
+import { Avatar, Box, Button, Popover, Typography } from '@mui/material';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -12,7 +12,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import storage from '@mui/icons-material/Storage';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess, logout } from '../../Redux/Slices/AuthSlice';
+import { logout } from '../../Redux/Slices/AuthSlice';
 import SearchIcon from '@mui/icons-material/Search';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import FolderSharedIcon from '@mui/icons-material/FolderShared';

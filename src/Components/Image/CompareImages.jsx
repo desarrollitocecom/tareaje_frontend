@@ -5,6 +5,7 @@ import SwapHorizRoundedIcon from '@mui/icons-material/SwapHorizRounded';
 import { useSelector } from 'react-redux';
 import useFetchData from '../hooks/useFetchData';
 import { Skeleton } from '@mui/material';
+import ErrImg from "../../assets/logos/notFoundImage.webp"
 
 const CompareImages = ({ open, handleClose, imagen, captura }) => {
     const { token } = useSelector((state) => state.auth);
@@ -40,17 +41,17 @@ const CompareImages = ({ open, handleClose, imagen, captura }) => {
     return (
         <CustomModal Open={open} handleClose={handleClose} className={'max-w-md'}>
             {isLoading ?
-                <div className='w-full h-[400px] flex items-center justify-center rounded-lg overflow-hidden'>
+                <div className='w-full h-[500px] flex items-center justify-center rounded-lg overflow-hidden'>
                     <Skeleton variant="rectangular" animation="wave" width={'100%'} height={'100%'} />
                 </div>
                 :
                 <div className="w-full max-w-lg mx-auto rounded-lg overflow-hidden">
                     <ReactCompareSlider
-                        itemOne={<ReactCompareSliderImage src={ImageBD} alt="Imagen 1" />}
-                        itemTwo={<ReactCompareSliderImage src={ImageAxon} alt="Imagen 2" />}
+                        itemOne={<ReactCompareSliderImage src={ImageBD || ErrImg} alt="Imagen 1" />}
+                        itemTwo={<ReactCompareSliderImage src={ImageAxon || ErrImg} alt="Imagen 2" />}
                         style={{
                             width: "100%",
-                            height: "400px",
+                            height: "500px",
                         }}
                         boundsPadding={23}
                         handle={

@@ -1,6 +1,5 @@
 import axios from 'axios'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import CustomSwal from '../../helpers/swalConfig';
 import { logout, moduleLoading } from '../../Redux/Slices/AuthSlice';
 

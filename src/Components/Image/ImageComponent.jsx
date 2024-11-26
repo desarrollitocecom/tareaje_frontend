@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useFetch from '../hooks/useFetch';
 import { useSelector } from 'react-redux';
 import ErrImg from "../../assets/logos/notFoundImage.webp"
-import axios from 'axios';
 import { Skeleton } from '@mui/material';
 import useFetchData from '../hooks/useFetchData';
 

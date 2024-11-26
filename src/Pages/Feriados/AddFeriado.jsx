@@ -8,7 +8,6 @@ import { Formik, Form, Field } from 'formik';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal from '../../helpers/swalConfig';
-import dayjs from 'dayjs';
 
 const AddFeriado = ({ refreshData }) => {
     const { postData } = useFetch();

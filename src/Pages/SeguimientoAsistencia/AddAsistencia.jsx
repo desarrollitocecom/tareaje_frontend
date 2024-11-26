@@ -1,36 +1,7 @@
-// import useFetch from "../../Components/hooks/useFetch"
-
-// export const AddAsistencia = (token, id_empleado) => {
-//     console.log(token, id_empleado);
-
-//     // const { postData } = useFetch()
-
-//     // postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencia`, {}, token)
-//     //     .then((res) => {
-//     //         if (res.status) {
-//     //             CustomSwal.fire(
-//     //                 'Agregado',
-//     //                 'La asistencia ha sido agregado correctamente.',
-//     //                 'success'
-//     //             );
-//     //             refreshData();
-//     //             handleClose();
-//     //         } else {
-//     //             throw res.error;
-//     //         }
-//     //     })
-//     //     .catch((err) => {
-//     //         swalError(err.response?.data);
-//     //         console.error(err);    
-//     //     }).finally(() => {
-//     //         formik.setSubmitting(false);
-//     //     });
-// }
-
 import React, { useEffect, useState } from 'react'
 import CustomModal from '../../Components/Modal/CustomModal';
-import { DatePicker, DateTimePicker, TimePicker } from '@mui/x-date-pickers';
-import { Button, FormControl, FormHelperText, MenuItem, Select, TextField } from '@mui/material';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { Button, FormControl, FormHelperText, MenuItem, Select } from '@mui/material';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import useFetch from '../../Components/hooks/useFetch';
@@ -167,7 +138,7 @@ const AddAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                 <MenuItem value="A">Asistio</MenuItem>
                 <MenuItem value="F">Falto</MenuItem>
               </Select>
-              <FormHelperText>{formik.touched.estado && formik.errors.estado || 'Estado de asistencia'}</FormHelperText>
+              <FormHelperText>{formik.touched.estado && formik.errors.estado || 'Estado de la asistencia'}</FormHelperText>
             </FormControl>
           </div>
         </div>
@@ -186,7 +157,7 @@ const AddAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
             size="small"
             variant="contained"
             color="success"
-          // disabled={isSubmitting}
+            disabled={formik.isSubmitting}
           >
             Enviar
           </Button>

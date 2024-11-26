@@ -6,7 +6,6 @@ import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddJustificacion from './AddJustificacion';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditJustificacion from './EditJustificacion';
 import usePermissions from '../../Components/hooks/usePermission';
 import { useSelector } from 'react-redux';

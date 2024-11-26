@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
-import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddRol from './AddRol';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditRol from './EditRol';
 import deleteRole from './DeleteRol';
 import usePermissions from '../../Components/hooks/usePermission';

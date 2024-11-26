@@ -1,4 +1,3 @@
-import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
 const deleteTurno = (obj, refreshData, token, deleteData) => {

@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Formik, Form } from "formik";
-import axios from 'axios';
 import CRUDTable from '../../Components/Table/CRUDTable';
 import { Link, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import FiltroSelect from "../../Components/Filtroselect/Filtro";
-import { TextField } from "@mui/material";
 import dayjs from 'dayjs';
-import ZoomImage from '../../Components/Image/zoomImages';
 import { formatDate, FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
@@ -23,6 +18,7 @@ const AsistenciaPersonal = () => {
   const [ImagesData, setImagesData] = useState(null);
   const [OpenModal, setOpenModal] = useState(false)
   const [date, setDate] = useState(new Date());
+  const [Count, setCount] = useState(0)
 
   const navigate = useNavigate();
 
@@ -62,7 +58,9 @@ const AsistenciaPersonal = () => {
   const fetchData = (date) => {
     setLoading(true);
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
+      setCount(response.data.data.totalCount)      
       const formattedData = response.data.data.asistencias.map((item) => ({
+        id: item.id_asistencia,
         nomrbes: item.nombres,
         apellidos: item.apellidos,
         dni: item.dni,
@@ -209,6 +207,7 @@ const AsistenciaPersonal = () => {
             loading={loading}
             rowOnClick={handleRowClick}
             noDataText={`No hay asistencias registradas para la fecha ${formatDate(date)}.`}
+            count={Count}
           />
         </div>
       </main>

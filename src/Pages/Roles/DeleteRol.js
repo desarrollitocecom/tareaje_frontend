@@ -1,5 +1,4 @@
 // deleteRole.js
-import axios from 'axios';
 import CustomSwal from '../../helpers/swalConfig';
 
 const deleteRole = (obj, deleteData, token, refreshData) => {
