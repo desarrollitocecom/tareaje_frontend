@@ -213,10 +213,10 @@ const AsistenciaPersonal = () => {
         </div>
       </main>
         <CompareImages
-          imagen={ImagesData?.foto}
-          captura={ImagesData?.photo_id}
-          // imagen={'https://image-compare-viewer.netlify.app/public/before-3.jpg'}
-          // captura={'https://image-compare-viewer.netlify.app/public/after-3.jpg'}
+          // imagen={ImagesData?.foto}
+          // captura={ImagesData?.photo_id}
+          imagen={"uploads/fotos/6f2af8e4-ed3d-4e1d-82e4-7f1fd4b1112f.jpg"}
+          captura={'axxon/photo/0697C6F0-CA7E-EF11-892C-D4F5EF3DCC17'}
           open={OpenModal}
           handleClose={handleCloseModal}
         />
