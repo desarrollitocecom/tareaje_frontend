@@ -11,7 +11,6 @@ export default CustomSwal;
 
 
 export const swalError = (obj) => {
-  console.log(obj);
   
   CustomSwal.fire({
     icon: 'error',

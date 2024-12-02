@@ -3,18 +3,14 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import dayjs from "dayjs";
 import { DateRange } from 'react-date-range';
-import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import { da, es } from "date-fns/locale";
+import { es } from "date-fns/locale";
 import { formatDate, FormatoEnvioFecha } from "../../helpers/GeneralFunctions";
 import useFetch from "../../Components/hooks/useFetch";
 import { useSelector } from "react-redux";
@@ -22,6 +18,8 @@ import CustomTablePagination from "../Pagination/TablePagination";
 import { isSameWeek } from "../../helpers/DayJs.Confg";
 import CustomPopover from "../../Components/Popover/CustomPopover";
 import CustomSwal, { swalError } from "../../helpers/swalConfig";
+import AddAsistencia from "./AddAsistencia";
+import UpdateAsistencia from "./UpdateAsistencia";
 
 const SeguimientoAsistencia = () => {
   const navigate = useNavigate()
@@ -47,6 +45,9 @@ const SeguimientoAsistencia = () => {
 
   const [showDatePicker, setshowDatePicker] = useState(false)
   const [RefreshData, setRefreshData] = useState(false)
+
+  const [SelectedAsistencia, setSelectedAsistencia] = useState(null)
+  const [SelectedAsistenciaUPD, setSelectedAsistenciaUPD] = useState(null)
 
   const today = new Date();
 
@@ -157,9 +158,9 @@ const SeguimientoAsistencia = () => {
       // Si no hay caché válida o se forza la actualización, solicita los datos del servidor
       postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
         .then((res) => {
-          if (res.status) {            
+          if (res.status) {
             setCount(res.data.data.totalCount);
-            
+
             const newEntry = {
               inicio: startDate,
               fin: endDate,
@@ -184,7 +185,7 @@ const SeguimientoAsistencia = () => {
 
             if (index === 0) {
               currentWeekData = res.data.data.asistencias;
-              
+
               setDataAsistencias(currentWeekData);
             }
           } else {
@@ -261,7 +262,7 @@ const SeguimientoAsistencia = () => {
   };
 
 
-  
+
 
   const handleTodayClick = () => {
     const start = dayjs(startDate);
@@ -419,20 +420,6 @@ const SeguimientoAsistencia = () => {
           </div>
           <div className="flex gap-2">
             <div>
-              {/* <Tooltip title={`${editCalendar ? "Guardar Ediciòn" : "Activar Ediciòn"}`} placement='top' arrow>
-                <Button
-                  color="inherit"
-                  className="p-2 rounded-lg flex items-center justify-center gap-1 "
-                  onClick={ToggleEditCalendar}
-                  sx={{ textTransform: 'none', minWidth: '30px' }}
-                >
-                  {editCalendar ?
-                    (<SaveIcon sx={{ fontSize: 20 }} />)
-                    :
-                    (<EditIcon sx={{ fontSize: 20 }} />)
-                  }
-                </Button>
-              </Tooltip> */}
               <Tooltip title={`Refrescar Calendario`} placement='top' arrow>
                 <Button
                   color="inherit"
@@ -523,34 +510,56 @@ const SeguimientoAsistencia = () => {
                   </tr>
                 ) : (
                   // Renderiza los datos reales cuando se cargan
-                  dataAsistencias.map((asistencia) => (
-                    <tr key={asistencia.id_empleado}>
-                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
-                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
-                      <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
-                      {asistencia.estados.map((asistencia) => (
-                        <td key={asistencia.id_empleado + asistencia.fecha} className="py-2 px-2 border text-center">
-                          {asistencia.asistencia ? asistencia.asistencia : '-'}
-                        </td>
-                      ))}
-                      {/* <td className="py-2 px-2 border text-center">
-                        <button className="bg-blue-500 text-white p-2 rounded-lg">
-                          Más info
-                        </button>
-                      </td> */}
-                    </tr>
-                  ))
+                  dataAsistencias.map((asistencia) => {
+                    return (
+                      <tr key={asistencia.id_empleado}>
+                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
+                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
+                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
+                        {asistencia.estados.map((asist) => {
+                          const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");
+                          const esAsistenciaInvalida = !asist.asistencia;
+
+                          return (
+                            <td
+                              key={asistencia.id_empleado + asist.fecha}
+                              className={`py-2 px-2 border text-center ${esFechaValida ? esAsistenciaInvalida ? 'hover:bg-gray-100 cursor-pointe' : 'hover:bg-gray-100 cursor-pointer' : ''}`}
+                              onClick={
+                                esFechaValida ? esAsistenciaInvalida ? (() =>
+                                  setSelectedAsistencia({
+                                    id_empleado: asistencia.id_empleado,
+                                    fecha: asist.fecha,
+                                  }))
+                                  :
+                                  (() =>
+                                    setSelectedAsistenciaUPD({
+                                      id_empleado: asistencia.id_empleado,
+                                      id_asistencia: asist.id_asistencia
+                                    })) :
+                                  null
+                              }
+                            >
+                              {asist.asistencia || '-'}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    )
+                  })
                 )}
               </tbody>
 
             </table>
           </div>
           <div className='flex justify-end pt-4'>
-            <CustomTablePagination count={count}/>
+            <CustomTablePagination count={count} />
           </div>
         </div>
       </div>
 
+      <AddAsistencia SelectedAsistencia={SelectedAsistencia} setRefreshData={setRefreshData} />
+
+      <UpdateAsistencia SelectedAsistencia={SelectedAsistenciaUPD} setRefreshData={setRefreshData} />
     </div >
   );
 };

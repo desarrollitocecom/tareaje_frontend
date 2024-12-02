@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
-import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddGradoEstudio from './AddGradoEstudio';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditGradoEstudio from './EditGradoEstudio';
 import deleteGradoEstudio from './DeleteGradoEstudio';
 import usePermissions from '../../Components/hooks/usePermission';

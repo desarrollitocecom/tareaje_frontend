@@ -1,4 +1,3 @@
-import axios from 'axios';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 

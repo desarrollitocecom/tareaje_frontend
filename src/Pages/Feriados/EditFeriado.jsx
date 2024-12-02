@@ -7,8 +7,6 @@ import { useFormik } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 const EditFeriado = ({ Selected, setSelected, refreshData }) => {

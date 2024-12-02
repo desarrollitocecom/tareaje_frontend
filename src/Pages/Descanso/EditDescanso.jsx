@@ -8,9 +8,7 @@ import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetchData from '../../Components/hooks/useFetchData';
 import dayjs from 'dayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const EditDescanso = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();

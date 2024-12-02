@@ -1,14 +1,13 @@
 import axios from 'axios'
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import CustomSwal from '../../helpers/swalConfig';
 import { logout, moduleLoading } from '../../Redux/Slices/AuthSlice';
 
 function useFetch() {
   const dispatch = useDispatch()
 
-  const handleAuthError = (error) => {
-    if (error.response && error.response.status === 401) {
+  const handleAuthError = (error, lazy) => {
+    if (error.response && error.response.status === 401 && !lazy) {
       CustomSwal.fire({
         icon: 'error',
         title: 'Error de autenticación',
@@ -36,7 +35,7 @@ function useFetch() {
 
     } catch (error) {
 
-      const authError = handleAuthError(error)
+      const authError = handleAuthError(error, lazy)
       if (authError.isAuthError) return authError
 
       return {

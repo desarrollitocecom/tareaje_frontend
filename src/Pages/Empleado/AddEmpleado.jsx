@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Tooltip, TextField, MenuItem } from '@mui/material';
@@ -33,6 +33,7 @@ const AddEmpleado = ({ refreshData }) => {
     });
     const [isLoading, setisLoading] = useState(false);
     const [foto, setFoto] = useState(null);
+    const fileInputRef = useRef()
 
 
     useEffect(() => {
@@ -252,6 +253,7 @@ const AddEmpleado = ({ refreshData }) => {
     const handleClose = () => {
         formik.resetForm();
         setFoto(null);
+        fileInputRef.current.value = ''
         setOpen(false);
     };
 
@@ -348,6 +350,7 @@ const AddEmpleado = ({ refreshData }) => {
                             type="file"
                             size="small"
                             fullWidth
+                            inputRef={fileInputRef}
                             onChange={handleFileInputChange}
                             slotProps={{
                                 inputLabel: { shrink: true },

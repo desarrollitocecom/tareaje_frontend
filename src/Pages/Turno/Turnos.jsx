@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
-import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddTurno from './AddTurno';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditTurno from './EditTurno';
 import DeleteTurno from './DeleteTurno';
 import usePermissions from '../../Components/hooks/usePermission';

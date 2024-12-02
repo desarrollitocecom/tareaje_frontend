@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Formik, Form } from 'formik';
-import { Box, Button, TextField, Paper, Popover, Tooltip, IconButton } from '@mui/material';
-import useData from "../Components/Hooks/UseDB";
+import { Button, Popover, Tooltip, IconButton } from '@mui/material';
 import CRUDTable from '../Components/Table/CRUDTable';
 import FilterListIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { Link, useNavigate } from "react-router-dom";
 import useFetch from '../Components/hooks/useFetch';
@@ -112,14 +108,8 @@ const PersonalBD = () => {
         </h1>
       </header>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-
-        <div className="flex-grow">
-          <SearchInput />
-        </div>
-
-        <div className="flex gap-2">
-
+      <div className="flex flex-col md:flex-row justify-between items-center mb-4">
+        <div>
           <Button
             onClick={handleClick}
             className="flex items-center gap-1 !capitalize !text-black"
@@ -132,6 +122,7 @@ const PersonalBD = () => {
             Filtros
           </Button>
         </div>
+        <SearchInput />
       </div>
 
       <main className="flex-1 bg-white shadow rounded-lg p-6 h-full overflow-hidden">

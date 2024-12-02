@@ -2,12 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import CRUDTable from '../../Components/Table/CRUDTable';
-import axios from 'axios';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormControl, InputAdornment, InputLabel, Input, IconButton, Tooltip } from '@mui/material';
 import AddSexo from './AddSexo';
-import CustomFiltrer from '../../Components/Popover/CustomFiltrer';
 import EditSexo from './EditSexo';
 import deleteSexo from './DeleteSexo';
 import usePermissions from '../../Components/hooks/usePermission';

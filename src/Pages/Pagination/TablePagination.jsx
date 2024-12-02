@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
 import { TablePagination } from '@mui/material';
 

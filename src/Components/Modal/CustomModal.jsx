@@ -18,7 +18,7 @@ const CustomModal = ({ children, Open, handleClose, className, isLoading }) => {
             onClose={handleClose}
             aria-labelledby="keep-mounted-modal-title"
             aria-describedby="keep-mounted-modal-description"
-
+            closeAfterTransition={false}
         >
             <Fade in={Open} >
                 <Box sx={style} className={`w-[95%] max-w-2xl rounded-md text-black ${className}`}>
