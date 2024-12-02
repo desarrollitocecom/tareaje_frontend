@@ -6,7 +6,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetchData from '../../Components/hooks/useFetchData';
 import { DateRange } from 'react-date-range';
 import es from 'date-fns/locale/es';
@@ -74,14 +74,7 @@ const AddVacaciones = ({ refreshData }) => {
                 refreshData();
                 handleClose(resetForm);
             } else {
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.error,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
-                });
+                swalError(res.error.response.data);
             }
         } catch (error) {
             CustomSwal.fire({

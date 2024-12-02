@@ -6,7 +6,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 
 const AddTurno = ({ refreshData }) => {
@@ -46,20 +46,8 @@ console.log(response);
                 refreshData();
                 resetForm();
             } else {
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                const errores = erroresArray.length > 0
-                    ? erroresArray.join(', ') // Unimos los elementos del array de errores
-                    : 'No se encontraron detalles del error';
 
-                // Mostramos la alerta
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: `${errores}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
+                swalError(response.error.response.data);
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);

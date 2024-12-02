@@ -533,6 +533,7 @@ const SeguimientoAsistencia = () => {
                                   :
                                   (() =>
                                     setSelectedAsistenciaUPD({
+                                      fecha: asist.fecha,
                                       id_empleado: asistencia.id_empleado,
                                       id_asistencia: asist.id_asistencia
                                     })) :

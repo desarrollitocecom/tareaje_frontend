@@ -218,11 +218,7 @@ const AddEmpleado = ({ refreshData }) => {
                         refreshData();
                         handleClose();
                     } else {
-                        const erroresArray = response?.error?.response?.data?.errores || [];
-                        swalError({
-                            message: 'Ocurrió un error al agregar el empleado',
-                            data: erroresArray,
-                        });
+                        swalError(response.error.response.data);
                     }
                 })
                 .catch((error) => {
@@ -256,6 +252,23 @@ const AddEmpleado = ({ refreshData }) => {
         fileInputRef.current.value = ''
         setOpen(false);
     };
+
+    useEffect(() => {
+        // Iterar sobre los campos con errores
+        const touchedWithErrors = Object.keys(formik.errors).filter(
+            (name) => formik.touched[name] && Boolean(formik.errors[name])
+        );
+    
+        if (touchedWithErrors.length > 0) {
+            // Mostrar mensajes de error solo de los campos tocados
+            const errorMessages = touchedWithErrors
+                .map((name) => `${name}: ${formik.errors[name]}`)
+                .join('\n');
+    
+            alert(`Errores encontrados:\n\n${errorMessages}`);
+        }
+    }, [formik.errors, formik.touched]);
+    
 
     
     return (

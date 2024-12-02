@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/material';
+import { Button, IconButton, Tooltip, TextField, Autocomplete, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetchData from '../../Components/hooks/useFetchData';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
+import { TIPO_dESCANSOS } from '../../helpers/Constants';
 
-const AddDescanso = () => {
+const AddDescanso = ({ refreshData }) => {
     const { postData } = useFetch();
     const [Open, setOpen] = useState(false);
     const { token } = useSelector((state) => state.auth);
@@ -48,23 +49,9 @@ const AddDescanso = () => {
                 setOpen(false);
                 CustomSwal.fire('Agregado', 'El descanso ha sido agregado correctamente.', 'success');
                 handleClose(resetForm);
+                refreshData();
             } else {
-                // Extraemos los errores de forma segura
-                const message = response?.error?.response?.data?.message || 'Ocurrió un error';
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                const errores = erroresArray.length > 0
-                    ? erroresArray.join(', ') // Unimos los elementos del array de errores
-                    : 'No se encontraron detalles del error';
-
-                // Mostramos la alerta
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: `${message}: ${errores}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
+                swalError(response.error.response.data);
 
             }
         } catch (error) {
@@ -96,6 +83,7 @@ const AddDescanso = () => {
                         dni: '',
                         nombre: '',
                         apellido: '',
+                        tipo: '',
                         fecha: fecha,
                         observacion: '',
                         id_empleado: ''
@@ -103,7 +91,7 @@ const AddDescanso = () => {
                     validate={validate}
                     onSubmit={handleSubmit}
                 >
-                    {({ errors, touched, setFieldValue }) => (
+                    {({ errors, touched, setFieldValue, values }) => (
                         <Form>
                             <div className="mb-3">
                                 <Autocomplete
@@ -161,6 +149,25 @@ const AddDescanso = () => {
                                         renderInput={(params) => <TextField {...params} fullWidth size="small" />}
                                     />
                                 </LocalizationProvider>
+                            </div>
+
+                            <div className='mb-3'>
+                                <FormControl fullWidth size='small'>
+                                    <InputLabel id="demo-simple-select-label">Tipo de descanso</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        label="Tipó de descanso"
+                                        name="tipo"
+                                        value={values.tipo}
+                                        onChange={(e) => setFieldValue('tipo', e.target.value)}
+                                        size="small"
+                                    >
+                                        {TIPO_dESCANSOS.map((item) => (
+                                            <MenuItem key={item} value={item}>{item}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </div>
 
                             <div className="mb-3">

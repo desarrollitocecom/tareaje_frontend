@@ -30,11 +30,7 @@ const AddGradoEstudio = ({ refreshData}) => {
                 refreshData();
                 resetForm();
             } else {
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                swalError({
-                    message: 'Ocurrió un error al agregar el grado de estudio',
-                    data: erroresArray,
-                });
+                swalError(response.error.response.data);
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);

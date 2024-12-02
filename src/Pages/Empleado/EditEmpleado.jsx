@@ -166,7 +166,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
         onSubmit: (values) => {
             const formData = new FormData();
             setIsLoading(true); // Activa el estado de carga durante el envío
-        
+
             // Convertir nombres a IDs
             const mappedValues = {
                 ...values,
@@ -180,11 +180,11 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                 id_lugar_trabajo: dataSets.lugarTrabajo.find((option) => option.nombre === values.id_lugar_trabajo)?.id || '',
                 id_funcion: dataSets.funciones.find((option) => option.nombre === values.id_funcion)?.id || '',
             };
-        
+
             Object.entries(mappedValues).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-        
+
             // Manejar la imagen (nueva o existente)
             if (foto && typeof foto !== 'string') {
                 formData.append('photo', foto); // Si hay una nueva imagen, adjúntala directamente
@@ -200,7 +200,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         const fileName = foto.split('/').pop(); // Extrae el nombre de la imagen
                         const existingFile = new File([blob], fileName, { type: blob.type });
                         formData.append('photo', existingFile); // Adjunta la imagen convertida como archivo
-        
+
                         // Llama al backend con el FormData que incluye la imagen
                         return patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token);
                     })
@@ -210,11 +210,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             refreshData();
                             handleClose();
                         } else {
-                            const erroresArray = response?.error?.response?.data?.errores || [];
-                            swalError({
-                                message: 'Ocurrió un error al modificar el empleado',
-                                data: erroresArray,
-                            });
+                            swalError(response.error.response.data);
                         }
                     })
                     .catch((err) => {
@@ -224,10 +220,13 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                             data: [err.message],
                         });
                     })
-                    .finally(() => setIsLoading(false));
-                return; // Detiene la ejecución para esperar el fetch
+                    .finally(() => {
+                        setIsLoading(false)
+                        formik.setSubmitting(false)
+                    }
+                );
             }
-        
+
             // Si no hay que convertir una imagen existente, continúa con la llamada al backend
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token)
                 .then((response) => {
@@ -236,11 +235,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         refreshData();
                         handleClose();
                     } else {
-                        const erroresArray = response?.error?.response?.data?.errores || [];
-                        swalError({
-                            message: 'Ocurrió un error al modificar el empleado',
-                            data: erroresArray,
-                        });
+                        swalError(response.error.response.data);
                     }
                 })
                 .catch((error) => {
@@ -250,9 +245,12 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         data: [error.message],
                     });
                 })
-                .finally(() => setIsLoading(false));
+                .finally(() => {
+                    setIsLoading(false)
+                    formik.setSubmitting(false);
+                });
         },
-        
+
     });
 
     useEffect(() => {
@@ -358,7 +356,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         { name: 'ruc', label: 'RUC', type: 'text' },
                         { name: 'hijos', label: 'Hijos', type: 'number' },
                         { name: 'f_nacimiento', label: 'Fecha de Nacimiento', type: 'date' },
-                        { name: 'edad', label: 'Edad', type: 'number', readOnly: true },                        
+                        { name: 'edad', label: 'Edad', type: 'number', readOnly: true },
                         { name: 'correo', label: 'Correo', type: 'email' },
                         { name: 'domicilio', label: 'Domicilio', type: 'text' },
                         { name: 'celular', label: 'Celular', type: 'text' },

@@ -83,11 +83,7 @@ const AddCargo = ({ refreshData }) => {
                         refreshData();
                         handleClose();
                     } else {
-                        const erroresArray = response?.error?.response?.data?.errores || [];
-                        swalError({
-                            message: 'Ocurrió un error al agregar el cargo',
-                            data: erroresArray,
-                        });
+                        swalError(response.error.response.data);
                     }
                 })
                 .catch((error) => {
