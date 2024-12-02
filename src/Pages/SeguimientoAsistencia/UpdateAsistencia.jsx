@@ -146,7 +146,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
 
 
                     <div>
-                        <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Tipo</label>
                         <FormControl
                             fullWidth
                             variant="outlined"
