@@ -3,11 +3,12 @@ import CustomModal from '../../Components/Modal/CustomModal';
 import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
-import { Button, TextField } from '@mui/material';
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import styled from '@emotion/styled';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { TIPO_JUSTIFICACIONES } from '../../helpers/Constants';
 
 const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
     const [Open, setOpen] = useState(false)
@@ -34,6 +35,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
             id_empleado: '',
             id_asistencia: '',
             descripcion: '',
+            tipo: '',
             documents: null,
         },
         validate: (values) => {
@@ -55,7 +57,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
         onSubmit: (values) => {
             formik.setSubmitting(true);
             console.log(values);
-            
+
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => {
                 if (value !== null && value !== undefined) {
@@ -73,9 +75,9 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
 
                 }
             })
-            .finally(() => {
-                formik.setSubmitting(false);
-            });
+                .finally(() => {
+                    formik.setSubmitting(false);
+                });
 
         }
     });
@@ -138,6 +140,51 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                         </div>
 
                     </div>
+
+
+                    <div>
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                        <FormControl
+                            fullWidth
+                            variant="outlined"
+                            size="small"
+                            className="bg-white"
+                            error={formik.touched.tipo && Boolean(formik.errors.tipo)}
+                        >
+                            <Select
+                                labelId={`tipo-label`}
+                                name="tipo"
+                                value={formik.values.tipo}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                displayEmpty={true}
+                                MenuProps={{
+                                    PaperProps: {
+                                        style: {
+                                            marginTop: 3,
+                                            maxHeight: 300,
+                                        },
+                                    },
+                                }}
+                                sx={{ fontSize: '0.9rem' }}
+                            >
+                                <MenuItem defaultChecked value="" sx={{ fontSize: '0.9rem' }}>
+                                    <em>'Seleccione una opción</em>
+                                </MenuItem>
+                                {TIPO_JUSTIFICACIONES.map((option) => (
+                                    <MenuItem
+                                        key={option}
+                                        value={option}
+                                        sx={option}
+                                    >
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {formik.touched.tipo && formik.errors.tipo && <FormHelperText error>{formik.errors.tipo}</FormHelperText>}
+                        </FormControl>
+                    </div>
+
                     <div className="flex flex-col gap-1">
                         <label>
                             <span>Descripción:</span>
