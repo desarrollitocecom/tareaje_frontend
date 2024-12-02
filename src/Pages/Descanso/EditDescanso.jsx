@@ -86,16 +86,20 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
             };
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/descansos/${Selected.id}`, data, token, true)
                 .then((res) => {
-                    CustomSwal.fire({
-                        icon: 'success',
-                        title: res.data.message,
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 4000,
-                    });
-                    refreshData();
-                    handleClose();
+                    if (res.status) {
+                        CustomSwal.fire({
+                            icon: 'success',
+                            title: res.data.message,
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 4000,
+                        });
+                        refreshData();
+                        handleClose();
+                    }else{
+                        swalError(res.error.response.data);
+                    }
                 })
                 .catch((err) => {
                     swalError(err.response?.data);

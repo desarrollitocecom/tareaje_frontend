@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
-import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/material';
+import { Button, IconButton, Tooltip, TextField, Autocomplete, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
@@ -12,6 +12,7 @@ import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
+import { TIPO_JUSTIFICACIONES } from '../../helpers/Constants';
 
 const AddJustificacion = ({ refreshData }) => {
     const [Open, setOpen] = useState(false);
@@ -73,6 +74,7 @@ const AddJustificacion = ({ refreshData }) => {
             formData.append('f_fin', FormatoEnvioFecha(dateRange.endDate));
             formData.append('id_asistencia', values.idasistencia);
             formData.append('descripcion', values.descripcion);
+            formData.append('tipo', values.tipo);
 
 
             // Realiza la solicitud POST
@@ -95,7 +97,7 @@ const AddJustificacion = ({ refreshData }) => {
     };
 
     const formik = useFormik({
-        initialValues: { idEmpleado: '', descripcion: '', nombre: '', apellido: '', idasistencia: '' },
+        initialValues: { idEmpleado: '', descripcion: '', nombre: '', apellido: '', idasistencia: '' , tipo: '' },
         validate: (values) => {
             const errors = {};
             if (!values.idEmpleado) {
@@ -110,6 +112,8 @@ const AddJustificacion = ({ refreshData }) => {
             return errors;
         },
         onSubmit: (values) => {
+            console.log(values);
+            
             handleConvertAndSubmit(values);
         },
 
@@ -208,6 +212,22 @@ const AddJustificacion = ({ refreshData }) => {
                             ranges={[dateRange]}
                         />
                     </div>
+                    <FormControl fullWidth size='small'>
+                        <InputLabel id="demo-simple-select-label">Tipo de descanso</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Tipó de descanso"
+                            name="tipo"
+                            value={formik.values.tipo}
+                            onChange={formik.handleChange}
+                            size="small"
+                        >
+                            {TIPO_JUSTIFICACIONES.map((item) => (
+                                <MenuItem key={item} value={item}>{item}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         value={formik.values.descripcion}
                         onChange={formik.handleChange}

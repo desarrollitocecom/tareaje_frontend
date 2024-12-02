@@ -26,7 +26,7 @@ const EditCargo = ({ Selected, setSelected, refreshData }) => {
                     if (!res.error) {
                         setSubgerencias(res.data);
                     } else {
-                        throw new Error(res.error);
+                        swalError(response.error.response.data);
                     }
                 })
                 .catch((err) => {

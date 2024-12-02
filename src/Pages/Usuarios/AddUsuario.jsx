@@ -5,7 +5,7 @@ import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/mater
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
 
@@ -56,14 +56,7 @@ const AddUsuario = ({ refreshData }) => {
                 refreshData();
                 handleClose(resetForm);
             } else {
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: response.error.response.data.message,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000
-                });
+                swalError(response.error.response.data);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Error en la solicitud';

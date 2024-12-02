@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useFormik } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
 import useFetchData from '../../Components/hooks/useFetchData';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 const EditUsuario = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();
@@ -90,16 +90,20 @@ const EditUsuario = ({ Selected, setSelected, refreshData }) => {
                     true
                 );
 
-                CustomSwal.fire({
-                    icon: 'success',
-                    title: res.data.message,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
-                handleClose();
-                if (refreshData) refreshData();
+                if (res.status) {
+                    CustomSwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                    });
+                    handleClose();
+                    if (refreshData) refreshData();
+                }else{
+                    swalError(res.error.response.data);
+                }
             } catch (error) {
                 console.error('Error al modificar usuario:', error);
                 CustomSwal.fire({

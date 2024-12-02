@@ -36,11 +36,7 @@ const EditSexo = ({ Selected, setSelected, refreshData }) => {
                 refreshData();
                 resetForm();
             } else {
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                swalError({
-                    message: 'Ocurrió un error al modificar el sexo',
-                    data: erroresArray,
-                });
+                swalError(response.error.response.data);
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);

@@ -93,16 +93,20 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
         
                 const res = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones/${Selected.id}`, data, token, true);
         
-                CustomSwal.fire({
-                    icon: 'success',
-                    title: res.data.message,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
-                handleClose();
-                refreshData();
+                if (res.status) {
+                    CustomSwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                    });
+                    handleClose();
+                    refreshData();
+                }else{
+                    swalError(res.error.response.data);
+                }
             } catch (error) {
                 console.error('Error al editar vacaciones:', error);
                 CustomSwal.fire({

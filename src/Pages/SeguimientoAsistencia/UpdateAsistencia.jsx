@@ -17,8 +17,10 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
     const fileInputRef = useRef()
 
     useEffect(() => {
+        console.log(SelectedAsistencia);
         if (SelectedAsistencia) {
             setOpen(true);
+            formik.setFieldValue('fecha', SelectedAsistencia.fecha);
             formik.setFieldValue('id_empleado', SelectedAsistencia.id_empleado);
             formik.setFieldValue('id_asistencia', SelectedAsistencia.id_asistencia);
         }
@@ -36,6 +38,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
             id_asistencia: '',
             descripcion: '',
             tipo: '',
+            fecha: null,
             documents: null,
         },
         validate: (values) => {
