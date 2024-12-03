@@ -281,9 +281,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         funciones: funcionesRes.data || [],
                     };
 
-                    setDataSets(fetchedDataSets);
-                    console.log(Selected.hijos);
-                    
+                    setDataSets(fetchedDataSets);                    
 
                     formik.setValues({
                         nombres: Selected.nombres || '',

@@ -57,7 +57,6 @@ const PersonaIdentificado = () => {
 
   useEffect(() => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token).then((response) => {
-      console.log(response.data.data);
       setPersona(response.data.data)
     }).catch((error) => {
       navigate("/buscar");

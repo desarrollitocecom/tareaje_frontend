@@ -111,9 +111,7 @@ const AddJustificacion = ({ refreshData }) => {
             }
             return errors;
         },
-        onSubmit: (values) => {
-            console.log(values);
-            
+        onSubmit: (values) => {            
             handleConvertAndSubmit(values);
         },
 

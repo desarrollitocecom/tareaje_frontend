@@ -50,7 +50,6 @@ const AddUsuario = ({ refreshData }) => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/login/signup`, values, token);
-            console.log(response);
             if (response.status) {
                 CustomSwal.fire('Agregado', 'El usuario ha sido agregado correctamente.', 'success');
                 refreshData();
@@ -60,7 +59,6 @@ const AddUsuario = ({ refreshData }) => {
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Error en la solicitud';
-            console.log(response.error)
             CustomSwal.fire({
                 icon: 'error',
                 title: errorMessage,

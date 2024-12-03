@@ -20,7 +20,6 @@ const deleteCargo = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${obj.id}`,token)
-                    console.log(response)
                     CustomSwal.fire(
                         'Eliminado',
                         'El empleado ha sido eliminado correctamente.',

@@ -209,7 +209,6 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                                     formik.setFieldValue('f_inicio', item.selection.startDate);
                                     formik.setFieldValue('f_fin', item.selection.endDate);
                                     setRangeDates([item.selection]);
-                                    console.log(item.selection);
                                 }}
                                 moveRangeOnFirstSelection={false}
                                 ranges={rangeDates}
