@@ -40,7 +40,6 @@ const useFetchData = (token) => {
     const fetchPermisos = async () => {
         try {
             const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/permiso`, token, true);
-            console.log(response);
             
             return{
                 data:response.data.data.data,

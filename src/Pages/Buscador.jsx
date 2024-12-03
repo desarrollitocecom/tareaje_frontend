@@ -33,7 +33,6 @@ const PersonalBD = () => {
   }, [location.search])
   const fetchEmpleados = async (urlParams) => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token).then((response) => {
-      console.log(response);
 
       setCount(response.data.data.totalCount)
       setData(response.data.data.data)
