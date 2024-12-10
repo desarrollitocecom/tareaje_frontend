@@ -35,6 +35,7 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
 import CustomSwal from '../../helpers/swalConfig';
+import ImageComponent from '../Image/ImageComponent';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
@@ -255,23 +256,25 @@ const Sidebar = ({ toggled, setToggled }) => {
             >
               <div className="min-w-12 min-h-12 flex items-center justify-center">
                 <Avatar
-                  src={user?.image || ProfileUser}
+                  // src={user?.image || ProfileUser}
                   alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                   sx={{
                     width: Collapsed ? 40 : 50,
                     height: Collapsed ? 40 : 50,
                     transition: 'width 0.5s, height 0.5s'
                   }}
-                />
+                >
+                  <ImageComponent path={user?.empleado.foto} errorImage={ProfileUser} alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`} />
+                </Avatar>
               </div>
-              <Box ml={2} flexGrow={1}>
+              <div className='flex flex-col ml-4 overflow-hidden text-ellipsis '>
                 <Typography variant="body1" fontWeight="bold" noWrap>
                   {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" noWrap>
+                <Typography className='text-ellipsis' variant="body2" color="textSecondary" noWrap>
                   {user?.correo}
                 </Typography>
-              </Box>
+              </div>
             </div>
 
             {/* Popover para mostrar opciones de usuario */}
@@ -286,11 +289,14 @@ const Sidebar = ({ toggled, setToggled }) => {
             >
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
                 <Avatar
-                  src={user?.image || ProfileUser}
+                  // src={user?.image || ProfileUser}
                   alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                   sx={{ width: 50, height: 50, mb: 1 }}
 
-                />
+                >
+                  <ImageComponent path={user?.empleado.foto} errorImage={ProfileUser} alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`} />
+
+                </Avatar>
                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
                   {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                 </Typography>

@@ -176,7 +176,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                                     <MenuItem
                                         key={option}
                                         value={option}
-                                        sx={option}
+                                        // sx={option}
                                     >
                                         {option}
                                     </MenuItem>

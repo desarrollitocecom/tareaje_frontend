@@ -1,8 +1,9 @@
-import { Button, Popover } from '@mui/material';
+import { Button, IconButton, Popover } from '@mui/material';
 import React from 'react'
 import FilterListIcon from '@mui/icons-material/FilterList';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
-const CustomPopover = ({ label, CustomIcon, children }) => {
+const CustomPopover = ({ label, CustomIcon, CustomIconClose, children }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -33,11 +34,18 @@ const CustomPopover = ({ label, CustomIcon, children }) => {
                     },
                 }}
             >
-                {CustomIcon ?
-                    <CustomIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
+                {!open ?
+                    CustomIcon ?
+                        <CustomIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
+                        :
+                        <FilterListIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
                     :
-                    <FilterListIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
+                    CustomIconClose ?
+                        <CustomIconClose sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
+                        :
+                        <FilterListIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
                 }
+
                 <div className='mt-1'>
                     {label}
                 </div>
@@ -53,7 +61,14 @@ const CustomPopover = ({ label, CustomIcon, children }) => {
                     horizontal: 'left',
                 }}
             >
-                <div className='p-3'>
+                <div className='p-3 relative'>
+                    <IconButton
+                        onClick={handleClose}
+                        className='!absolute !top-1 !right-1 cursor-pointer z-10'
+                    >
+                        <CloseRoundedIcon/>
+                    </IconButton>
+
                     {children}
                 </div>
             </Popover>

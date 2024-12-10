@@ -8,6 +8,8 @@ const CustomModal = ({ children, Open, handleClose, className, isLoading }) => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         bgcolor: 'background.paper',
+        maxHeight: '90%',
+        overflow: 'hidden',
         boxShadow: 24,
         p: 4,
     };
@@ -22,12 +24,14 @@ const CustomModal = ({ children, Open, handleClose, className, isLoading }) => {
         >
             <Fade in={Open} >
                 <Box sx={style} className={`w-[95%] max-w-2xl rounded-md text-black ${className}`}>
-                    {isLoading ?
-                        <div className='absolute rounded-lg w-full h-full flex items-center justify-center bg-white/80 z-10 top-0 left-0'>
-                            <CircularProgress size="30px" />
-                        </div>
-                        : null}
-                    {children}
+                    <div className='overflow-auto py-4'>
+                        {isLoading ?
+                            <div className='absolute rounded-lg w-full h-full flex items-center justify-center bg-white/80 z-10 top-0 left-0'>
+                                <CircularProgress size="30px" />
+                            </div>
+                            : null}
+                        {children}
+                    </div>
                 </Box>
             </Fade>
         </Modal>

@@ -24,6 +24,8 @@ const AddJustificacion = ({ refreshData }) => {
     const [dniInputValue, setDniInputValue] = useState('');
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
     const fileInputRef = useRef()
+    const [isLoading, setisLoading] = useState(false)
+    const timeoutRef = useRef(null);
     const [dateRange, setDateRange] = useState({
         startDate: new Date(),
         endDate: new Date(),
@@ -97,7 +99,7 @@ const AddJustificacion = ({ refreshData }) => {
     };
 
     const formik = useFormik({
-        initialValues: { idEmpleado: '', descripcion: '', nombre: '', apellido: '', idasistencia: '' , tipo: '' },
+        initialValues: { idEmpleado: '', descripcion: '', nombre: '', apellido: '', idasistencia: '', tipo: '' },
         validate: (values) => {
             const errors = {};
             if (!values.idEmpleado) {
@@ -111,7 +113,7 @@ const AddJustificacion = ({ refreshData }) => {
             }
             return errors;
         },
-        onSubmit: (values) => {            
+        onSubmit: (values) => {
             handleConvertAndSubmit(values);
         },
 
@@ -138,28 +140,60 @@ const AddJustificacion = ({ refreshData }) => {
                             }
                             value={selectedEmpleado}
                             inputValue={dniInputValue}
-                            onInputChange={(event, newInputValue) => setDniInputValue(newInputValue)}
+                            loading={isLoading}
+                            onInputChange={(event, newInputValue) => {
+                                setDniInputValue(newInputValue);
+
+                                // Lógica de búsqueda y filtrado de empleados con timeout
+                                setisLoading(true);
+                                setEmpleados([]);
+
+                                if (timeoutRef.current) {
+                                    clearTimeout(timeoutRef.current);
+                                }
+
+                                timeoutRef.current = setTimeout(() => {
+                                    if (!newInputValue.trim()) {
+                                        fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                    } else {
+                                        const firstChar = newInputValue.trim().charAt(0);
+                                        const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                        fetchEmpleados(`?${paramKey}=${newInputValue.trim()}`)
+                                            .then((empleados) => {
+                                                setEmpleados(empleados.data);
+                                            })
+                                            .catch((error) => {
+                                                console.error("Error fetching empleados:", error);
+                                            })
+                                            .finally(() => {
+                                                setisLoading(false);
+                                            });
+                                    }
+                                }, 800);
+                            }}
                             onChange={(event, value) => {
                                 setSelectedEmpleado(value || null);
+                                
                                 if (value) {
-                                    formik.setFieldValue('idEmpleado', value.id);
                                     formik.setFieldValue('nombre', value.nombres);
                                     formik.setFieldValue('apellido', value.apellidos);
+                                    formik.setFieldValue('idEmpleado', value.id);
                                 } else {
-                                    formik.setFieldValue('idEmpleado', '');
                                     formik.setFieldValue('nombre', '');
                                     formik.setFieldValue('apellido', '');
+                                    formik.setFieldValue('idEmpleado', '');
                                 }
+                                setDniInputValue(value ? `${value.dni} - ${value.nombres} ${value.apellidos}` : '');
                             }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
                                     label="DNI"
                                     variant="outlined"
-                                    size="small"
                                     error={formik.touched.idEmpleado && Boolean(formik.errors.idEmpleado)}
                                     helperText={formik.touched.idEmpleado && formik.errors.idEmpleado}
                                     fullWidth
+                                    size="small"
                                 />
                             )}
                         />

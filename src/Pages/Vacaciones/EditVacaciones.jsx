@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Button, TextField, Autocomplete } from '@mui/material';
@@ -21,6 +21,8 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
     const { fetchEmpleados } = useFetchData(token);
     const [dniInputValue, setDniInputValue] = useState('');
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
+    const [isLoading, setisLoading] = useState(false)
+    const timeoutRef = useRef(null);
 
     // Estado para el rango de fechas
     const [rangeDates, setRangeDates] = useState([{
@@ -46,17 +48,26 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
     useEffect(() => {
         if (Selected) {
             setOpen(true);
-            const empleadoSeleccionado = empleados.find(emp => emp.dni === Selected.dni);
-            setSelectedEmpleado(empleadoSeleccionado || null);
-            formik.setFieldValue('dni', empleadoSeleccionado?.dni || '');
-            formik.setFieldValue('nombre', empleadoSeleccionado?.nombres || '');
-            formik.setFieldValue('apellido', empleadoSeleccionado?.apellidos || '');
-            formik.setFieldValue('id_empleado', empleadoSeleccionado?.id || '');
-            setRangeDates([{
-                startDate: dayjs(Selected['fecha de inicio']).toDate(),
-                endDate: dayjs(Selected['fecha de fin']).toDate(),
-                key: 'selection',
-            }]);
+
+            fetchEmpleados(`?dni=${Selected.dni.trim()}`)
+                .then((empleados) => {
+                    setEmpleados(empleados.data);
+                    const empleadoSeleccionado = empleados.data.find(emp => emp.dni === Selected.dni);
+                    setSelectedEmpleado(empleadoSeleccionado || null);
+                    formik.setFieldValue('dni', empleadoSeleccionado?.dni || '');
+                    formik.setFieldValue('nombre', empleadoSeleccionado?.nombres || '');
+                    formik.setFieldValue('apellido', empleadoSeleccionado?.apellidos || '');
+                    formik.setFieldValue('id_empleado', empleadoSeleccionado?.id || '');
+                    setRangeDates([{
+                        startDate: dayjs(Selected['fecha de inicio']).toDate(),
+                        endDate: dayjs(Selected['fecha de fin']).toDate(),
+                        key: 'selection',
+                    }]);
+                }).finally(() => {
+                    setisLoading(false)
+                })
+
+
         }
     }, [Selected]);
 
@@ -90,9 +101,9 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                     f_inicio: dayjs(rangeDates[0].startDate).format('YYYY-MM-DD'),
                     f_fin: dayjs(rangeDates[0].endDate).format('YYYY-MM-DD'),
                 };
-        
+
                 const res = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/vacaciones/${Selected.id}`, data, token, true);
-        
+
                 if (res.status) {
                     CustomSwal.fire({
                         icon: 'success',
@@ -104,7 +115,7 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                     });
                     handleClose();
                     refreshData();
-                }else{
+                } else {
                     swalError(res.error.response.data);
                 }
             } catch (error) {
@@ -120,7 +131,7 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                 });
             }
         }
-        
+
     });
 
     return (
@@ -139,8 +150,36 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                         value={selectedEmpleado}
                         inputValue={dniInputValue}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
+                        loading={isLoading}
                         onInputChange={(event, newInputValue) => {
                             setDniInputValue(newInputValue);
+
+                            // Lógica de búsqueda y filtrado de empleados con timeout
+                            setisLoading(true);
+                            setEmpleados([]);
+
+                            if (timeoutRef.current) {
+                                clearTimeout(timeoutRef.current);
+                            }
+
+                            timeoutRef.current = setTimeout(() => {
+                                if (!newInputValue.trim()) {
+                                    fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                } else {
+                                    const firstChar = newInputValue.trim().charAt(0);
+                                    const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                    fetchEmpleados(`?${paramKey}=${newInputValue.trim()}`)
+                                        .then((empleados) => {
+                                            setEmpleados(empleados.data);
+                                        })
+                                        .catch((error) => {
+                                            console.error("Error fetching empleados:", error);
+                                        })
+                                        .finally(() => {
+                                            setisLoading(false);
+                                        });
+                                }
+                            }, 800);
                         }}
                         onChange={(event, value) => {
                             setSelectedEmpleado(value || null);
@@ -157,7 +196,8 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                                 formik.setFieldValue('apellido', '');
                                 formik.setFieldValue('id_empleado', '');
                             }
-                            formik.setTouched({ ...formik.touched, dni: true }); // Marcar como tocado
+
+                            formik.setTouched({ ...formik.touched, dni: false }); // Marcar como tocado
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -166,11 +206,14 @@ const EditVacaciones = ({ Selected, setSelected, refreshData }) => {
                                 variant="outlined"
                                 fullWidth
                                 size="small"
+                                name='dni'
                                 error={formik.touched.dni && Boolean(formik.errors.dni)}  // Corrección aquí
+                                onBlur={formik.handleBlur}
                                 helperText={formik.touched.dni && formik.errors.dni}     // Corrección aquí
                             />
                         )}
                     />
+
 
 
                     <div className="flex gap-2">
