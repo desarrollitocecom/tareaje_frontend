@@ -32,6 +32,7 @@
     "sweetalert2": "^11.14.4",
     "sweetalert2-react-content": "^5.0.7",
     "uuid": "^11.0.2",
+    "xlsx-js-style": "^1.2.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {
@@ -48,6 +49,7 @@
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
     "vite": "^5.4.8",
+    "vite-plugin-node-polyfills": "^0.22.0",
     "webpack-bundle-analyzer": "^4.10.2"
   }
 }

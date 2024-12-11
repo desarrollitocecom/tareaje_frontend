@@ -52,6 +52,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
             id_cargo: '',
             id_turno: '',
             id_regimen_laboral: '',
+            foto: '',
             id_sexo: '',
             id_jurisdiccion: '',
             id_grado_estudios: '',
@@ -255,7 +256,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
 
     useEffect(() => {
         setOpen(Selected !== null);
-        if (Selected) {
+        if (Selected) {            
             setIsLoading(true); // Comienza cargando
             Promise.all([
                 fetchCargos(),
@@ -305,6 +306,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         id_subgerencia: fetchedDataSets.subgerencias.find(opt => opt.nombre === Selected.subgerencia?.nombre)?.nombre || '',
                         id_lugar_trabajo: fetchedDataSets.lugarTrabajo.find(opt => opt.nombre === Selected.lugarTrabajo?.nombre)?.nombre || '',
                         id_funcion: fetchedDataSets.funciones.find(opt => opt.nombre === Selected.funcion?.nombre)?.nombre || '',
+                        foto: Selected.foto
                     });
 
                     if (Selected?.foto) {

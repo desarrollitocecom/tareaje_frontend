@@ -264,7 +264,7 @@ const useFetchData = (token) => {
     
           return pdfURL;
         } catch (error) {
-          console.error('Error al obtener la imagen:', error);
+        //   console.error('Error al obtener la imagen:', error);
           return null;
         }
       };

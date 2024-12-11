@@ -25,6 +25,7 @@ import SearchInput from "../../Components/Inputs/SearchInput";
 import FilterListIcon from '@mui/icons-material/FilterAlt';
 import useFetchData from "../../Components/hooks/useFetchData";
 import UseUrlParamsManager from "../../Components/hooks/UseUrlParamsManager";
+import DownloadIcon from '@mui/icons-material/Download';
 
 
 const SeguimientoAsistencia = () => {
@@ -169,7 +170,7 @@ const SeguimientoAsistencia = () => {
       postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
         .then((res) => {
           if (res.status) {
-            setCount(res.data.data.totalCount);            
+            setCount(res.data.data.totalCount);
             const newEntry = {
               inicio: startDate,
               fin: endDate,
@@ -353,6 +354,28 @@ const SeguimientoAsistencia = () => {
   }
 
 
+  const exportToExcel = () => {
+    const params = location.search;
+
+    // Convertir los parámetros a un objeto
+    const urlSearchParams = new URLSearchParams(params);
+
+    // Quitar las propiedades 'page' y 'limit'
+    urlSearchParams.delete('page');
+    urlSearchParams.delete('limit');
+
+    // Reconstruir el string de parámetros
+    const updatedParams = `?${urlSearchParams.toString()}&page=0`;
+    const startDate =FormatoEnvioFecha(rangeDates[0].startDate)
+    const endDate =FormatoEnvioFecha(rangeDates[0].endDate)
+    
+    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${updatedParams}`, { inicio: startDate, fin: endDate }, token, true).then((res) => {
+      console.log(res);
+
+      
+    })
+  }
+
 
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col">
@@ -369,7 +392,7 @@ const SeguimientoAsistencia = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 pb-5 overflow-hidden">
         <div className="pb-6 flex justify-between">
-          <div>
+          <div className="flex items-center ">
             <CustomPopover
               CustomIcon={DateRangeIcon}
               label={"Filtro Fechas"}
@@ -523,6 +546,19 @@ const SeguimientoAsistencia = () => {
                 </div>
               </div>
             </CustomPopover>
+            <Button
+              onClick={() => exportToExcel()}
+              color="primary"
+              size="small"
+              className="!capitalize"
+              sx={{
+                padding: '3px 10px',
+              }}
+            >
+              <DownloadIcon className="!size-5" />
+              Descargar Excel
+            </Button>
+
           </div>
           <SearchInput />
         </div>
@@ -652,53 +688,53 @@ const SeguimientoAsistencia = () => {
                     </td>
                   </tr>
                 ) :
-                dataAsistencias.length === 0 ? (
-                  <tr>
-                    <td colSpan={weekDates.length + 4} className="py-4 text-center">
-                      <p>No se encontraron datos</p>
-                    </td>
-                  </tr>
-                ) :                
-                (
-                  // Renderiza los datos reales cuando se cargan
-                  dataAsistencias.map((asistencia) => {
-                    return (
-                      <tr key={asistencia.id_empleado}>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
-                        {asistencia.estados.map((asist) => {
-                          const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");
-                          const esAsistenciaInvalida = !asist.asistencia;
+                  dataAsistencias.length === 0 ? (
+                    <tr>
+                      <td colSpan={weekDates.length + 4} className="py-4 text-center">
+                        <p>No se encontraron datos</p>
+                      </td>
+                    </tr>
+                  ) :
+                    (
+                      // Renderiza los datos reales cuando se cargan
+                      dataAsistencias.map((asistencia) => {
+                        return (
+                          <tr key={asistencia.id_empleado}>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
+                            {asistencia.estados.map((asist) => {
+                              const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");
+                              const esAsistenciaInvalida = !asist.asistencia;
 
-                          return (
-                            <td
-                              key={asistencia.id_empleado + asist.fecha}
-                              className={`py-2 px-2 border text-center ${esFechaValida ? esAsistenciaInvalida ? 'hover:bg-gray-100 cursor-pointe' : 'hover:bg-gray-100 cursor-pointer' : ''}`}
-                              onClick={
-                                esFechaValida ? esAsistenciaInvalida ? (() =>
-                                  setSelectedAsistencia({
-                                    id_empleado: asistencia.id_empleado,
-                                    fecha: asist.fecha,
-                                  }))
-                                  :
-                                  (() =>
-                                    setSelectedAsistenciaUPD({
-                                      fecha: asist.fecha,
-                                      id_empleado: asistencia.id_empleado,
-                                      id_asistencia: asist.id_asistencia
-                                    })) :
-                                  null
-                              }
-                            >
-                              {asist.asistencia || '-'}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    )
-                  })
-                )}
+                              return (
+                                <td
+                                  key={asistencia.id_empleado + asist.fecha}
+                                  className={`py-2 px-2 border text-center ${esFechaValida ? esAsistenciaInvalida ? 'hover:bg-gray-100 cursor-pointe' : 'hover:bg-gray-100 cursor-pointer' : ''}`}
+                                  onClick={
+                                    esFechaValida ? esAsistenciaInvalida ? (() =>
+                                      setSelectedAsistencia({
+                                        id_empleado: asistencia.id_empleado,
+                                        fecha: asist.fecha,
+                                      }))
+                                      :
+                                      (() =>
+                                        setSelectedAsistenciaUPD({
+                                          fecha: asist.fecha,
+                                          id_empleado: asistencia.id_empleado,
+                                          id_asistencia: asist.id_asistencia
+                                        })) :
+                                      null
+                                  }
+                                >
+                                  {asist.asistencia || '-'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        )
+                      })
+                    )}
               </tbody>
 
             </table>
