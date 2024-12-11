@@ -376,6 +376,18 @@ const SeguimientoAsistencia = () => {
     })
   }
 
+  const getDatesInRange = (startDate, endDate) => {
+    const dates = [];
+    let currentDate = dayjs(startDate);
+  
+    while (currentDate.isBefore(dayjs(endDate).add(1, 'day'))) {
+      dates.push(currentDate.format('YYYY-MM-DD')); // Formato de fecha que desees
+      currentDate = currentDate.add(1, 'day');
+    }
+  
+    return dates;
+  };
+
 
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col">
