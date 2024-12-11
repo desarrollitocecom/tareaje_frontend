@@ -34,7 +34,6 @@ const AddTurno = ({ refreshData }) => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos`, values, token);
-console.log(response);
             if (response.status) {
                 setOpen(false);
                 CustomSwal.fire(

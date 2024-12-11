@@ -18,7 +18,6 @@ const deleteFuncion = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/funciones/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'La función ha sido eliminada correctamente.',

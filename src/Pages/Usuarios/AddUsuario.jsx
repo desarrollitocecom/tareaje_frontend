@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/material';
@@ -16,6 +16,8 @@ const AddUsuario = ({ refreshData }) => {
     const [roles, setRoles] = useState([]);
     const { token } = useSelector((state) => state.auth);
     const { fetchEmpleados, fetchRoles } = useFetchData(token);
+    const [isLoading, setisLoading] = useState(false)
+    const timeoutRef = useRef(null);
 
     useEffect(() => {
         fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
@@ -50,7 +52,6 @@ const AddUsuario = ({ refreshData }) => {
     const handleSubmit = async (values, { resetForm }) => {
         try {
             const response = await postData(`${import.meta.env.VITE_APP_ENDPOINT}/login/signup`, values, token);
-            console.log(response);
             if (response.status) {
                 CustomSwal.fire('Agregado', 'El usuario ha sido agregado correctamente.', 'success');
                 refreshData();
@@ -60,7 +61,6 @@ const AddUsuario = ({ refreshData }) => {
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || 'Error en la solicitud';
-            console.log(response.error)
             CustomSwal.fire({
                 icon: 'error',
                 title: errorMessage,
@@ -133,9 +133,38 @@ const AddUsuario = ({ refreshData }) => {
                                         setFieldValue('dni', value?.dni || '');
                                         setFieldValue('id_empleado', value?.id || '');
                                     }}
+                                    onInputChange={(e) => {
+                                        setisLoading(true);
+                                        setEmpleados([]);
+
+                                        if (timeoutRef.current) {
+                                            clearTimeout(timeoutRef.current);
+                                        }
+
+                                        timeoutRef.current = setTimeout(() => {
+                                            if (!e.target.value.trim()) {
+                                                fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                            } else {
+                                                const firstChar = e.target.value.trim().charAt(0);
+                                                const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                                fetchEmpleados(`?${paramKey}=${e.target.value.trim()}`)
+                                                    .then((empleados) => {
+                                                        setEmpleados(empleados.data);
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("Error fetching empleados:", error);
+                                                    })
+                                                    .finally(() => {
+                                                        setisLoading(false);
+                                                    });
+
+                                            }
+                                        }, 800);
+                                    }}
                                     renderOption={(props, option) => (
                                         <li {...props} key={option.id}>{`${option.dni} - ${option.nombres} ${option.apellidos}`}</li>
                                     )}
+                                    loading={isLoading}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}

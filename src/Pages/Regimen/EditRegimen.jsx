@@ -5,7 +5,7 @@ import { Button, TextField, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
-import CustomSwal from '../../helpers/swalConfig';
+import CustomSwal, { swalError } from '../../helpers/swalConfig';
 
 const EditRegimen = ({ Selected, setSelected, refreshData }) => {
     const { patchData } = useFetch();
@@ -34,21 +34,7 @@ const EditRegimen = ({ Selected, setSelected, refreshData }) => {
                 setSubmitting(false);
                 handleClose();
             } else {
-                const message = response?.error?.response?.data?.message || 'Ocurrió un error';
-                const erroresArray = response?.error?.response?.data?.errores || [];
-                const errores = erroresArray.length > 0
-                    ? erroresArray.join(', ') // Unimos los elementos del array de errores
-                    : 'No se encontraron detalles del error';
-
-                // Mostramos la alerta
-                CustomSwal.fire({
-                    icon: 'error',
-                    title: `${message}: ${errores}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 4000,
-                });
+                swalError(response.error.response.data);
 
             }
         } catch (error) {
@@ -68,8 +54,6 @@ const EditRegimen = ({ Selected, setSelected, refreshData }) => {
         const errors = {};
         if (!values.nombre) {
             errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
-            errors.nombre = 'El nombre solo debe contener letras';
         }
         return errors;
     };

@@ -16,9 +16,7 @@ const Layout = () => {
     const { getUserData } = UseLogin()
 
     useEffect(() => {
-        if (!isLogin) {
-            console.log('Se ejecuto el login');
-            
+        if (!isLogin) {            
             const fetchData = async () => {
                 try {
                     const userData = await getUserData(token);

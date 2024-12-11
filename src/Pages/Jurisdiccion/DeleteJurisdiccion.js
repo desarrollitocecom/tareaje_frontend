@@ -17,7 +17,6 @@ const deleteJurisdiccion = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'La jurisdicción ha sido eliminada correctamente.',

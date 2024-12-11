@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import FiltroSelect from '../../Components/Filtroselect/Filtro';
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -20,12 +21,21 @@ import CustomPopover from "../../Components/Popover/CustomPopover";
 import CustomSwal, { swalError } from "../../helpers/swalConfig";
 import AddAsistencia from "./AddAsistencia";
 import UpdateAsistencia from "./UpdateAsistencia";
+import SearchInput from "../../Components/Inputs/SearchInput";
+import FilterListIcon from '@mui/icons-material/FilterAlt';
+import useFetchData from "../../Components/hooks/useFetchData";
+import UseUrlParamsManager from "../../Components/hooks/UseUrlParamsManager";
+
 
 const SeguimientoAsistencia = () => {
+  const [DataSelects, setDataSelects] = useState([])
   const navigate = useNavigate()
   const location = useLocation();
   const { postData } = useFetch()
   const { token } = useSelector((state) => state.auth);
+  const { fetchCargos, fetchTurnos, fetchSubgerencias, fetchRegimenLaboral, fetchSexos, fetchJurisdicciones } = useFetchData(token);
+  const { addParams, getParams, removeParams } = UseUrlParamsManager();
+  const params = getParams();
   const [Fecha, setFecha] = useState(new Date());
   const [weekRange, setWeekRange] = useState([null, null]);
   const [startDate, setStartDate] = useState(null);
@@ -159,8 +169,7 @@ const SeguimientoAsistencia = () => {
       postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${urlParams || ''}`, { inicio: startDate, fin: endDate }, token, true)
         .then((res) => {
           if (res.status) {
-            setCount(res.data.data.totalCount);
-
+            setCount(res.data.data.totalCount);            
             const newEntry = {
               inicio: startDate,
               fin: endDate,
@@ -305,6 +314,46 @@ const SeguimientoAsistencia = () => {
     return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
   };
 
+
+
+
+  useEffect(() => {
+    loadFiltersData();
+  }, [])
+
+  const loadFiltersData = async () => {
+    try {
+      const [subgerenciasData, turnosData, cargosData, regimenLaboralData, sexosData, JurisdiccionesData] = await Promise.all([
+        fetchSubgerencias(),
+        fetchTurnos(),
+        fetchCargos(),
+        fetchRegimenLaboral(),
+        fetchSexos(),
+        fetchJurisdicciones()
+      ]);
+
+      setDataSelects({
+        subgerencias: mapToSelectOptions(subgerenciasData?.data),
+        turnos: mapToSelectOptions(turnosData?.data),
+        cargos: mapToSelectOptions(cargosData?.data),
+        regimenLaboral: mapToSelectOptions(regimenLaboralData?.data),
+        sexos: mapToSelectOptions(sexosData?.data),
+        jurisdicciones: mapToSelectOptions(JurisdiccionesData?.data),
+      });
+
+    } catch (error) {
+      console.error('Error al cargar los datos de filtros:', error);
+    }
+  };
+
+  const mapToSelectOptions = (data) => {
+    if (!data) return []
+
+    return data.map((item) => ({ value: item.id, label: item.nombre }))
+  }
+
+
+
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
@@ -325,34 +374,6 @@ const SeguimientoAsistencia = () => {
               CustomIcon={DateRangeIcon}
               label={"Filtro Fechas"}
             >
-              <div className="absolute top-1 right-1">
-                <Tooltip title="Limpiar Filtro" placement='top' arrow>
-                  <IconButton
-                    onClick={() => {
-                      const today = new Date();
-                      setStartDate(null);
-                      setEndDate(null);
-                      setIsPrevDisabled(false);
-                      setIsNextDisabled(false);
-                      setFecha(today);
-                      setRageDates([
-                        {
-                          startDate: today,
-                          endDate: today,
-                          key: 'selection',
-                        },
-                      ]);
-                    }}
-                    aria-label="Limpiar"
-                    className="!p-2 z-10"
-                  >
-                    <FilterAltOffIcon
-                      className="cursor-pointer text-gray-500"
-                      sx={{ fontSize: 20 }} // Ajustar el tamaño según el diseño
-                    />
-                  </IconButton>
-                </Tooltip>
-              </div>
               <div className="p-2 relative">
                 <div className="text-gray-500 font-semibold">
                   Filtro por fechas
@@ -376,12 +397,134 @@ const SeguimientoAsistencia = () => {
                   weekStartsOn={1}
                   locale={es}
                 />
+
+              </div>
+              {/* Botón para limpiar filtros */}
+              <div className="flex justify-end mt-6">
+                <Button
+                  className="!capitalize"
+                  onClick={() => {
+                    const today = new Date();
+                    setStartDate(null);
+                    setEndDate(null);
+                    setIsPrevDisabled(false);
+                    setIsNextDisabled(false);
+                    setFecha(today);
+                    setRageDates([
+                      {
+                        startDate: today,
+                        endDate: today,
+                        key: 'selection',
+                      },
+                    ]);
+                  }}
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                >
+                  Limpiar filtros
+                </Button>
+              </div>
+            </CustomPopover>
+            <CustomPopover
+              CustomIcon={FilterListIcon}
+              CustomIconClose={FilterAltOffIcon}
+              label={"Filtro Personal"}
+            >
+              <div className="p-6">
+                <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
+                <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
+                  {/* Subgerencia */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
+                    <FiltroSelect
+                      name="subgerencias"
+                      placeholder={'Seleccione una subgerencia'}
+                      onChange={(e) => addParams({ subgerencia: e.target.value })}
+                      value={params.subgerencia || ''}
+                      options={DataSelects.subgerencias}
+                    />
+                  </div>
+
+                  {/* Cargo */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="cargo-label">Cargo</label>
+                    <FiltroSelect
+                      name="cargo"
+                      placeholder={'Seleccione un cargo'}
+                      onChange={(e) => addParams({ cargo: e.target.value })}
+                      value={params.cargo || ''}
+                      options={DataSelects.cargos}
+                    />
+                  </div>
+
+                  {/* Regimen */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="regimen-label">Regimen</label>
+                    <FiltroSelect
+                      name="regimen"
+                      placeholder={'Seleccione un regimen'}
+                      onChange={(e) => addParams({ regimen: e.target.value })}
+                      value={params.regimen || ''}
+                      options={DataSelects.regimenLaboral}
+                    />
+                  </div>
+
+                  {/* Turno */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="turno-label">Turno</label>
+                    <FiltroSelect
+                      name="turnos"
+                      placeholder={'Seleccione un turno'}
+                      onChange={(e) => addParams({ turno: e.target.value })}
+                      value={params.turno || ''}
+                      options={DataSelects.turnos}
+                    />
+                  </div>
+
+                  {/* Sexo */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                    <FiltroSelect
+                      name="sexos"
+                      placeholder={'Seleccione un sexo'}
+                      onChange={(e) => addParams({ sexo: e.target.value })}
+                      value={params.sexo || ''}
+                      options={DataSelects.sexos}
+                    />
+                  </div>
+
+                  {/* Jurisdicción */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Jurisdicción</label>
+                    <FiltroSelect
+                      name="Jurisdicciones"
+                      placeholder={'Seleccione una jurisdicción'}
+                      onChange={(e) => addParams({ jurisdiccion: e.target.value })}
+                      value={params.jurisdiccion || ''}
+                      options={DataSelects.jurisdicciones}
+                    />
+                  </div>
+                </div>
+
+                {/* Botón para limpiar filtros */}
+                <div className="flex justify-end mt-6">
+                  <Button
+                    className="!capitalize"
+                    onClick={() => {
+                      removeParams();
+                    }}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                  >
+                    Limpiar filtros
+                  </Button>
+                </div>
               </div>
             </CustomPopover>
           </div>
-          <div>
-
-          </div>
+          <SearchInput />
         </div>
 
         {/* Navegación de semanas */}
@@ -508,7 +651,15 @@ const SeguimientoAsistencia = () => {
                       <p>Cargando asistencia...</p>
                     </td>
                   </tr>
-                ) : (
+                ) :
+                dataAsistencias.length === 0 ? (
+                  <tr>
+                    <td colSpan={weekDates.length + 4} className="py-4 text-center">
+                      <p>No se encontraron datos</p>
+                    </td>
+                  </tr>
+                ) :                
+                (
                   // Renderiza los datos reales cuando se cargan
                   dataAsistencias.map((asistencia) => {
                     return (

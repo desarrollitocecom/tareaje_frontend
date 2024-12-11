@@ -281,16 +281,14 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         funciones: funcionesRes.data || [],
                     };
 
-                    setDataSets(fetchedDataSets);
-                    console.log(Selected.hijos);
-                    
+                    setDataSets(fetchedDataSets);                    
 
                     formik.setValues({
                         nombres: Selected.nombres || '',
                         apellidos: Selected.apellidos || '',
                         dni: Selected.dni || '',
                         ruc: Selected.ruc || '',
-                        hijos: parseInt(Selected.hijos) === NaN ? '' : Selected.hijos,
+                        hijos: Number.isNaN(parseInt(Selected.hijos)) ? '' : Selected.hijos,
                         edad: Selected.edad || '',
                         f_nacimiento: Selected.f_nacimiento || '',
                         correo: Selected.correo || '',

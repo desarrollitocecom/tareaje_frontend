@@ -13,11 +13,13 @@ import ImageComponent from '../Components/Image/ImageComponent';
 import CustomTablePagination from './Pagination/TablePagination';
 import useFetchData from '../Components/hooks/useFetchData';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { ESTADOS } from '../helpers/Constants';
 
 const PersonalBD = () => {
   const [DataSelects, setDataSelects] = useState([])
   const navigate = useNavigate();
   const location = useLocation()
+  const url = new URLSearchParams(location.search);
   const { addParams, getParams, removeParams } = UseUrlParamsManager();
   const { token } = useSelector((state) => state.auth);
   const { fetchCargos, fetchTurnos, fetchSubgerencias, fetchRegimenLaboral, fetchSexos, fetchJurisdicciones } = useFetchData(token);
@@ -26,6 +28,8 @@ const PersonalBD = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [Data, setData] = useState([])
   const [count, setCount] = useState(0);
+  const [HijosRange, setHijosRange] = useState([url.get('hijosMin') || 0, url.get('hijosMax') || 30])
+  const [EdadRange, setEdadRange] = useState([url.get('edadMin') || 0, url.get('edadMax') || 100])
   const timeoutRef = useRef(null);
 
   useEffect(() => {
@@ -33,7 +37,6 @@ const PersonalBD = () => {
   }, [location.search])
   const fetchEmpleados = async (urlParams) => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token).then((response) => {
-      console.log(response);
 
       setCount(response.data.data.totalCount)
       setData(response.data.data.data)
@@ -168,7 +171,7 @@ const PersonalBD = () => {
                   placeholder={'Seleccione un turno'}
                   onChange={(e) => addParams({ turno: e.target.value })}
                   value={params.turno || ''}
-                  options={DataSelects.regimenLaboral}
+                  options={DataSelects.turnos}
                 />
               </div>
 
@@ -196,18 +199,38 @@ const PersonalBD = () => {
                 />
               </div>
 
+              {/* Jurisdicción */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Estado</label>
+                <FiltroSelect
+                  name="Jurisdicciones"
+                  placeholder={'Seleccione un estado'}
+                  onChange={(e) => addParams({ state: e.target.value })}
+                  value={params.state || ''}
+                  options={ESTADOS}
+                />
+              </div>
+
               {/* Hijos */}
               <div className="w-full px-2 py-2">
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Hijos</label>
                 <div className="pt-2 px-2">
                   <Slider
-                    disabled
                     className="min-w-[12rem]"
                     getAriaLabel={() => 'Hijos'}
                     defaultValue={[0, 30]}
                     valueLabelDisplay="auto"
-                    onChange={(e, value) => addParams({ hijos: `${value[0]}-${value[1]}` })}
-                    value={[params.hijos?.split('-')[0] || 0, params.hijos?.split('-')[1] || 30]}
+                    onChange={(e, value) => {
+                      setHijosRange(value)
+                      if (timeoutRef.current) {
+                        clearTimeout(timeoutRef.current);
+                      }
+
+                      timeoutRef.current = setTimeout(() => {
+                        addParams({ hijosMin: value[0], hijosMax: value[1] });
+                      }, 800);
+                    }}
+                    value={HijosRange}
                     max={30}
                     min={0}
                     marks={[
@@ -223,13 +246,21 @@ const PersonalBD = () => {
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Edad</label>
                 <div className="pt-2 px-2">
                   <Slider
-                    disabled
                     className="min-w-[12rem]"
                     getAriaLabel={() => 'Edad'}
                     defaultValue={[0, 100]}
                     valueLabelDisplay="auto"
-                    onChange={(e, value) => addParams({ edad: `${value[0]}-${value[1]}` })}
-                    value={[params.edad?.split('-')[0] || 0, params.edad?.split('-')[1] || 100]}
+                    onChange={(e, value) => {
+                      setEdadRange(value)
+                      if (timeoutRef.current) {
+                        clearTimeout(timeoutRef.current);
+                      }
+
+                      timeoutRef.current = setTimeout(() => {
+                        addParams({ edadMin: value[0], edadMax: value[1] });
+                      }, 800);
+                    }}
+                    value={EdadRange}
                     max={100}
                     min={0}
                     marks={[
@@ -245,7 +276,11 @@ const PersonalBD = () => {
             <div className="flex justify-end mt-6">
               <Button
                 className="!capitalize"
-                onClick={removeParams}
+                onClick={() => {
+                  removeParams();
+                  setHijosRange([0, 30]);
+                  setEdadRange([0, 100]);
+                }}
                 variant="outlined"
                 color="error"
                 size="small"

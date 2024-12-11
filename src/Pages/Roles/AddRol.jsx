@@ -80,13 +80,13 @@ const AddRol = ({ refreshData, permisosAgrupados }) => {
                     <AddIcon />
                 </IconButton>
             </Tooltip>
-            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={formik.isSubmitting}>
-                <div className="flex items-center mb-2">
+            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={formik.isSubmitting} className={'flex flex-col'}>
+                <div className="flex items-center sticky top-0 bg-white p-4 z-10">
                     <SecurityIcon className="w-6 h-6 mr-2" />
                     <h1 className='text-lg font-bold'>Añadir un rol</h1>
                 </div>
-                <form onSubmit={formik.handleSubmit} className='mt-8'>
-                    <div className='flex flex-col gap-3'>
+                <form onSubmit={formik.handleSubmit} className='mt-3 flex flex-col flex-1'>
+                    <div className='flex flex-col gap-3 flex-1 overflow-hidden'>
                         <div>
                             {/* Inputs para el rol */}
                             <TextField
