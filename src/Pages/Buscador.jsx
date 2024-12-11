@@ -13,6 +13,7 @@ import ImageComponent from '../Components/Image/ImageComponent';
 import CustomTablePagination from './Pagination/TablePagination';
 import useFetchData from '../Components/hooks/useFetchData';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { ESTADOS } from '../helpers/Constants';
 
 const PersonalBD = () => {
   const [DataSelects, setDataSelects] = useState([])
@@ -195,6 +196,18 @@ const PersonalBD = () => {
                   onChange={(e) => addParams({ jurisdiccion: e.target.value })}
                   value={params.jurisdiccion || ''}
                   options={DataSelects.jurisdicciones}
+                />
+              </div>
+
+              {/* Jurisdicción */}
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Estado</label>
+                <FiltroSelect
+                  name="Jurisdicciones"
+                  placeholder={'Seleccione un estado'}
+                  onChange={(e) => addParams({ state: e.target.value })}
+                  value={params.state || ''}
+                  options={ESTADOS}
                 />
               </div>
 

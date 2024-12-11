@@ -13,20 +13,18 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import SearchInput from '../../Components/Inputs/SearchInput';
 
 const Empleados = ({ moduleName }) => {
     const { canCreate, canDelete, canEdit } = usePermissions(moduleName);
     const location = useLocation();
     const { token } = useSelector((state) => state.auth);
     const { getData, deleteData } = useFetch();
-    const { addParams } = UseUrlParamsManager();
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [update, setUpdate] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
     const [selected, setSelected] = useState(null);
-    const timeoutRef = useRef(null);
 
     const [count, setCount] = useState(0);
 
@@ -34,19 +32,6 @@ const Empleados = ({ moduleName }) => {
         fetchData(location.search || undefined);
     }, [location.search, update]);
 
-    const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setSearchTerm(value);
-
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-
-        timeoutRef.current = setTimeout(() => {
-
-            addParams({ search: value.trim() });
-        }, 800);
-    };
 
     const refreshData = () => {
         setUpdate((prev) => !prev);
@@ -141,21 +126,7 @@ const Empleados = ({ moduleName }) => {
                                     </Tooltip>
                                     {canCreate && <AddEmpleado refreshData={refreshData} />}
                                 </div>
-                                <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
-                                    <InputLabel htmlFor="input-with-icon-adornment">
-                                        Buscar
-                                    </InputLabel>
-                                    <Input
-                                        id="input-with-icon-adornment"
-                                        value={searchTerm}
-                                        onChange={handleSearchChange}
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                <SearchIcon />
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
+                                <SearchInput />
                             </div>
                         </div>
                         <CRUDTable
