@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Popover, Tooltip, IconButton } from '@mui/material';
 import CRUDTable from '../Components/Table/CRUDTable';
-import ImageZoom from '../Components/Image/ImageZoom';
 import FilterListIcon from '@mui/icons-material/FilterAlt';
 import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -17,13 +16,18 @@ import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx-js-style';
 import CustomSwal from '../helpers/swalConfig';
+import ImageZoom from '../Components/Image/ImageZoom';
 
 const PersonalBD = () => {
-  const [DataSelects, setDataSelects] = useState([]);
+
+  const [DataSelects, setDataSelects] = useState([])
   const [anchorEl, setAnchorEl] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const { getData } = useFetch();
   const { fetchCargos, fetchTurnos, fetchSubgerencias } = useFetchData(token);
+  const [imageZoomOpen, setImageZoomOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
 
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
@@ -36,9 +40,8 @@ const PersonalBD = () => {
   const [count, setCount] = useState(0);
   const [isDisabled] = useState(false);
 
-  const [imageZoomOpen, setImageZoomOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState('');
 
+  // Carga de datos inicial
   useEffect(() => {
     loadFiltersData();
     fetchData(location.search || undefined);
@@ -46,18 +49,21 @@ const PersonalBD = () => {
 
   const fetchData = async (url) => {
     setLoading(true);
-    const urlParams = url || '';
+    const urlParams = url || ''
     try {
       const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token, true);
       setCount(response.data.data.totalCount);
       const formattedData = response.data.data.data.map((item) => ({
         id: item.id,
-        nombres: item.nombres,
-        apellidos: item.apellidos,
-        subgerencia: item.subgerencia?.nombre || 'Sin Subgerencia',
-        cargo: item.cargo?.nombre || 'Sin Cargo',
-        turno: item.turno?.nombre || 'Sin Turno',
-        telefono: item.celular,
+        nombres: item.nombres === "undefined" ? '-' : item.nombres,
+        apellidos: item.apellidos === "undefined" ? '-' : item.apellidos,
+        subgerencia: item.subgerencia?.nombre === "undefined" ? '-' : item.subgerencia?.nombre,
+        cargo: item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
+        turno: item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
+        telefono: item?.celular === "undefined" ? '-' : item?.celular,
+        foto: item?.foto === "undefined" ? '-' : item?.foto,
+        notShow: ['foto'], // Lista de propiedades a excluir de la tabla
+        
       }));
       setDataFormatted(formattedData);
     } catch (error) {
@@ -76,23 +82,26 @@ const PersonalBD = () => {
       ]);
 
       setDataSelects({
+
         subgerencias: mapToSelectOptions(subgerenciasData?.data),
         turnos: mapToSelectOptions(turnosData?.data),
         cargos: mapToSelectOptions(cargosData?.data)
-      });
+      })
+
     } catch (error) {
       console.error('Error al cargar los datos de filtros:', error);
     }
   };
 
   const mapToSelectOptions = (data) => {
-    if (!data) return [];
-    return data.map((item) => ({ value: item.id, label: item.nombre }));
-  };
+    if (!data) return []
+
+    return data.map((item) => ({ value: item.id, label: item.nombre }))
+  }
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-  };
+  }
 
   const handleRowClick = (event, row) => {
     if (row?.foto) {
@@ -125,6 +134,7 @@ const PersonalBD = () => {
             'CARGO': item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
             'TURNO': item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
             'TELEFONO': item?.celular === "undefined" ? '-' : item?.celular,
+
         }));
 
         // Crear la hoja de trabajo
@@ -137,6 +147,7 @@ const PersonalBD = () => {
           { wch: 20 }, // CARGO
           { wch: 15 }, // TURNO
           { wch: 15 }, // TELEFONO
+
       ];
 
         // Estilos de las celdas
@@ -221,7 +232,10 @@ const PersonalBD = () => {
             <span className="text-gray-600 text-sm md:text-base">
               Total de filas: <span id="rowCount" className="font-bold">{count || 0}</span>
             </span>
+
+            {/* Figuras para Descargar e Importar */}
             <div className="flex items-center gap-4">
+              {/* Botón para Descargar */}
               <Tooltip title="Descargar Excel" arrow>
                 <IconButton
                   onClick={() => exportToExcel()}
@@ -232,7 +246,7 @@ const PersonalBD = () => {
               </Tooltip>
 
               {/* Botón para Importar */}
-              <Tooltip title="Importar Excel" arrow>
+              {/* <Tooltip title="Importar Excel" arrow>
                 <IconButton
                   onClick={() => console.log('Importar')}
                   className="!bg-blue-500 !text-white hover:!bg-blue-600"
@@ -242,12 +256,8 @@ const PersonalBD = () => {
               </Tooltip> */}
             </div>
           </div>
-          <CRUDTable
-            data={dataFormatted}
-            loading={loading}
-            count={count}
-            rowOnClick={handleRowClick} // Manejador de clic en la fila
-          />
+
+          <CRUDTable data={dataFormatted} loading={loading} count={count} rowOnClick={handleRowClick} />
         </div>
       </main>
 
@@ -272,37 +282,45 @@ const PersonalBD = () => {
         <div className="p-6">
           <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
           <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
+            {/* Turnos */}
             <div className="w-full sm:w-1/2 px-2 pb-2">
               <label className="text-sm font-semibold text-gray-600" htmlFor="turno-label">Turno</label>
               <FiltroSelect
                 name="turnos"
-                placeholder="Seleccione un turno"
+                placeholder={'Seleccione un turno'}
                 onChange={(e) => addParams({ turno: e.target.value })}
                 value={params.turno || ''}
                 options={DataSelects.turnos}
               />
             </div>
+
+            {/* Cargo */}
             <div className="w-full sm:w-1/2 px-2 pb-2">
               <label className="text-sm font-semibold text-gray-600" htmlFor="cargo-label">Cargo</label>
               <FiltroSelect
                 name="cargo"
-                placeholder="Seleccione un cargo"
+                placeholder={'Seleccione un cargo'}
                 onChange={(e) => addParams({ cargo: e.target.value })}
                 value={params.cargo || ''}
                 options={DataSelects.cargos}
               />
             </div>
+
+            {/* Subgerencia */}
             <div className="w-full sm:w-1/2 px-2 pb-2">
               <label className="text-sm font-semibold text-gray-600" htmlFor="subgerencia-label">Subgerencia</label>
               <FiltroSelect
                 name="subgerencias"
-                placeholder="Seleccione una subgerencia"
+                placeholder={'Seleccione una subgerencia'}
                 onChange={(e) => addParams({ subgerencia: e.target.value })}
                 value={params.subgerencia || ''}
                 options={DataSelects.subgerencias}
               />
             </div>
+
           </div>
+
+          {/* Botón para limpiar filtros */}
           <div className="flex justify-end mt-6">
             <Button
               className="!capitalize"
@@ -316,13 +334,14 @@ const PersonalBD = () => {
           </div>
         </div>
       </Popover>
-
       <ImageZoom
         open={imageZoomOpen}
         onClose={() => setImageZoomOpen(false)}
         imageSrc={selectedImage}
         altText="Foto del empleado"
       />
+
+
     </div>
   );
 };
