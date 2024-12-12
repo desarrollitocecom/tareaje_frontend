@@ -16,6 +16,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import * as XLSX from 'xlsx-js-style';
 import CustomSwal from '../helpers/swalConfig';
+import ImageZoom from '../Components/Image/ImageZoom';
 
 const PersonalBD = () => {
 
@@ -24,6 +25,9 @@ const PersonalBD = () => {
   const { token } = useSelector((state) => state.auth);
   const { getData } = useFetch();
   const { fetchCargos, fetchTurnos, fetchSubgerencias } = useFetchData(token);
+  const [imageZoomOpen, setImageZoomOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
 
   const navigate = useNavigate();
   const timeoutRef = useRef(null);
@@ -57,6 +61,9 @@ const PersonalBD = () => {
         cargo: item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
         turno: item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
         telefono: item?.celular === "undefined" ? '-' : item?.celular,
+        foto: item?.foto === "undefined" ? '-' : item?.foto,
+        notShow: ['foto'], // Lista de propiedades a excluir de la tabla
+        
       }));
       setDataFormatted(formattedData);
     } catch (error) {
@@ -96,6 +103,13 @@ const PersonalBD = () => {
     setAnchorEl(event.currentTarget);
   }
 
+  const handleRowClick = (event, row) => {
+    if (row?.foto) {
+      setSelectedImage(row.foto);
+      setImageZoomOpen(true);
+    }
+  };
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
@@ -120,6 +134,7 @@ const PersonalBD = () => {
             'CARGO': item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
             'TURNO': item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
             'TELEFONO': item?.celular === "undefined" ? '-' : item?.celular,
+
         }));
 
         // Crear la hoja de trabajo
@@ -132,6 +147,7 @@ const PersonalBD = () => {
           { wch: 20 }, // CARGO
           { wch: 15 }, // TURNO
           { wch: 15 }, // TELEFONO
+
       ];
 
         // Estilos de las celdas
@@ -241,7 +257,7 @@ const PersonalBD = () => {
             </div>
           </div>
 
-          <CRUDTable data={dataFormatted} loading={loading} count={count} />
+          <CRUDTable data={dataFormatted} loading={loading} count={count} rowOnClick={handleRowClick} />
         </div>
       </main>
 
@@ -318,6 +334,12 @@ const PersonalBD = () => {
           </div>
         </div>
       </Popover>
+      <ImageZoom
+        open={imageZoomOpen}
+        onClose={() => setImageZoomOpen(false)}
+        imageSrc={selectedImage}
+        altText="Foto del empleado"
+      />
 
 
     </div>

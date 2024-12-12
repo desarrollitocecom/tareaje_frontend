@@ -36,12 +36,16 @@ import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
 import CustomSwal from '../../helpers/swalConfig';
 import ImageComponent from '../Image/ImageComponent';
+import ImageZoom from '../Image/ImageZoom';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const { user } = useSelector((state) => state.auth);
+  const [imageZoomOpen, setImageZoomOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+
 
   const LogOut = () => {
     dispatch(logout());
@@ -63,6 +67,12 @@ const Sidebar = ({ toggled, setToggled }) => {
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
+
+  const handleImageZoom = (imagePath) => {
+    setSelectedImage(imagePath);
+    setImageZoomOpen(true);
+  };
+
 
   const open = Boolean(anchorEl);
 
@@ -290,8 +300,10 @@ const Sidebar = ({ toggled, setToggled }) => {
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
                 <Avatar
                   // src={user?.image || ProfileUser}
+                  onClick={() => handleImageZoom(user?.empleado?.foto)}
+
                   alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-                  sx={{ width: 50, height: 50, mb: 1 }}
+                  sx={{ width: 50, height: 50, mb: 1, cursor: 'pointer' }}
 
                 >
                   <ImageComponent path={user?.empleado.foto} errorImage={ProfileUser} alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`} />
@@ -315,6 +327,13 @@ const Sidebar = ({ toggled, setToggled }) => {
 
               </Box>
             </Popover>
+            <ImageZoom
+              open={imageZoomOpen}
+              onClose={() => setImageZoomOpen(false)}
+              imageSrc={selectedImage}
+              altText="Foto del usuario"
+            />
+
           </div>
         </div>
       </ProSidebar >
