@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PrivateRouter from './PrivateRouter';
 import PublicRouter from './PublicRouter';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
@@ -25,10 +25,11 @@ import Feriados from '../Pages/Feriados/Feriados';
 import Justificaciones from '../Pages/Justificaciones/Justificaciones';
 import RegimenLaboral from '../Pages/Regimen/Regimen';
 import Login from '../Pages/Login/Login';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../Components/Loader/Loader';
 import SeguimientoAsistencia from '../Pages/SeguimientoAsistencia/SeguimientoAsitencia';
 import AsistenciaPersonal from '../Pages/AsistenciaPersonal/AsistenciaPersonal';
+import { setLoading } from '../Redux/Slices/AuthSlice';
 
 const AppRouter = () => {
   const future = {
@@ -154,6 +155,13 @@ const AppRouter = () => {
   ], {
     future: future
   });
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoading(false));
+  }, [])
+
+
 
   return (
     <>

@@ -10,7 +10,7 @@ const ImageComponent = ({ path, errorImage, alt, ...props }) => {
   const { fetchImage } = useFetchData(token);
 
   useEffect(() => {
-    if (path) {
+    if (path && path !== 'Sin foto') {
       getImage(path);
     } else {
       setImageSrc(errorImage || ErrImg);
