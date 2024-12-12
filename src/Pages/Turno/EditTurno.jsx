@@ -32,8 +32,6 @@ const EditTurno = ({ Selected, setSelected, refreshData }) => {
     };
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-        console.log(values, Selected?.id);
-
         try {
 
             const response = await patchData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos/${Selected?.id}`, values, token);

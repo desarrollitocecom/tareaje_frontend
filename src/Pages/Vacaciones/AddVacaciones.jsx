@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Tooltip, TextField, Autocomplete } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 import useFetch from '../../Components/hooks/useFetch';
 import CustomSwal, { swalError } from '../../helpers/swalConfig';
 import useFetchData from '../../Components/hooks/useFetchData';
@@ -12,6 +12,7 @@ import { DateRange } from 'react-date-range';
 import es from 'date-fns/locale/es';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { FormatoEnvioFecha } from '../../helpers/GeneralFunctions';
 
 const AddVacaciones = ({ refreshData }) => {
     const { postData } = useFetch();
@@ -19,6 +20,8 @@ const AddVacaciones = ({ refreshData }) => {
     const [empleados, setEmpleados] = useState([]);
     const { token } = useSelector((state) => state.auth);
     const { fetchEmpleados } = useFetchData(token);
+    const [isLoading, setisLoading] = useState(false)
+    const timeoutRef = useRef(null);
 
     const [rangeDates, setRangeDates] = useState([{
         startDate: new Date(),
@@ -105,8 +108,8 @@ const AddVacaciones = ({ refreshData }) => {
                         dni: '',
                         apellido: '',
                         nombre: '',
-                        f_inicio: '',
-                        f_fin: '',
+                        f_inicio: FormatoEnvioFecha(new Date()),
+                        f_fin: FormatoEnvioFecha(new Date()),
                         id_empleado: ''
                     }}
                     validate={validate}
@@ -122,8 +125,36 @@ const AddVacaciones = ({ refreshData }) => {
                                     }
                                     value={selectedEmpleado}
                                     inputValue={dniInputValue}
+                                    loading={isLoading}
                                     onInputChange={(event, newInputValue) => {
                                         setDniInputValue(newInputValue);
+
+                                        // Lógica de búsqueda y filtrado de empleados con timeout
+                                        setisLoading(true);
+                                        setEmpleados([]);
+
+                                        if (timeoutRef.current) {
+                                            clearTimeout(timeoutRef.current);
+                                        }
+
+                                        timeoutRef.current = setTimeout(() => {
+                                            if (!newInputValue.trim()) {
+                                                fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                            } else {
+                                                const firstChar = newInputValue.trim().charAt(0);
+                                                const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                                fetchEmpleados(`?${paramKey}=${newInputValue.trim()}`)
+                                                    .then((empleados) => {
+                                                        setEmpleados(empleados.data);
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("Error fetching empleados:", error);
+                                                    })
+                                                    .finally(() => {
+                                                        setisLoading(false);
+                                                    });
+                                            }
+                                        }, 800);
                                     }}
                                     onChange={(event, value) => {
                                         setSelectedEmpleado(value || null);
@@ -153,7 +184,7 @@ const AddVacaciones = ({ refreshData }) => {
                                     )}
                                 />
                             </div>
-                            
+
                             <div className="flex flex-col md:flex-row gap-4 mb-3">
                                 <Field as={TextField} label="Nombre" variant="outlined" fullWidth name="nombre" disabled size="small" />
                                 <Field as={TextField} label="Apellido" variant="outlined" fullWidth name="apellido" disabled size="small" />
@@ -173,6 +204,15 @@ const AddVacaciones = ({ refreshData }) => {
                                         ranges={rangeDates}
                                         locale={es}
                                     />
+
+                                    {/* Mostrar error debajo del campo de fecha */}
+                                    {errors.f_inicio && touched.f_inicio && (
+                                        <div className="text-red-500 text-sm">Fecha de inicio: {errors.f_inicio}</div>
+                                    )}
+
+                                    {errors.f_fin && touched.f_fin && (
+                                        <div className="text-red-500 text-sm">Fecha de fin: {errors.f_fin}</div>
+                                    )}
                                 </div>
                             </div>
 

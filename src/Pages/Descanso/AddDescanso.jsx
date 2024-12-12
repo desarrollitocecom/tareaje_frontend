@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, Tooltip, TextField, Autocomplete, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
@@ -23,6 +23,8 @@ const AddDescanso = ({ refreshData }) => {
     const [fecha, setFecha] = useState(dayjs('2022-04-17'));
     const [dniInputValue, setDniInputValue] = useState('');
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
+    const [isLoading, setisLoading] = useState(false)
+    const timeoutRef = useRef(null);
 
     useEffect(() => {
         fetchEmpleados().then((empleados) => {
@@ -73,37 +75,31 @@ const AddDescanso = ({ refreshData }) => {
                     <AddIcon />
                 </IconButton>
             </Tooltip>
-            <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} >
-                <div className="flex items-center mb-2">
-                    <SecurityIcon className="w-6 h-6 mr-2" />
-                    <h1 className='text-lg font-bold'>Añadir un Descanso</h1>
-                </div>
-                <Formik
-                    initialValues={{
-                        dni: '',
-                        nombre: '',
-                        apellido: '',
-                        tipo: '',
-                        fecha: fecha,
-                        observacion: '',
-                        id_empleado: ''
-                    }}
-                    validate={validate}
-                    onSubmit={handleSubmit}
-                >
-                    {({ errors, touched, setFieldValue, values }) => (
+            <Formik
+                initialValues={{
+                    dni: '',
+                    nombre: '',
+                    apellido: '',
+                    tipo: '',
+                    fecha: fecha,
+                    observacion: '',
+                    id_empleado: ''
+                }}
+                validate={validate}
+                onSubmit={handleSubmit}
+            >
+                {({ errors, touched, setFieldValue, values, isSubmitting }) => (
+                    <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isSubmitting} >
+                        <div className="flex items-center mb-2">
+                            <SecurityIcon className="w-6 h-6 mr-2" />
+                            <h1 className='text-lg font-bold'>Añadir un Descanso</h1>
+                        </div>
                         <Form>
                             <div className="mb-3">
                                 <Autocomplete
+                                    size='small'
                                     options={empleados}
-                                    getOptionLabel={(option) =>
-                                        `${option.dni} - ${option.nombres} ${option.apellidos}`
-                                    }
-                                    value={selectedEmpleado}
-                                    inputValue={dniInputValue}
-                                    onInputChange={(event, newInputValue) => {
-                                        setDniInputValue(newInputValue);
-                                    }}
+                                    getOptionLabel={(option) => `${option.dni} - ${option.nombres} ${option.apellidos}`}
                                     onChange={(event, value) => {
                                         setSelectedEmpleado(value || null);
                                         if (value) {
@@ -117,16 +113,46 @@ const AddDescanso = ({ refreshData }) => {
                                             setFieldValue('apellido', '');
                                             setFieldValue('id_empleado', '');
                                         }
+                                        setDniInputValue(value ? `${value.dni} - ${value.nombres} ${value.apellidos}` : '');
                                     }}
+                                    onInputChange={(e) => {
+                                        setisLoading(true);
+                                        setEmpleados([]);
+
+                                        if (timeoutRef.current) {
+                                            clearTimeout(timeoutRef.current);
+                                        }
+
+                                        timeoutRef.current = setTimeout(() => {
+                                            if (!e.target.value.trim()) {
+                                                fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                            } else {
+                                                const firstChar = e.target.value.trim().charAt(0);
+                                                const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                                fetchEmpleados(`?${paramKey}=${e.target.value.trim()}`)
+                                                    .then((empleados) => {
+                                                        setEmpleados(empleados.data);
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("Error fetching empleados:", error);
+                                                    })
+                                                    .finally(() => {
+                                                        setisLoading(false);
+                                                    });
+
+                                            }
+                                        }, 800);
+                                    }}
+                                    renderOption={(props, option) => (
+                                        <li {...props} key={option.id}>{`${option.dni} - ${option.nombres} ${option.apellidos}`}</li>
+                                    )}
+                                    loading={isLoading}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             label="DNI"
                                             variant="outlined"
-                                            error={touched.dni && Boolean(errors.dni)}
-                                            helperText={touched.dni && errors.dni}
                                             fullWidth
-                                            size="small"
                                         />
                                     )}
                                 />
@@ -187,9 +213,9 @@ const AddDescanso = ({ refreshData }) => {
                                 <Button type="submit" variant="contained" color="success" size="small">Agregar</Button>
                             </div>
                         </Form>
-                    )}
-                </Formik>
-            </CustomModal>
+                    </CustomModal>
+                )}
+            </Formik>
         </>
     );
 };

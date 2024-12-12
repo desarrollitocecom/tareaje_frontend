@@ -18,7 +18,6 @@ const deleteCargo = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'El cargo ha sido eliminada correctamente.',

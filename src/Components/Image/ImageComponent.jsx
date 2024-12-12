@@ -4,27 +4,29 @@ import ErrImg from "../../assets/logos/notFoundImage.webp"
 import { Skeleton } from '@mui/material';
 import useFetchData from '../hooks/useFetchData';
 
-const ImageComponent = ({ path, alt, ...props }) => {
+const ImageComponent = ({ path, errorImage, alt, ...props }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const { token } = useSelector((state) => state.auth);
   const { fetchImage } = useFetchData(token);
 
   useEffect(() => {
-    if (path) {
+    if (path && path !== 'Sin foto') {
       getImage(path);
+    } else {
+      setImageSrc(errorImage || ErrImg);
     }
   }, [path]);
 
   const getImage = async (path) => {
     const imageURL = await fetchImage(path);
-    
+
     if (!imageURL) {
-      setImageSrc(ErrImg);
+      setImageSrc(errorImage || ErrImg);
       return;
     }
 
     setImageSrc(imageURL);
-    
+
   };
 
 

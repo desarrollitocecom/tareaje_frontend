@@ -19,3 +19,7 @@ body.swal2-height-auto {
 #swal2-title {
   margin: 10px 0px;
 }
+
+.css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  max-height: 300px !important;
+}

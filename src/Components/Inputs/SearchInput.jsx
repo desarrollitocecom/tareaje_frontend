@@ -5,9 +5,11 @@ import UseUrlParamsManager from '../hooks/UseUrlParamsManager';
 import { v4 as uiu4d } from 'uuid';
 
 const SearchInput = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const timeoutRef = useRef(null);
+    const url = new URLSearchParams(location.search);
+
     const { addParams } = UseUrlParamsManager();
+    const [searchTerm, setSearchTerm] = useState(url.get('search') || url.get('dni') || '');
+    const timeoutRef = useRef(null);
     const inputId = uiu4d();
 
     const handleSearchChange = (event) => {
@@ -25,7 +27,8 @@ const SearchInput = () => {
             } else {
                 const firstChar = value.trim().charAt(0);
                 const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
-                addParams({ [paramKey]: value.trim() });
+                const otherKey = /^[0-9]$/.test(firstChar) ? 'search' : 'dni';
+                addParams({ [paramKey]: value.trim(), [otherKey]: '' });
             }
         }, 800);
     };

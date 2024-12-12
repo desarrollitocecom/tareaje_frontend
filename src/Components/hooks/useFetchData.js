@@ -6,9 +6,9 @@ const useFetchData = (token) => {
     const { getData } = useFetch();
 
     // Obtener nombres de empleados    
-    const fetchEmpleados = async () => {
+    const fetchEmpleados = async ( urlParams = '') => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados`, token, true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${urlParams}`, token, true);
             return{
                 data: response.data.data.data,
                 status: false
@@ -24,7 +24,7 @@ const useFetchData = (token) => {
     // Obtener roles
     const fetchRoles = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, token, true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol?page=0`, token, true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -39,7 +39,8 @@ const useFetchData = (token) => {
 
     const fetchPermisos = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/permiso`, token, true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/permiso?page=0`, token, true);
+            
             return{
                 data:response.data.data.data,
                 status:false
@@ -71,7 +72,7 @@ const useFetchData = (token) => {
     //obtener subgerencias
     const fetchSubgerencias = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/subgerencias`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/subgerencias?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -88,7 +89,7 @@ const useFetchData = (token) => {
 
     const fetchCargos = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/cargos?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -105,7 +106,7 @@ const useFetchData = (token) => {
 
     const fetchTurnos = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/turnos?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -122,7 +123,7 @@ const useFetchData = (token) => {
 
     const fetchRegimenLaboral = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/regimenlaborales?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -139,7 +140,7 @@ const useFetchData = (token) => {
 
     const fetchSexos = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/sexos`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/sexos?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -156,7 +157,7 @@ const useFetchData = (token) => {
 
     const fetchJurisdicciones = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/jurisdicciones?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -173,7 +174,7 @@ const useFetchData = (token) => {
 
     const fetchGradoEstudio = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/gradoestudios`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/gradoestudios?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -191,7 +192,7 @@ const useFetchData = (token) => {
 
     const fetchLugarTrabajo = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/lugarestrabajos`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/lugarestrabajos?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -208,7 +209,7 @@ const useFetchData = (token) => {
 
     const fetchFunciones = async () => {
         try {
-            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/funciones`, token,true);
+            const response = await getData(`${import.meta.env.VITE_APP_ENDPOINT}/funciones?page=0`, token,true);
             return{
                 data:response.data.data.data,
                 status:false
@@ -263,7 +264,7 @@ const useFetchData = (token) => {
     
           return pdfURL;
         } catch (error) {
-          console.error('Error al obtener la imagen:', error);
+        //   console.error('Error al obtener la imagen:', error);
           return null;
         }
       };

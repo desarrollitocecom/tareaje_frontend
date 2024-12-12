@@ -61,8 +61,8 @@ const EditJurisdiccion = ({ Selected, setSelected, refreshData }) => {
         const errors = {};
         if (!values.nombre) {
             errors.nombre = 'Campo requerido';
-        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { 
-            errors.nombre = 'El nombre solo debe contener letras';
+        } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú0-9\s]+$/.test(values.nombre)) { 
+            errors.nombre = 'El nombre solo debe contener letras, números y espacios';
         }
         return errors;
     }

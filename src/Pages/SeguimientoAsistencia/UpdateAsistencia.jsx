@@ -17,7 +17,6 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
     const fileInputRef = useRef()
 
     useEffect(() => {
-        console.log(SelectedAsistencia);
         if (SelectedAsistencia) {
             setOpen(true);
             formik.setFieldValue('fecha', SelectedAsistencia.fecha);
@@ -59,7 +58,6 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
         },
         onSubmit: (values) => {
             formik.setSubmitting(true);
-            console.log(values);
 
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => {
@@ -178,7 +176,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                                     <MenuItem
                                         key={option}
                                         value={option}
-                                        sx={option}
+                                        // sx={option}
                                     >
                                         {option}
                                     </MenuItem>

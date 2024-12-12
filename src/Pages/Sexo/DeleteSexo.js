@@ -18,7 +18,6 @@ const deleteSexo = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/sexos/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'El sexo ha sido eliminada correctamente.',

@@ -26,8 +26,6 @@ const AddRegimen = ({ refreshData }) => {
             const errors = {};
             if (!values.nombre) {
                 errors.nombre = 'Este campo es obligatorio';
-            } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) {
-                errors.nombre = 'El nombre solo debe contener letras';
             }
             return errors;
         },

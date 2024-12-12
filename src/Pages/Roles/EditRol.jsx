@@ -110,10 +110,10 @@ const EditRol = ({ Selected, setSelected, refreshData, permisos, permisosAgrupad
 
     // Usar selected para sacar los datos del rol
     return (
-        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting}>
+        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting}  className={'flex flex-col'}>
             <div className="flex items-center mb-2">
                 <SecurityIcon className="w-6 h-6 mr-2" />
-                <h1 className='text-lg font-bold fl'>Editar un rol</h1>
+                <h1 className='text-lg font-bold'>Editar un rol</h1>
             </div>
             <form onSubmit={formik.handleSubmit} className='mt-8'>
                 <div className='flex flex-col gap-3'>

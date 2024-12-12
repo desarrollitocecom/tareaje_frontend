@@ -17,7 +17,6 @@ const deleteLugarTrabajo = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/lugarestrabajos/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'El lugar de trabajo ha sido eliminada correctamente.',

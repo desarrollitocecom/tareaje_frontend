@@ -17,7 +17,6 @@ const deleteGradoEstudio = (obj, refreshData, token, deleteData) => {
                 try {
                     
                     const response = await deleteData(`${import.meta.env.VITE_APP_ENDPOINT}/gradoestudios/${obj.id}`, token);
-                    console.log(response);
                     CustomSwal.fire(
                         'Eliminado',
                         'El grado de estudio ha sido eliminada correctamente.',

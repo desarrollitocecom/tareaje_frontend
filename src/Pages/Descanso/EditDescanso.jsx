@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CustomModal from '../../Components/Modal/CustomModal';
 import SecurityIcon from '@mui/icons-material/Security';
 import { Button, TextField, Autocomplete } from '@mui/material';
@@ -19,6 +19,8 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
     const { token } = useSelector((state) => state.auth);
     const { fetchEmpleados } = useFetchData(token);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingAutoComplete, setisLoadingAutoComplete] = useState(false)
+    const timeoutRef = useRef(null);
 
     // Efecto para cargar empleados
     useEffect(() => {
@@ -37,14 +39,27 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
     useEffect(() => {
         if (Selected) {
             setOpen(true);
-            const empleadoSeleccionado = empleados.find(emp => emp.dni === Selected.dni);
-            setSelectedEmpleado(empleadoSeleccionado || null);
-            formik.setFieldValue('dni', empleadoSeleccionado?.dni || '');
-            formik.setFieldValue('nombre', empleadoSeleccionado?.nombres || '');
-            formik.setFieldValue('apellido', empleadoSeleccionado?.apellidos || '');
-            formik.setFieldValue('observacion', Selected.observacion || '');
-            formik.setFieldValue('id_empleado', empleadoSeleccionado?.id || '');
-            formik.setFieldValue('fecha', dayjs(Selected.fecha));
+            setisLoadingAutoComplete(true)
+            fetchEmpleados(`?dni=${Selected.dni.trim()}`)
+                .then((empleados) => {
+                    setEmpleados(empleados.data);
+                    const empleadoSeleccionado = empleados.data.find(emp => emp.dni === Selected.dni);
+                    setSelectedEmpleado(empleadoSeleccionado || null);
+                    formik.setFieldValue('dni', empleadoSeleccionado?.dni || '');
+                    formik.setFieldValue('nombre', empleadoSeleccionado?.nombres || '');
+                    formik.setFieldValue('apellido', empleadoSeleccionado?.apellidos || '');
+                    formik.setFieldValue('id_empleado', empleadoSeleccionado?.id || '');
+                    setRangeDates([{
+                        startDate: dayjs(Selected['fecha de inicio']).toDate(),
+                        endDate: dayjs(Selected['fecha de fin']).toDate(),
+                        key: 'selection',
+                    }]);
+                }).finally(() => {
+                    setisLoadingAutoComplete(false)
+                })
+
+            formik.setFieldValue('observacion', Selected.observacion);
+
         }
     }, [Selected]);
 
@@ -97,7 +112,7 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
                         });
                         refreshData();
                         handleClose();
-                    }else{
+                    } else {
                         swalError(res.error.response.data);
                     }
                 })
@@ -127,8 +142,36 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
                         value={selectedEmpleado}
                         inputValue={dniInputValue}
                         isOptionEqualToValue={(option, value) => option.id === value.id}
+                        loading={isLoadingAutoComplete}
                         onInputChange={(event, newInputValue) => {
                             setDniInputValue(newInputValue);
+
+                            // Lógica de búsqueda y filtrado de empleados con timeout
+                            setisLoadingAutoComplete(true);
+                            setEmpleados([]);
+
+                            if (timeoutRef.current) {
+                                clearTimeout(timeoutRef.current);
+                            }
+
+                            timeoutRef.current = setTimeout(() => {
+                                if (!newInputValue.trim()) {
+                                    fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
+                                } else {
+                                    const firstChar = newInputValue.trim().charAt(0);
+                                    const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
+                                    fetchEmpleados(`?${paramKey}=${newInputValue.trim()}`)
+                                        .then((empleados) => {
+                                            setEmpleados(empleados.data);
+                                        })
+                                        .catch((error) => {
+                                            console.error("Error fetching empleados:", error);
+                                        })
+                                        .finally(() => {
+                                            setisLoadingAutoComplete(false);
+                                        });
+                                }
+                            }, 800);
                         }}
                         onChange={(event, value) => {
                             setSelectedEmpleado(value || null);
@@ -145,7 +188,8 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
                                 formik.setFieldValue('apellido', '');
                                 formik.setFieldValue('id_empleado', '');
                             }
-                            formik.setTouched({ ...formik.touched, dni: true }); // Marcar como tocado
+
+                            formik.setTouched({ ...formik.touched, dni: false }); // Marcar como tocado
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -153,10 +197,11 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
                                 label="DNI"
                                 variant="outlined"
                                 fullWidth
-                                name="dni"
                                 size="small"
-                                error={formik.touched.dni && Boolean(formik.errors.dni)} // Error
-                                helperText={formik.touched.dni && formik.errors.dni} // Texto de ayuda
+                                name='dni'
+                                error={formik.touched.dni && Boolean(formik.errors.dni)}  // Corrección aquí
+                                onBlur={formik.handleBlur}
+                                helperText={formik.touched.dni && formik.errors.dni}     // Corrección aquí
                             />
                         )}
                     />
@@ -193,13 +238,13 @@ const EditDescanso = ({ Selected, setSelected, refreshData }) => {
 
 
                     {/* Picker para seleccionar la fecha */}
-                        <StaticDatePicker
-                            displayStaticWrapperAs="desktop"
-                            openTo="day"
-                            value={formik.values.fecha}
-                            onChange={(value) => formik.setFieldValue('fecha', value)}
-                            renderInput={(params) => <TextField {...params} />}
-                        />
+                    <StaticDatePicker
+                        displayStaticWrapperAs="desktop"
+                        openTo="day"
+                        value={formik.values.fecha}
+                        onChange={(value) => formik.setFieldValue('fecha', value)}
+                        renderInput={(params) => <TextField {...params} />}
+                    />
                 </div>
 
                 {/* Campo de Observación */}

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import FiltroSelect from '../../Components/Filtroselect/Filtro';
 import { Button, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -20,12 +21,22 @@ import CustomPopover from "../../Components/Popover/CustomPopover";
 import CustomSwal, { swalError } from "../../helpers/swalConfig";
 import AddAsistencia from "./AddAsistencia";
 import UpdateAsistencia from "./UpdateAsistencia";
+import SearchInput from "../../Components/Inputs/SearchInput";
+import FilterListIcon from '@mui/icons-material/FilterAlt';
+import useFetchData from "../../Components/hooks/useFetchData";
+import UseUrlParamsManager from "../../Components/hooks/UseUrlParamsManager";
+import DownloadIcon from '@mui/icons-material/Download';
+
 
 const SeguimientoAsistencia = () => {
+  const [DataSelects, setDataSelects] = useState([])
   const navigate = useNavigate()
   const location = useLocation();
   const { postData } = useFetch()
   const { token } = useSelector((state) => state.auth);
+  const { fetchCargos, fetchTurnos, fetchSubgerencias, fetchRegimenLaboral, fetchSexos, fetchJurisdicciones } = useFetchData(token);
+  const { addParams, getParams, removeParams } = UseUrlParamsManager();
+  const params = getParams();
   const [Fecha, setFecha] = useState(new Date());
   const [weekRange, setWeekRange] = useState([null, null]);
   const [startDate, setStartDate] = useState(null);
@@ -160,7 +171,6 @@ const SeguimientoAsistencia = () => {
         .then((res) => {
           if (res.status) {
             setCount(res.data.data.totalCount);
-
             const newEntry = {
               inicio: startDate,
               fin: endDate,
@@ -305,6 +315,80 @@ const SeguimientoAsistencia = () => {
     return `${baseClasses} ${outOfRangeClasses} ${todayClasses}`.trim();
   };
 
+
+
+
+  useEffect(() => {
+    loadFiltersData();
+  }, [])
+
+  const loadFiltersData = async () => {
+    try {
+      const [subgerenciasData, turnosData, cargosData, regimenLaboralData, sexosData, JurisdiccionesData] = await Promise.all([
+        fetchSubgerencias(),
+        fetchTurnos(),
+        fetchCargos(),
+        fetchRegimenLaboral(),
+        fetchSexos(),
+        fetchJurisdicciones()
+      ]);
+
+      setDataSelects({
+        subgerencias: mapToSelectOptions(subgerenciasData?.data),
+        turnos: mapToSelectOptions(turnosData?.data),
+        cargos: mapToSelectOptions(cargosData?.data),
+        regimenLaboral: mapToSelectOptions(regimenLaboralData?.data),
+        sexos: mapToSelectOptions(sexosData?.data),
+        jurisdicciones: mapToSelectOptions(JurisdiccionesData?.data),
+      });
+
+    } catch (error) {
+      console.error('Error al cargar los datos de filtros:', error);
+    }
+  };
+
+  const mapToSelectOptions = (data) => {
+    if (!data) return []
+
+    return data.map((item) => ({ value: item.id, label: item.nombre }))
+  }
+
+
+  const exportToExcel = () => {
+    const params = location.search;
+
+    // Convertir los parámetros a un objeto
+    const urlSearchParams = new URLSearchParams(params);
+
+    // Quitar las propiedades 'page' y 'limit'
+    urlSearchParams.delete('page');
+    urlSearchParams.delete('limit');
+
+    // Reconstruir el string de parámetros
+    const updatedParams = `?${urlSearchParams.toString()}&page=0`;
+    const startDate =FormatoEnvioFecha(rangeDates[0].startDate)
+    const endDate =FormatoEnvioFecha(rangeDates[0].endDate)
+    
+    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${updatedParams}`, { inicio: startDate, fin: endDate }, token, true).then((res) => {
+      console.log(res);
+
+      
+    })
+  }
+
+  const getDatesInRange = (startDate, endDate) => {
+    const dates = [];
+    let currentDate = dayjs(startDate);
+  
+    while (currentDate.isBefore(dayjs(endDate).add(1, 'day'))) {
+      dates.push(currentDate.format('YYYY-MM-DD')); // Formato de fecha que desees
+      currentDate = currentDate.add(1, 'day');
+    }
+  
+    return dates;
+  };
+
+
   return (
     <div className="w-full bg-gray-100 p-4 h-full flex flex-col">
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
@@ -320,39 +404,11 @@ const SeguimientoAsistencia = () => {
 
       <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 pb-5 overflow-hidden">
         <div className="pb-6 flex justify-between">
-          <div>
+          <div className="flex items-center ">
             <CustomPopover
               CustomIcon={DateRangeIcon}
               label={"Filtro Fechas"}
             >
-              <div className="absolute top-1 right-1">
-                <Tooltip title="Limpiar Filtro" placement='top' arrow>
-                  <IconButton
-                    onClick={() => {
-                      const today = new Date();
-                      setStartDate(null);
-                      setEndDate(null);
-                      setIsPrevDisabled(false);
-                      setIsNextDisabled(false);
-                      setFecha(today);
-                      setRageDates([
-                        {
-                          startDate: today,
-                          endDate: today,
-                          key: 'selection',
-                        },
-                      ]);
-                    }}
-                    aria-label="Limpiar"
-                    className="!p-2 z-10"
-                  >
-                    <FilterAltOffIcon
-                      className="cursor-pointer text-gray-500"
-                      sx={{ fontSize: 20 }} // Ajustar el tamaño según el diseño
-                    />
-                  </IconButton>
-                </Tooltip>
-              </div>
               <div className="p-2 relative">
                 <div className="text-gray-500 font-semibold">
                   Filtro por fechas
@@ -376,12 +432,147 @@ const SeguimientoAsistencia = () => {
                   weekStartsOn={1}
                   locale={es}
                 />
+
+              </div>
+              {/* Botón para limpiar filtros */}
+              <div className="flex justify-end mt-6">
+                <Button
+                  className="!capitalize"
+                  onClick={() => {
+                    const today = new Date();
+                    setStartDate(null);
+                    setEndDate(null);
+                    setIsPrevDisabled(false);
+                    setIsNextDisabled(false);
+                    setFecha(today);
+                    setRageDates([
+                      {
+                        startDate: today,
+                        endDate: today,
+                        key: 'selection',
+                      },
+                    ]);
+                  }}
+                  variant="outlined"
+                  color="error"
+                  size="small"
+                >
+                  Limpiar filtros
+                </Button>
               </div>
             </CustomPopover>
-          </div>
-          <div>
+            <CustomPopover
+              CustomIcon={FilterListIcon}
+              CustomIconClose={FilterAltOffIcon}
+              label={"Filtro Personal"}
+            >
+              <div className="p-6">
+                <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
+                <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
+                  {/* Subgerencia */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
+                    <FiltroSelect
+                      name="subgerencias"
+                      placeholder={'Seleccione una subgerencia'}
+                      onChange={(e) => addParams({ subgerencia: e.target.value })}
+                      value={params.subgerencia || ''}
+                      options={DataSelects.subgerencias}
+                    />
+                  </div>
+
+                  {/* Cargo */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="cargo-label">Cargo</label>
+                    <FiltroSelect
+                      name="cargo"
+                      placeholder={'Seleccione un cargo'}
+                      onChange={(e) => addParams({ cargo: e.target.value })}
+                      value={params.cargo || ''}
+                      options={DataSelects.cargos}
+                    />
+                  </div>
+
+                  {/* Regimen */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="regimen-label">Regimen</label>
+                    <FiltroSelect
+                      name="regimen"
+                      placeholder={'Seleccione un regimen'}
+                      onChange={(e) => addParams({ regimen: e.target.value })}
+                      value={params.regimen || ''}
+                      options={DataSelects.regimenLaboral}
+                    />
+                  </div>
+
+                  {/* Turno */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="turno-label">Turno</label>
+                    <FiltroSelect
+                      name="turnos"
+                      placeholder={'Seleccione un turno'}
+                      onChange={(e) => addParams({ turno: e.target.value })}
+                      value={params.turno || ''}
+                      options={DataSelects.turnos}
+                    />
+                  </div>
+
+                  {/* Sexo */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                    <FiltroSelect
+                      name="sexos"
+                      placeholder={'Seleccione un sexo'}
+                      onChange={(e) => addParams({ sexo: e.target.value })}
+                      value={params.sexo || ''}
+                      options={DataSelects.sexos}
+                    />
+                  </div>
+
+                  {/* Jurisdicción */}
+                  <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                    <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Jurisdicción</label>
+                    <FiltroSelect
+                      name="Jurisdicciones"
+                      placeholder={'Seleccione una jurisdicción'}
+                      onChange={(e) => addParams({ jurisdiccion: e.target.value })}
+                      value={params.jurisdiccion || ''}
+                      options={DataSelects.jurisdicciones}
+                    />
+                  </div>
+                </div>
+
+                {/* Botón para limpiar filtros */}
+                <div className="flex justify-end mt-6">
+                  <Button
+                    className="!capitalize"
+                    onClick={() => {
+                      removeParams();
+                    }}
+                    variant="outlined"
+                    color="error"
+                    size="small"
+                  >
+                    Limpiar filtros
+                  </Button>
+                </div>
+              </div>
+            </CustomPopover>
+            <Button
+              onClick={() => exportToExcel()}
+              color="primary"
+              size="small"
+              className="!capitalize"
+              sx={{
+                padding: '3px 10px',
+              }}
+            >
+              <DownloadIcon className="!size-5" />
+              Descargar Excel
+            </Button>
 
           </div>
+          <SearchInput />
         </div>
 
         {/* Navegación de semanas */}
@@ -508,46 +699,54 @@ const SeguimientoAsistencia = () => {
                       <p>Cargando asistencia...</p>
                     </td>
                   </tr>
-                ) : (
-                  // Renderiza los datos reales cuando se cargan
-                  dataAsistencias.map((asistencia) => {
-                    return (
-                      <tr key={asistencia.id_empleado}>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
-                        <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
-                        {asistencia.estados.map((asist) => {
-                          const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");
-                          const esAsistenciaInvalida = !asist.asistencia;
+                ) :
+                  dataAsistencias.length === 0 ? (
+                    <tr>
+                      <td colSpan={weekDates.length + 4} className="py-4 text-center">
+                        <p>No se encontraron datos</p>
+                      </td>
+                    </tr>
+                  ) :
+                    (
+                      // Renderiza los datos reales cuando se cargan
+                      dataAsistencias.map((asistencia) => {
+                        return (
+                          <tr key={asistencia.id_empleado}>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
+                            {asistencia.estados.map((asist) => {
+                              const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");
+                              const esAsistenciaInvalida = !asist.asistencia;
 
-                          return (
-                            <td
-                              key={asistencia.id_empleado + asist.fecha}
-                              className={`py-2 px-2 border text-center ${esFechaValida ? esAsistenciaInvalida ? 'hover:bg-gray-100 cursor-pointe' : 'hover:bg-gray-100 cursor-pointer' : ''}`}
-                              onClick={
-                                esFechaValida ? esAsistenciaInvalida ? (() =>
-                                  setSelectedAsistencia({
-                                    id_empleado: asistencia.id_empleado,
-                                    fecha: asist.fecha,
-                                  }))
-                                  :
-                                  (() =>
-                                    setSelectedAsistenciaUPD({
-                                      fecha: asist.fecha,
-                                      id_empleado: asistencia.id_empleado,
-                                      id_asistencia: asist.id_asistencia
-                                    })) :
-                                  null
-                              }
-                            >
-                              {asist.asistencia || '-'}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    )
-                  })
-                )}
+                              return (
+                                <td
+                                  key={asistencia.id_empleado + asist.fecha}
+                                  className={`py-2 px-2 border text-center ${esFechaValida ? esAsistenciaInvalida ? 'hover:bg-gray-100 cursor-pointe' : 'hover:bg-gray-100 cursor-pointer' : ''}`}
+                                  onClick={
+                                    esFechaValida ? esAsistenciaInvalida ? (() =>
+                                      setSelectedAsistencia({
+                                        id_empleado: asistencia.id_empleado,
+                                        fecha: asist.fecha,
+                                      }))
+                                      :
+                                      (() =>
+                                        setSelectedAsistenciaUPD({
+                                          fecha: asist.fecha,
+                                          id_empleado: asistencia.id_empleado,
+                                          id_asistencia: asist.id_asistencia
+                                        })) :
+                                      null
+                                  }
+                                >
+                                  {asist.asistencia || '-'}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        )
+                      })
+                    )}
               </tbody>
 
             </table>
