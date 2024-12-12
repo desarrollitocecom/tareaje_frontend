@@ -19,6 +19,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import useFetch from "../Components/hooks/useFetch";
 import { useSelector } from "react-redux";
 import ImageComponent from "../Components/Image/ImageComponent";
+import ImageZoom from "../Components/Image/ImageZoom";
 
 const personasData = [
   {
@@ -54,6 +55,19 @@ const PersonaIdentificado = () => {
   const { token } = useSelector((state) => state.auth);
 
   const [persona, setPersona] = useState(null)
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
+  const [selectedAlt, setSelectedAlt] = useState('');
+
+  const handleImageClick = (image, alt) => {
+    setSelectedImage(image || 'Sin foto');
+    setSelectedAlt(alt || 'Foto no disponible');
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${id}`, token).then((response) => {
@@ -89,7 +103,7 @@ const PersonaIdentificado = () => {
     }
 
     return edad.toString(); // Convierte la edad a string antes de devolverla
-}
+  }
 
 
 
@@ -111,17 +125,29 @@ const PersonaIdentificado = () => {
           <div className="container">
             <div className="md:mt-5 md:ml-7">
               <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
-                <ImageComponent
-                  path={persona?.foto}
-                  alt="Persona"
-                  className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg"
-                />
+                <div
+                  className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg cursor-pointer"
+                  onClick={() => handleImageClick(persona?.foto, `${persona?.nombres} ${persona?.apellidos}`)}
+                >
+                  <ImageComponent
+                    path={persona?.foto}
+                    alt="Persona"
+                    className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg"
+                  />
+                </div>
                 <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
                   <h2 className="text-xl md:text-2xl font-semibold">{persona?.nombres} {persona?.apellidos}</h2>
                   <p className="text-gray-500 text-md md:text-base">{persona?.subgerencia.nombre}</p>
                 </div>
               </div>
             </div>
+
+            <ImageZoom
+              open={openDialog}
+              onClose={handleDialogClose}
+              imageSrc={selectedImage}
+              altText={selectedAlt}
+            />
 
             {/* Información Personal */}
             <div className="w-full max-w-[95%] py-6 mt-3">

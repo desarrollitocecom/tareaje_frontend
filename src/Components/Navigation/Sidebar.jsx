@@ -35,12 +35,22 @@ import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
 import CustomSwal from '../../helpers/swalConfig';
+import ImageZoom from '../Image/ImageZoom';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const { user } = useSelector((state) => state.auth);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleAvatarClick = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
 
   const LogOut = () => {
     dispatch(logout());
@@ -285,12 +295,17 @@ const Sidebar = ({ toggled, setToggled }) => {
               }}
             >
               <Box p={2} display="flex" flexDirection="column" alignItems="center">
-                <Avatar
-                  src={user?.image || ProfileUser}
-                  alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
-                  sx={{ width: 50, height: 50, mb: 1 }}
+                <div
+                  className="cursor-pointer"
+                  onClick={handleAvatarClick}
+                >
+                  <Avatar
+                    src={user?.image || ProfileUser}
+                    alt={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+                    sx={{ width: 50, height: 50, mb: 1 }}
 
-                />
+                  />
+                </div>
                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
                   {`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
                 </Typography>
@@ -309,6 +324,12 @@ const Sidebar = ({ toggled, setToggled }) => {
 
               </Box>
             </Popover>
+            <ImageZoom
+              open={openDialog}
+              onClose={handleDialogClose}
+              imageSrc={user?.image || ProfileUser}
+              altText={`${formatFirstNameLastName(user?.empleado?.nombres, user?.empleado?.apellidos)}`}
+            />
           </div>
         </div>
       </ProSidebar >
