@@ -21,33 +21,6 @@ import { useSelector } from "react-redux";
 import ImageComponent from "../Components/Image/ImageComponent";
 import ImageZoom from "../Components/Image/ImageZoom";
 
-const personasData = [
-  {
-    id: "1",
-    nombres: "Ana Pérez",
-    subgerencia: "Subgerencia de serenazgo",
-    dni: "12345678",
-    ruc: "20123456789",
-    cargo: "Gerente",
-    turno: "Mañana",
-    regimen: "Planilla",
-    sexo: "Femenino",
-    hijos: 2,
-    edad: 30,
-    jurisdiccion: "Lima",
-    fechaNacimiento: "01/01/1990",
-    lugarTrabajo: "Oficina Principal",
-    correo: "correo@ejemplo.com",
-    domicilio: "Calle Ejemplo 123",
-    celular: "987654321",
-    fechaInicio: "01/01/2020",
-    gradoEstudios: "Bachiller",
-    observaciones: "Ninguna",
-    imagen:
-      "https://th.bing.com/th/id/OIP.Y4_ks4-nJ_soelRGYS90LwHaLH?rs=1&pid=ImgDetMain",
-  },
-];
-
 const PersonaIdentificado = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -126,7 +99,7 @@ const PersonaIdentificado = () => {
               <div className="w-full max-w-[95%] flex flex-col md:flex-row gap-3 md:gap-8 items-center">
                 <div
                   className="w-24 h-24 md:!w-40 md:!h-40 rounded-full object-cover shadow-lg cursor-pointer"
-                  onClick={() => handleImageClick(persona?.foto, `${persona?.nombres} ${persona?.apellidos}`)}
+                  onClick={() => handleImageClick(persona?.foto, `${persona?.apellidos} ${persona?.nombres}`)}
                 >
                   <ImageComponent
                     path={persona?.foto}
@@ -135,7 +108,7 @@ const PersonaIdentificado = () => {
                   />
                 </div>
                 <div className="flex flex-col justify-center items-center md:items-start text-center md:text-left mb-3">
-                  <h2 className="text-xl md:text-2xl font-semibold">{persona?.nombres} {persona?.apellidos}</h2>
+                  <h2 className="text-xl md:text-2xl font-semibold">{persona?.apellidos} {persona?.nombres}</h2>
                   <p className="text-gray-500 text-md md:text-base">{persona?.subgerencia.nombre}</p>
                 </div>
               </div>
@@ -155,7 +128,7 @@ const PersonaIdentificado = () => {
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-3">
                   <div>
                     <p className="text-sm font-medium">Nombre:</p>
-                    <p className="text-base text-gray-800">{persona?.nombres} {persona?.apellidos}</p>
+                    <p className="text-base text-gray-800">{persona?.apellidos} {persona?.nombres}</p>
                   </div>
 
                   <div>

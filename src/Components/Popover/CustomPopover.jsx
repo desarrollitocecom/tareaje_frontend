@@ -46,7 +46,7 @@ const CustomPopover = ({ label, CustomIcon, CustomIconClose, children }) => {
                         <FilterListIcon sx={{ marginRight: '5px', width: '1.1rem', height: '1.1rem' }} />
                 }
 
-                <div className='mt-1'>
+                <div className='mt-1 hidden lg:block text-nowrap'>
                     {label}
                 </div>
             </Button>

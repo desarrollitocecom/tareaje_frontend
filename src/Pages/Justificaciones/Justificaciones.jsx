@@ -75,8 +75,8 @@ const Justificaciones = ({ moduleName }) => {
         
         return {
           id: item.id,
-          nombre: item.empleado.nombres,
           apellido: item.empleado.apellidos,
+          nombre: item.empleado.nombres,
           dni: item.empleado.dni,
           "fecha de inicio": item.f_inicio,
           "fecha de fin": item.f_fin,

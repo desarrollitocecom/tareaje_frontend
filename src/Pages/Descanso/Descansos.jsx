@@ -65,8 +65,8 @@ const Descansos = ({ moduleName}) => {
       const dataFormated = response.data.data.data.map((item) =>{
         return{
           id:item.id,
-          nombre: item.empleado.nombres,
           apellidos: item.empleado.apellidos,
+          nombre: item.empleado.nombres,
           dni: item.empleado.dni,
           observacion: item.observacion,
           fecha: item.fecha

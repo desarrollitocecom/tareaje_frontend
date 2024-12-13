@@ -46,8 +46,8 @@ const Empleados = ({ moduleName }) => {
             setCount(response.data.data.totalCount);
             const dataFormated = response.data.data.data.map((item) => ({
                 id: item.id,
-                nombres: item.nombres,
                 apellidos: item.apellidos,
+                nombres: item.nombres,
                 dni: item.dni,
                 celular: item.celular,
                 cargo: item.cargo?.nombre || '',
