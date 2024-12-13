@@ -61,8 +61,9 @@ const PersonalBD = () => {
         cargo: item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
         turno: item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
         telefono: item?.celular === "undefined" ? '-' : item?.celular,
-        foto: item?.foto === "undefined" ? '-' : item?.foto,
-        notShow: ['foto'], // Lista de propiedades a excluir de la tabla
+        notShow:{
+          foto: item.foto
+        }
         
       }));
       setDataFormatted(formattedData);
@@ -104,8 +105,10 @@ const PersonalBD = () => {
   }
 
   const handleRowClick = (event, row) => {
-    if (row?.foto) {
-      setSelectedImage(row.foto);
+    const foto = row.notShow.foto
+
+    if (foto) {
+      setSelectedImage(foto);
       setImageZoomOpen(true);
     }
   };
