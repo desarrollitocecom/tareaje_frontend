@@ -31,6 +31,11 @@ export const hasPermissionFunction = (user, permission) => {
 // Función para formatear la fecha
 export const formatDate = (DateString) => {
     const date = new Date(DateString);
+
+    if (isNaN(date.getTime())) {
+        return false;
+    }
+    
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Los meses empiezan en 0
     const day = String(date.getDate()).padStart(2, "0");

@@ -55,16 +55,16 @@ const PersonalBD = () => {
       setCount(response.data.data.totalCount);
       const formattedData = response.data.data.data.map((item) => ({
         id: item.id,
-        nombres: item.nombres === "undefined" ? '-' : item.nombres,
         apellidos: item.apellidos === "undefined" ? '-' : item.apellidos,
+        nombres: item.nombres === "undefined" ? '-' : item.nombres,
         subgerencia: item.subgerencia?.nombre === "undefined" ? '-' : item.subgerencia?.nombre,
         cargo: item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
         turno: item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
         telefono: item?.celular === "undefined" ? '-' : item?.celular,
-        notShow:{
+        notShow: {
           foto: item.foto
         }
-        
+
       }));
       setDataFormatted(formattedData);
     } catch (error) {
@@ -130,76 +130,76 @@ const PersonalBD = () => {
     const updatedParams = `?${urlSearchParams.toString()}&page=0`;
 
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${updatedParams}`, token).then((response) => {
-        const data = response.data.data.data.map((item) => ({
-            'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
-            'APELLIDOS': item.apellidos === "undefined" ? '-' : item.apellidos,
-            'SUBGERENCIA': item.subgerencia?.nombre === "undefined" ? '-' : item.subgerencia?.nombre,
-            'CARGO': item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
-            'TURNO': item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
-            'TELEFONO': item?.celular === "undefined" ? '-' : item?.celular,
+      const data = response.data.data.data.map((item) => ({
+        'APELLIDOS': item.apellidos === "undefined" ? '-' : item.apellidos,
+        'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
+        'SUBGERENCIA': item.subgerencia?.nombre === "undefined" ? '-' : item.subgerencia?.nombre,
+        'CARGO': item.cargo?.nombre === "undefined" ? '-' : item.cargo?.nombre,
+        'TURNO': item.turno?.nombre === "undefined" ? '-' : item.turno?.nombre,
+        'TELEFONO': item?.celular === "undefined" ? '-' : item?.celular,
 
-        }));
+      }));
 
-        // Crear la hoja de trabajo
-        const worksheet = XLSX.utils.json_to_sheet(data);
+      // Crear la hoja de trabajo
+      const worksheet = XLSX.utils.json_to_sheet(data);
 
-        worksheet['!cols'] = [
-          { wch: 20 }, // NOMBRES
-          { wch: 20 }, // APELLIDOS
-          { wch: 25 }, // SUBGERENCIA
-          { wch: 20 }, // CARGO
-          { wch: 15 }, // TURNO
-          { wch: 15 }, // TELEFONO
+      worksheet['!cols'] = [
+        { wch: 20 }, // NOMBRES
+        { wch: 20 }, // APELLIDOS
+        { wch: 25 }, // SUBGERENCIA
+        { wch: 20 }, // CARGO
+        { wch: 15 }, // TURNO
+        { wch: 15 }, // TELEFONO
 
       ];
 
-        // Estilos de las celdas
-        const range = XLSX.utils.decode_range(worksheet['!ref']);
-        for (let row = range.s.r; row <= range.e.r; row++) {
-            for (let col = range.s.c; col <= range.e.c; col++) {
-                const address = XLSX.utils.encode_cell({ r: row, c: col });
-                const cell = worksheet[address];
+      // Estilos de las celdas
+      const range = XLSX.utils.decode_range(worksheet['!ref']);
+      for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let col = range.s.c; col <= range.e.c; col++) {
+          const address = XLSX.utils.encode_cell({ r: row, c: col });
+          const cell = worksheet[address];
 
-                if (cell) {
-                    // Estilo general de celdas
-                    cell.s = {
-                        font: { bold: false, color: { rgb: "000000" }, sz: 12 }, // Color de texto y tamaño
-                        alignment: { horizontal: 'center', vertical: 'center' },  // Alineación centrada
-                        border: { 
-                            top: { style: 'thin', color: { rgb: '000000' } },
-                            left: { style: 'thin', color: { rgb: '000000' } },
-                            bottom: { style: 'thin', color: { rgb: '000000' } },
-                            right: { style: 'thin', color: { rgb: '000000' } }
-                        }
-                    };
+          if (cell) {
+            // Estilo general de celdas
+            cell.s = {
+              font: { bold: false, color: { rgb: "000000" }, sz: 12 }, // Color de texto y tamaño
+              alignment: { horizontal: 'center', vertical: 'center' },  // Alineación centrada
+              border: {
+                top: { style: 'thin', color: { rgb: '000000' } },
+                left: { style: 'thin', color: { rgb: '000000' } },
+                bottom: { style: 'thin', color: { rgb: '000000' } },
+                right: { style: 'thin', color: { rgb: '000000' } }
+              }
+            };
 
-                    // Ejemplo de celdas específicas: encabezados
-                    if (row === 0) {
-                        cell.s.font = { color: { rgb: 'FFFFFF' }, bold: true, sz: 12 };
-                        cell.s.fill = { fgColor: { rgb: '16a34a' }  }; // Fondo verde en los encabezados
-                    }
-                }
+            // Ejemplo de celdas específicas: encabezados
+            if (row === 0) {
+              cell.s.font = { color: { rgb: 'FFFFFF' }, bold: true, sz: 12 };
+              cell.s.fill = { fgColor: { rgb: '16a34a' } }; // Fondo verde en los encabezados
             }
+          }
         }
+      }
 
-        // Crear el libro y agregar la hoja
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Empleados');
+      // Crear el libro y agregar la hoja
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Empleados');
 
-        // Generar el archivo de Excel con los estilos aplicados
-        XLSX.writeFile(workbook, 'EmpleadosDB.xlsx');
+      // Generar el archivo de Excel con los estilos aplicados
+      XLSX.writeFile(workbook, 'EmpleadosDB.xlsx');
 
     }).catch((error) => {
-        CustomSwal.fire({
-            icon: 'error',
-            title: 'Error al exportar a Excel',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 4000
-        });
+      CustomSwal.fire({
+        icon: 'error',
+        title: 'Error al exportar a Excel',
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000
+      });
     });
-};
+  };
 
   return (
     <div className="relative flex flex-col h-full w-full bg-gray-100 p-4">

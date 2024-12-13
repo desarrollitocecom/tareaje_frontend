@@ -63,8 +63,8 @@ const Vacaciones = ({moduleName}) => {
       const dataFormated = response.data.data.data.map((item) =>{
         return{
           id:item.id,
-          nombre: item.empleado.nombres,
           apellido: item.empleado.apellidos,
+          nombre: item.empleado.nombres,
           dni: item.empleado.dni,
           "fecha de inicio": item.f_inicio,
           "fecha de fin": item.f_fin

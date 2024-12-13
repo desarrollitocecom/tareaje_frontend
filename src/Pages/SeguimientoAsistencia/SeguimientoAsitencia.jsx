@@ -26,7 +26,7 @@ import FilterListIcon from '@mui/icons-material/FilterAlt';
 import useFetchData from "../../Components/hooks/useFetchData";
 import UseUrlParamsManager from "../../Components/hooks/UseUrlParamsManager";
 import DownloadIcon from '@mui/icons-material/Download';
-
+import * as XLSX from 'xlsx-js-style';
 
 const SeguimientoAsistencia = () => {
   const [DataSelects, setDataSelects] = useState([])
@@ -228,6 +228,13 @@ const SeguimientoAsistencia = () => {
     return monday;
   };
 
+  const getSunday = (date) => {
+    const day = date.getDay(); // Día de la semana (0 = domingo, 1 = lunes, etc.)
+    const diff = day === 0 ? 0 : 7 - day; // Si es domingo, no hacer cambios, si no, calcular la diferencia para llegar al domingo
+    const sunday = new Date(date);
+    sunday.setDate(date.getDate() + diff);
+    return sunday;
+  };
 
   // Función para cambiar a la semana anterior
   const handleSemanaAnterior = () => {
@@ -241,7 +248,7 @@ const SeguimientoAsistencia = () => {
 
       const dayjsNewDate = dayjs(twoWeeksBefore);
       // Verificar si la fecha de 14 días antes es anterior a startDate
-      const isBeforeStartDate = dayjsNewDate.isBefore(dayjs(startDate));
+      const isBeforeStartDate = dayjsNewDate.isBefore(dayjs(getMonday(new Date(startDate))));
 
       setIsPrevDisabled(isBeforeStartDate); // Deshabilitar el botón si se pasa de la fecha inicial
       setIsNextDisabled(false); // Habilitar el botón de siguiente
@@ -262,9 +269,9 @@ const SeguimientoAsistencia = () => {
 
       const dayjsNewDate = dayjs(twoWeeksAfter);
       // Verificar si la fecha de 14 día despues es posterior a endDate
-      const isAfterEndDate = dayjsNewDate.isAfter(dayjs(endDate));
+      const isAfterEndDate = dayjsNewDate.isAfter(dayjs(getSunday(new Date(endDate))));
 
-      setIsNextDisabled(isAfterEndDate); // Deshabilitar el botón si se pasa de la fecha final
+      setIsNextDisabled(endDate ? isAfterEndDate : false); // Deshabilitar el botón si se pasa de la fecha final
       setIsPrevDisabled(false); // Habilitar el botón de anterior
 
       return newDate; // Retornar la nueva fecha
@@ -277,12 +284,23 @@ const SeguimientoAsistencia = () => {
   const handleTodayClick = () => {
     const start = dayjs(startDate);
     const end = dayjs(endDate);
+    const todayDayjs = dayjs(today);
     const isSameStartEnd = (!startDate && !endDate) || start.isSame(end);
-    const isBetween = dayjs(today).isAfter(dayjs(startDate)) || dayjs(Fecha).isSame(dayjs(startDate)) && dayjs(today).isBefore(dayjs(endDate)) || dayjs(today).isSame(dayjs(endDate));
+    const isBetween = todayDayjs.isBetween(start, end, null, '[]'); // '[]' incluye las fechas de inicio y fin
 
-
+    // Lógica para la actualización de fecha
     if (isSameStartEnd || isBetween) {
       setFecha(today);
+
+      // Verificar si las fechas de inicio y fin están correctamente formateadas
+      if (formatDate(start) && formatDate(end)) {
+        const endWeek = isSameWeek(today, endDate);
+        setIsNextDisabled(endWeek); // Deshabilitar el botón si se pasa de la fecha final
+        setIsPrevDisabled(false);
+      } else {
+        setIsNextDisabled(false);
+        setIsPrevDisabled(false);
+      }
     } else {
       CustomSwal.fire({
         icon: "error",
@@ -366,27 +384,65 @@ const SeguimientoAsistencia = () => {
 
     // Reconstruir el string de parámetros
     const updatedParams = `?${urlSearchParams.toString()}&page=0`;
-    const startDate =FormatoEnvioFecha(rangeDates[0].startDate)
-    const endDate =FormatoEnvioFecha(rangeDates[0].endDate)
-    
-    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${updatedParams}`, { inicio: startDate, fin: endDate }, token, true).then((res) => {
-      console.log(res);
+    let startDate = FormatoEnvioFecha(rangeDates[0].startDate)
+    let endDate = FormatoEnvioFecha(rangeDates[0].endDate)
 
-      
+    if (startDate === endDate) {
+      startDate = FormatoEnvioFecha(weekRange[0]);
+      endDate = FormatoEnvioFecha(weekRange[1]);
+    }
+
+    postData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/${updatedParams}`, { inicio: startDate, fin: endDate }, token, true).then((res) => {
+      const headers = ["APELLIDO", "NOMBRE", "TURNO", ...getDatesInRange(startDate, endDate).map((date) =>
+        `${date.toLocaleString("es-ES", { weekday: "short" }).toUpperCase()} - ${formatDate(date)}`)];
+
+      if (!res.status) {
+        throw res.error;
+      }
+
+      const rows = res.data.data.asistencias.map((asistencia) => {
+        const estados = asistencia.estados.map((estado) => estado.asistencia || "-");
+        return [asistencia.apellidos, asistencia.nombres, asistencia.turno, ...estados];
+      });
+      const worksheetData = [headers, ...rows];
+
+      const headerStyle = {
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "16a34a" } },
+        alignment: { horizontal: "center" },
+      };
+
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+      worksheet["!cols"] = headers.map(() => ({ wpx: 100 }));
+      headers.forEach((_, colIndex) => {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: colIndex });
+        if (worksheet[cellAddress]) {
+          worksheet[cellAddress].s = headerStyle;
+        }
+      });
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Asistencias");
+
+      XLSX.writeFile(workbook, `Asistencias ${formatDate(startDate)} - ${formatDate(endDate)}.xlsx`);
+    }).catch((e) => {
+      swalError(e.response.data)
     })
   }
 
   const getDatesInRange = (startDate, endDate) => {
     const dates = [];
     let currentDate = dayjs(startDate);
-  
+
     while (currentDate.isBefore(dayjs(endDate).add(1, 'day'))) {
-      dates.push(currentDate.format('YYYY-MM-DD')); // Formato de fecha que desees
+      dates.push(currentDate.toDate());
       currentDate = currentDate.add(1, 'day');
     }
-  
+
     return dates;
   };
+
 
 
   return (
@@ -403,7 +459,7 @@ const SeguimientoAsistencia = () => {
       </header>
 
       <div className="bg-white p-6 rounded-lg shadow-lg text-sm flex flex-col flex-1 pb-5 overflow-hidden">
-        <div className="pb-6 flex justify-between">
+        <div className="pb-6 flex justify-between flex-col-reverse items-center md:items-end md:flex-row gap-5">
           <div className="flex items-center ">
             <CustomPopover
               CustomIcon={DateRangeIcon}
@@ -568,7 +624,9 @@ const SeguimientoAsistencia = () => {
               }}
             >
               <DownloadIcon className="!size-5" />
-              Descargar Excel
+              <div className='mt-1 hidden lg:block text-nowrap'>
+                Descargar Excel
+              </div>
             </Button>
 
           </div>
@@ -670,8 +728,8 @@ const SeguimientoAsistencia = () => {
             <table className="min-w-full bg-white border text-xs text-nowrap h-max ">
               <thead>
                 <tr>
-                  <th className="py-2 px-2 border min-w-[72px]">NOMBRE</th>
                   <th className="py-2 px-2 border min-w-[72px]">APELLIDO</th>
+                  <th className="py-2 px-2 border min-w-[72px]">NOMBRE</th>
                   {/* <th className="py-2 px-2 border">DNI</th> */}
                   <th className={`py-2 px-2 border min-w-[72px] ${today.getDay() === 1 ? 'border-r-0' : ''}`}>TURNO</th>
                   {weekDates.map((fecha, i) => {
@@ -712,8 +770,8 @@ const SeguimientoAsistencia = () => {
                       dataAsistencias.map((asistencia) => {
                         return (
                           <tr key={asistencia.id_empleado}>
-                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
                             <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.apellidos}</td>
+                            <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.nombres}</td>
                             <td className="py-2 px-2 border max-w-10 overflow-hidden text-ellipsis">{asistencia.turno}</td>
                             {asistencia.estados.map((asist) => {
                               const esFechaValida = dayjs(asist.fecha).isBefore(dayjs(), "day") || dayjs(asist.fecha).isSame(dayjs(), "day");

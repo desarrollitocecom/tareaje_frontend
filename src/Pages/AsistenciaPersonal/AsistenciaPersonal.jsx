@@ -10,11 +10,18 @@ import { useSelector } from 'react-redux';
 import CompareImages from '../../Components/Image/CompareImages';
 import CustomSwal from '../../helpers/swalConfig';
 import * as XLSX from 'xlsx-js-style';
-import { Tooltip, IconButton } from '@mui/material';
+import { Tooltip, IconButton, Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import CustomPopover from "../../Components/Popover/CustomPopover";
+import FilterListIcon from '@mui/icons-material/FilterAlt';
+import FilterAltOffIcon from '@mui/icons-material/FilterAltOff';
+import FiltroSelect from '../../Components/Filtroselect/Filtro';
+import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import useFetchData from '../../Components/hooks/useFetchData';
 
 const AsistenciaPersonal = () => {
   const { getData } = useFetch()
+  const [DataSelects, setDataSelects] = useState([])
   const [loading, setLoading] = useState(false);
   const { token } = useSelector((state) => state.auth);
   const [dataFormatted, setDataFormatted] = useState([]);
@@ -22,6 +29,9 @@ const AsistenciaPersonal = () => {
   const [OpenModal, setOpenModal] = useState(false)
   const [date, setDate] = useState(new Date());
   const [Count, setCount] = useState(0)
+  const { addParams, getParams, removeParams } = UseUrlParamsManager();
+  const { fetchCargos, fetchTurnos, fetchSubgerencias, fetchRegimenLaboral, fetchSexos, fetchJurisdicciones } = useFetchData(token);
+  const params = getParams();
 
   const navigate = useNavigate();
 
@@ -55,18 +65,17 @@ const AsistenciaPersonal = () => {
   }
 
   useEffect(() => {
-    fetchData(date);
-  }, [date]);
+    fetchData(date, location.search);
+  }, [location.search, date]);
 
-  const fetchData = (date) => {
+  const fetchData = (date, params) => {
     setLoading(true);
-    getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
-      console.log(response);
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}/${params || ''}`, token).then((response) => {
       setCount(response.data.data.totalCount)
       const formattedData = response.data.data.asistencias.map((item) => ({
         id: item.id_asistencia,
-        nombres: item.nombres === "undefined" ? '-' : item.nombres,
         apellidos: item.apellidos === "undefined" ? '-' : item.apellidos,
+        nombres: item.nombres === "undefined" ? '-' : item.nombres,
         dni: item.dni === "undefined" ? '-' : item.dni,
         turno: item.turno === "undefined" ? '-' : item.turno,
         fecha: item.fecha === "undefined" ? '-' : item.fecha,
@@ -86,10 +95,23 @@ const AsistenciaPersonal = () => {
   };
 
   const exportToExcel = () => {
-    getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}`, token).then((response) => {
+    const params = location.search;
+
+    // Convertir los parámetros a un objeto
+    const urlSearchParams = new URLSearchParams(params);
+
+    // Quitar las propiedades 'page' y 'limit'
+    urlSearchParams.delete('page');
+    urlSearchParams.delete('limit');
+
+    // Reconstruir el string de parámetros
+    const updatedParams = `?${urlSearchParams.toString()}&page=0`;
+    console.log(updatedParams);
+
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}${updatedParams}`, token).then((response) => {
       const data = response.data.data.asistencias.map((item) => ({
-        'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
         'APELLIDOS': item.apellidos === "undefined" ? '-' : item.apellidos,
+        'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
         'DNI': item.dni === "undefined" ? '-' : item.dni,
         'TURNO': item.turno === "undefined" ? '-' : item.turno,
         'FECHA': item.fecha === "undefined" ? '-' : item.fecha,
@@ -148,6 +170,41 @@ const AsistenciaPersonal = () => {
     });
   };
 
+  useEffect(() => {
+    loadFiltersData();
+  }, [])
+
+  const loadFiltersData = async () => {
+    try {
+      const [subgerenciasData, turnosData, cargosData, regimenLaboralData, sexosData, JurisdiccionesData] = await Promise.all([
+        fetchSubgerencias(),
+        fetchTurnos(),
+        fetchCargos(),
+        fetchRegimenLaboral(),
+        fetchSexos(),
+        fetchJurisdicciones()
+      ]);
+
+      setDataSelects({
+        subgerencias: mapToSelectOptions(subgerenciasData?.data),
+        turnos: mapToSelectOptions(turnosData?.data),
+        cargos: mapToSelectOptions(cargosData?.data),
+        regimenLaboral: mapToSelectOptions(regimenLaboralData?.data),
+        sexos: mapToSelectOptions(sexosData?.data),
+        jurisdicciones: mapToSelectOptions(JurisdiccionesData?.data),
+      });
+
+    } catch (error) {
+      console.error('Error al cargar los datos de filtros:', error);
+    }
+  };
+
+  const mapToSelectOptions = (data) => {
+    if (!data) return []
+
+    return data.map((item) => ({ value: item.id, label: item.nombre }))
+  }
+
   return (
     <div className='h-full flex flex-col w-full bg-gray-100 p-4'>
       <header className="text-white bg-green-700 py-4 px-3 mb-6 w-full rounded-lg flex justify-center relative">
@@ -163,120 +220,132 @@ const AsistenciaPersonal = () => {
       <main className='flex-1 bg-white shadow rounded-lg p-4 h-full overflow-hidden'>
         <div className='flex flex-col w-full h-full'>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 text-sm'>
-            <div className="flex flex-col">
-              <DatePicker
-                label="Seleccionar Fecha"
-                value={dayjs(date)}
-                slotProps={{ textField: { size: 'small' } }}
-                maxDate={dayjs()}
-                format="DD/MM/YYYY"
-                onChange={(value) => setDate(value)}
-              />
+            <div className="flex gap-5 items-center">
+              <div>
+                <DatePicker
+                  className='!min-w-max'
+                  label="Seleccionar Fecha"
+                  value={dayjs(date)}
+                  slotProps={{ textField: { size: 'small' } }}
+                  maxDate={dayjs()}
+                  format="DD/MM/YYYY"
+                  onChange={(value) => setDate(value)}
+                />
+              </div>
+              <div>
+                <CustomPopover
+                  CustomIcon={FilterListIcon}
+                  CustomIconClose={FilterAltOffIcon}
+                  label={"Filtro Personal"}
+                >
+                  <div className="p-6">
+                    <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
+                    <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
+                      {/* Subgerencia */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
+                        <FiltroSelect
+                          name="subgerencias"
+                          placeholder={'Seleccione una subgerencia'}
+                          onChange={(e) => addParams({ subgerencia: e.target.value })}
+                          value={params.subgerencia || ''}
+                          options={DataSelects.subgerencias}
+                        />
+                      </div>
+
+                      {/* Cargo */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="cargo-label">Cargo</label>
+                        <FiltroSelect
+                          name="cargo"
+                          placeholder={'Seleccione un cargo'}
+                          onChange={(e) => addParams({ cargo: e.target.value })}
+                          value={params.cargo || ''}
+                          options={DataSelects.cargos}
+                        />
+                      </div>
+
+                      {/* Regimen */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="regimen-label">Regimen</label>
+                        <FiltroSelect
+                          name="regimen"
+                          placeholder={'Seleccione un regimen'}
+                          onChange={(e) => addParams({ regimen: e.target.value })}
+                          value={params.regimen || ''}
+                          options={DataSelects.regimenLaboral}
+                        />
+                      </div>
+
+                      {/* Turno */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="turno-label">Turno</label>
+                        <FiltroSelect
+                          name="turnos"
+                          placeholder={'Seleccione un turno'}
+                          onChange={(e) => addParams({ turno: e.target.value })}
+                          value={params.turno || ''}
+                          options={DataSelects.turnos}
+                        />
+                      </div>
+
+                      {/* Sexo */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="sexo-label">Sexo</label>
+                        <FiltroSelect
+                          name="sexos"
+                          placeholder={'Seleccione un sexo'}
+                          onChange={(e) => addParams({ sexo: e.target.value })}
+                          value={params.sexo || ''}
+                          options={DataSelects.sexos}
+                        />
+                      </div>
+
+                      {/* Jurisdicción */}
+                      <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
+                        <label className="text-sm font-semibold text-gray-600" htmlFor="jurisdiccion-label">Jurisdicción</label>
+                        <FiltroSelect
+                          name="Jurisdicciones"
+                          placeholder={'Seleccione una jurisdicción'}
+                          onChange={(e) => addParams({ jurisdiccion: e.target.value })}
+                          value={params.jurisdiccion || ''}
+                          options={DataSelects.jurisdicciones}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Botón para limpiar filtros */}
+                    <div className="flex justify-end mt-6">
+                      <Button
+                        className="!capitalize"
+                        onClick={() => {
+                          removeParams();
+                        }}
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                      >
+                        Limpiar filtros
+                      </Button>
+                    </div>
+                  </div>
+                </CustomPopover>
+              </div>
             </div>
             <div className="flex justify-center md:justify-end w-full md:col-span-1 lg:col-span-4">
-            <Tooltip title="Descargar Excel" arrow>
-                <IconButton
-                  onClick={exportToExcel}
-                  className="!bg-green-500 !text-white hover:!bg-green-600"
-                >
-                  <DownloadIcon />
-                </IconButton>
-              </Tooltip>
+              {Count > 0 && (
+                <Tooltip title="Descargar Excel" arrow>
+                  <IconButton
+                    onClick={exportToExcel}
+                    className="!bg-green-500 !text-white hover:!bg-green-600"
+                  >
+                    <DownloadIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
             </div>
           </div>
-          {/* <Formik
-            initialValues={{
-              buscar: "",
-              fecha: null,
-              cargo: "",
-              turno: "",
-              subgerencias: ""
-            }}
-            onSubmit={(values) => {
-              console.log("Valores del formulario:", values);
-            }}
-          >
-            {({ handleChange, handleBlur, values, setFieldValue, errors, touched }) => (
-              <Form className="flex flex-col text-nowrap">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4 text-sm">
-                
-                  <div className="md:col-span-1">
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      label="Buscar"
-                      name="buscar"
-                      size="small"
-                      className="bg-white"
-                      value={values.buscar}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                  </div>
 
-                
-                  <div className="flex flex-col">
-                    <DatePicker
-                      label="Seleccionar Fecha"
-                      value={values.fecha}
-                      slotProps={{ textField: { size: 'small' } }}
-                      maxDate={dayjs()}
-                      format="DD/MM/YYYY"
-                      onChange={(value) => setFieldValue("fecha", value)}
-
-
-                    />
-                  </div>
-
-                
-                  <div>
-                    <FiltroSelect
-                      label="Subgerencia"
-                      name="subgerencias"
-                      value={values.subgerencias}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      options={subgerencias}
-                      error={errors.subgerencias}
-                      touched={touched.subgerencias}
-                    />
-                  </div>
-
-                
-                  <div>
-                    <FiltroSelect
-                      label="Cargo"
-                      name="cargo"
-                      value={values.cargo}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      options={cargos}
-                      error={errors.cargo}
-                      touched={touched.cargo}
-                    />
-                  </div>
-
-                
-                  <div>
-                    <FiltroSelect
-                      label="Turno"
-                      name="turno"
-                      value={values.turno}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      options={turnos}
-                      error={errors.turno}
-                      touched={touched.turno}
-                    />
-                  </div>
-                </div>
-
-              
-
-
-              </Form>
-            )}
-          </Formik> */}
           <div className="my-1"></div>
 
           <CRUDTable
