@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CustomModal from '../../Components/Modal/CustomModal'
 import AddIcon from '@mui/icons-material/Add';
-import { Button, IconButton, Tooltip, TextField } from '@mui/material';
+import { Button, IconButton, Tooltip, TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import SecurityIcon from '@mui/icons-material/Security';
 import { useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
@@ -23,6 +23,9 @@ const AddFuncion = ({refreshData}) => {
             errors.nombre = 'Campo requerido';
         } else if (!/^[A-Za-zÑñÁÉÍÓÚáéíóú\s]+$/.test(values.nombre)) { // Verifica si solo contiene letras y espacios
             errors.nombre = 'El nombre solo debe contener letras';
+        }
+        if (!values.tipo) {
+            errors.tipo = 'Campo requerido';
         }
         return errors;
     }
@@ -70,13 +73,13 @@ const AddFuncion = ({refreshData}) => {
                     <h1 className='text-lg font-bold fl'>Añadir una Funcion</h1>
                 </div>
                 <Formik
-                    initialValues={{ nombre: '' }}
+                    initialValues={{ nombre: '', tipo: '' }}
                     validate={validate}
                     onSubmit={handleSubmit}
                 >
-                    {({ errors, touched }) => (
+                    {({ errors, touched, values, handleChange, handleBlur }) => (
                         <Form>
-                            <div className="mb-3">
+                            <div className="mb-3 flex flex-col gap-4">
                                 <Field
                                     as={TextField}
                                     label="Funcion"
@@ -85,8 +88,26 @@ const AddFuncion = ({refreshData}) => {
                                     fullWidth
                                     name="nombre"
                                     error={touched.nombre && Boolean(errors.nombre)}
-                                    helperText={touched.nombre && errors.nombre}
+                                    helperText={touched.nombre && errors.nombre || 'Ingrese la funcion'}
                                 />
+                                <FormControl fullWidth size='small' error={touched.tipo && errors.tipo}>
+                                    <InputLabel id="select-helper-label">Tipo Función</InputLabel>
+                                    <Select
+                                        labelId="select-helper-label"
+                                        id="select-helper"
+                                        label="Tipo Función"
+                                        name="tipo"
+                                        value={values.tipo}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                    >
+                                        <MenuItem value={"Operativo"}>Operativo</MenuItem>
+                                        <MenuItem value={"Intervención"}>Intervención</MenuItem>
+                                        <MenuItem value={"Administrativo"}>Administrativo</MenuItem>
+                                        <MenuItem value={"Libre"}>Libre</MenuItem>
+                                    </Select>
+                                    <FormHelperText>{touched.tipo && errors.tipo || 'Seleccione el tipo de funcion'}</FormHelperText>
+                                </FormControl>
                             </div>
                             <div className="flex justify-between pt-5">
                                 <div></div>

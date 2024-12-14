@@ -73,18 +73,19 @@ const AsistenciaPersonal = () => {
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}/${params || ''}`, token).then((response) => {
       setCount(response.data.data.totalCount)
       const formattedData = response.data.data.asistencias.map((item) => ({
-        id: item.id_asistencia,
-        apellidos: item.apellidos === "undefined" ? '-' : item.apellidos,
-        nombres: item.nombres === "undefined" ? '-' : item.nombres,
-        dni: item.dni === "undefined" ? '-' : item.dni,
-        turno: item.turno === "undefined" ? '-' : item.turno,
-        fecha: item.fecha === "undefined" ? '-' : item.fecha,
-        hora: item.hora === "undefined" ? '-' : item.hora,
+        id: item.id,
+        apellidos: item.empleado?.apellidos || '-',
+        nombres: item.empleado?.nombres || '-',
+        dni: item.empleado?.dni || '-',
+        cargo: item.empleado?.cargo?.nombre || '-',
+        turno: item.empleado?.turno?.nombre || '-',
+        fecha: item.fecha || '-',
+        hora: item.hora || '-',
         tipo: item.photo_id === 'Asistencia manual' ? '🔴' : '🟢',
         notShow: {
           photo_id: item.photo_id,
-          foto: item.foto
-        }
+          foto: item.empleado?.foto || null,
+        },
       }));
       setDataFormatted(formattedData);
     }).catch((error) => {
@@ -110,14 +111,16 @@ const AsistenciaPersonal = () => {
 
     getData(`${import.meta.env.VITE_APP_ENDPOINT}/asistencias/diaria/${FormatoEnvioFecha(date)}${updatedParams}`, token).then((response) => {
       const data = response.data.data.asistencias.map((item) => ({
-        'APELLIDOS': item.apellidos === "undefined" ? '-' : item.apellidos,
-        'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
-        'DNI': item.dni === "undefined" ? '-' : item.dni,
-        'TURNO': item.turno === "undefined" ? '-' : item.turno,
-        'FECHA': item.fecha === "undefined" ? '-' : item.fecha,
-        'HORA': item.hora === "undefined" ? '-' : item.hora,
-        'TIPO': item.photo_id === 'Asistencia manual' ? 'Manual' : 'Automática'
+        'APELLIDOS': item.empleado?.apellidos || '-',
+        'NOMBRES': item.empleado?.nombres || '-',
+        'DNI': item.empleado?.dni || '-',
+        'CARGO': item.empleado?.cargo?.nombre || '-',
+        'TURNO': item.empleado?.turno?.nombre || '-',
+        'FECHA': item.fecha || '-',
+        'HORA': item.hora || '-',
+        'TIPO': item.photo_id === 'Asistencia manual' ? 'Manual' : 'Automática',
       }));
+      
 
       const worksheet = XLSX.utils.json_to_sheet(data);
 
