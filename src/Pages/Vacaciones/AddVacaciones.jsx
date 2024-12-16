@@ -32,10 +32,12 @@ const AddVacaciones = ({ refreshData }) => {
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
 
     useEffect(() => {
-        fetchEmpleados().then((empleados) => {
-            setEmpleados(empleados.data);
-        });
-    }, []);
+        if (Open) {
+            fetchEmpleados().then((empleados) => {
+                setEmpleados(empleados.data);
+            });
+        }
+    }, [Open]);
 
     const handleClose = (resetForm) => {
         setOpen(false);

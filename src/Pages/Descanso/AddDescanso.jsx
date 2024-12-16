@@ -124,7 +124,7 @@ const AddDescanso = ({ refreshData }) => {
                                         }
 
                                         timeoutRef.current = setTimeout(() => {
-                                            if (!e.target.value.trim()) {
+                                            if (!e.target.value) {
                                                 fetchEmpleados().then((empleados) => setEmpleados(empleados.data));
                                             } else {
                                                 const firstChar = e.target.value.trim().charAt(0);

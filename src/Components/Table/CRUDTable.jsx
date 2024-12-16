@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import { SortData } from '../../helpers/GeneralFunctions';
 import CustomTablePagination from '../../Pages/Pagination/TablePagination';
+import { useLocation } from 'react-router-dom';
 
 const CRUDTable = memo(({
     data = [],
@@ -15,10 +16,13 @@ const CRUDTable = memo(({
     rowOnClick = null,
     count = 100,
     noDataText = 'No hay datos registrados.',
+    filter = false
 }) => {
     const headers = data.length > 0
         ? Object.keys(data[0]).filter((key) => key !== 'id' && key !== 'notShow')
         : [];
+
+    const location = useLocation();
 
     const [orderBy, setOrderBy] = useState('index');
     const [orderDirection, setOrderDirection] = useState('asc');
@@ -37,6 +41,34 @@ const CRUDTable = memo(({
         }));
         setSortedData(SortData(dataWithIndex, orderBy, orderDirection));
     }, [data, orderBy, orderDirection]);
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const searchParam = searchParams.get('search'); // Obtén el parámetro de búsqueda 'search'
+
+        if (searchParam && filter) {
+            const lowerCaseSearch = searchParam.toLowerCase();
+            const filteredData = data.filter((item) =>
+                headers.some((key) =>
+                    item[key]?.toString().toLowerCase().includes(lowerCaseSearch)
+                )
+            );
+            // Agrega el índice a los datos filtrados
+            const filteredDataWithIndex = filteredData.map((item, index) => ({
+                ...item,
+                index: index + 1, // Reasigna el índice en función del arreglo filtrado
+            }));
+
+            setSortedData(SortData(filteredDataWithIndex, orderBy, orderDirection));
+        } else {
+            // Si no hay búsqueda, muestra todos los datos ordenados
+            const dataWithIndex = data.map((item, index) => ({
+                ...item,
+                index: index + 1,
+            }));
+            setSortedData(SortData(dataWithIndex, orderBy, orderDirection));
+        }
+    }, [location.search, data, orderBy, orderDirection]);
 
     return (
         <div className='flex flex-1 overflow-hidden'>

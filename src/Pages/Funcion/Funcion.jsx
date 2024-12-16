@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import SearchInput from '../../Components/Inputs/SearchInput';
 
 
 const Funcion = (moduleName) => {
@@ -33,9 +34,13 @@ const Funcion = (moduleName) => {
 
     const [count, setCount] = useState(0);
 
+    // useEffect(() => {
+    //     fetchData(location.search || undefined);
+    // }, [location.search, Update])
+
     useEffect(() => {
-        fetchData(location.search || undefined);
-    }, [location.search, Update])
+        fetchData();
+    }, [Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
@@ -117,21 +122,8 @@ const Funcion = (moduleName) => {
                                     {canCreate && <AddFuncion refreshData={refreshData} />}
                                     
                                 </div>
-                                <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
-                                    <InputLabel htmlFor="input-with-icon-adornment">
-                                        Buscar
-                                    </InputLabel>
-                                    <Input
-                                        id="input-with-icon-adornment"
-                                        value={searchTerm}
-                                        onChange={handleSearchChange}
-                                        startAdornment={
-                                            <InputAdornment position="start">
-                                                <SearchIcon />
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
+                                <SearchInput/>
+
                             </div>
                         </div>
                         <CRUDTable
@@ -140,6 +132,7 @@ const Funcion = (moduleName) => {
                             onDelete={canDelete ? onDelete : null}
                             onEdit={canEdit ? onEdit : null}
                             count={count}
+                            filter={true}
                         />
                     </div >
                 </main>

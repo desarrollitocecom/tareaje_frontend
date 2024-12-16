@@ -30,11 +30,11 @@ const Usuarios = ({ moduleName }) => {
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    if(location.search){
-      fetchData(location.search)
-    }
-  }, [location.search, Update])
+  // useEffect(() => {
+  //   if(location.search){
+  //     fetchData(location.search)
+  //   }
+  // }, [location.search, Update])
 
   useEffect(() => {
     fetchData()
@@ -142,6 +142,7 @@ const Usuarios = ({ moduleName }) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
+              filter={true}
             />
           </div >
         </main>
