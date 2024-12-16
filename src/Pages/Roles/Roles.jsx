@@ -34,9 +34,13 @@ const Roles = ({ moduleName }) => {
   const [permisos, setPermisos] = useState([]);
   const [permisosAgrupados, setPermisosAgrupados] = useState([])
 
+  // useEffect(() => {
+  //   fetchData(location.search || '');
+  // }, [location.search, Update])
+
   useEffect(() => {
-    fetchData(location.search || '');
-  }, [location.search, Update])
+    fetchData("");
+  }, [Update])
 
   useEffect(() => {
     fetchPermisos().then((res) => {
@@ -166,6 +170,7 @@ const Roles = ({ moduleName }) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
+              filter={true}
             />
           </div >
         </main>
