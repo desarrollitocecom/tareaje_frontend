@@ -22,10 +22,13 @@ export const formatFirstNameLastName = (nombes, apellidos) => {
     return `${firstName} ${lastName}`;
 }
 
-export const hasPermissionFunction = (user, permission) => {
+export const hasPermissionFunction = (user, permission) => {    
     const hasAllAccess = user?.permissions?.includes("all_system_access");
-    const hasSpecificPermission = user?.permissions?.includes(`read_${permission}`);
-    return hasAllAccess || !permission || hasSpecificPermission;
+    const hasCreatePermission = user?.permissions?.includes(`create_${permission}`);
+    const hasUpdatePermission = user?.permissions?.includes(`update_${permission}`);
+    const hasDeletePermission = user?.permissions?.includes(`delete_${permission}`);    
+    
+    return hasAllAccess || !permission || hasCreatePermission || hasUpdatePermission || hasDeletePermission;
 }
 
 // Función para formatear la fecha

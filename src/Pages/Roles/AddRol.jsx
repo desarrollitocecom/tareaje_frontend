@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomModal from '../../Components/Modal/CustomModal'
 import AddIcon from '@mui/icons-material/Add';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
@@ -48,6 +48,7 @@ const AddRol = ({ refreshData, permisosAgrupados }) => {
             return errors;
         },
         onSubmit: (values) => {
+
             postData(`${import.meta.env.VITE_APP_ENDPOINT}/auth/rol`, values, token, true).then((res) => {
                 if (res.status) {
                     CustomSwal.fire({
@@ -72,6 +73,26 @@ const AddRol = ({ refreshData, permisosAgrupados }) => {
             })
         }
     })
+
+    useEffect(() => {
+        if (Open) {
+            const permisosArray = [];
+    
+            Object.entries(permisosAgrupados).forEach(([modulo, permisosModulo]) => {
+                // Excluir módulos relacionados con datos sensibles
+                if (!['usuario', 'rol', 'rolesPermiso'].includes(modulo)) {                    
+                    permisosModulo.forEach((permiso) => {
+                        if (permiso.nombre.split('_').includes('read')) {
+                            permisosArray.push(permiso.id);
+                        }
+                    });
+                }
+            });
+    
+            formik.setFieldValue('permisos', permisosArray);
+        }
+    }, [permisosAgrupados, Open]);
+
 
     return (
         <>
