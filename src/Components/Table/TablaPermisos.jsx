@@ -10,9 +10,19 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
 
         // Si el permiso que se cambia es el 1, dejamos solo el 1 en el arreglo
         if (permisoKey === 1) {
-            // Si ya está seleccionado, lo quitamos y eliminamos los demás permisos
-            formik.setFieldValue('permisos', permisos.includes(1) ? [] : [1]);
+            const permisosArray = [];
 
+            Object.entries(permisosAgrupados).forEach(([modulo, permisosModulo]) => {
+                permisosModulo.forEach((permiso) => {
+                    // Verificamos si el nombre del permiso contiene 'read' y no es uno de los permisos excluidos
+                    if (permiso.nombre.split('_').includes('read') && !['usuario', 'rol', 'rolesPermiso'].includes(permiso.nombre.split('_')[1])) {
+                        permisosArray.push(permiso.id);
+                    }
+                });
+            });
+
+            // Si ya está seleccionado, lo quitamos y eliminamos los demás permisos
+            formik.setFieldValue('permisos', permisos.includes(1) ? permisosArray : [1]);
         } else {
             // Si no es el 1, sigue funcionando normalmente
             formik.setFieldValue(
@@ -36,7 +46,7 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
                 }, {})
             };
         });
-        
+
         setIds({
             ...initialIds, 'all-system-access': {
                 moduloId: uuidv4(),
@@ -93,16 +103,27 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
                                     )}
                                     onChange={() => {
                                         const permisosIds = permisosModulo.map(permiso => permiso.id);
+                                        const nombreModulo = permisosModulo[0].nombre.split('_')[1];
                                         const permisosSeleccionados = formik.values.permisos;
-
                                         const allPermisos = permisosIds.every(permisoId => permisosSeleccionados.includes(permisoId));
 
-                                        const nuevosPermisos = allPermisos
-                                            ? permisosSeleccionados.filter(permisoId => !permisosIds.includes(permisoId)) // Filtramos los permisos existentes
-                                            : [
-                                                ...permisosSeleccionados,
-                                                ...permisosIds.filter(permisoId => !permisosSeleccionados.includes(permisoId)) // Solo agregamos permisos no duplicados
-                                            ];
+                                        const filtroPermisos = (permisoId) => !permisosIds.includes(permisoId);
+
+                                        let nuevosPermisos;
+
+                                        if (allPermisos) {
+                                            if (['usuario', 'rol', 'rolesPermiso'].includes(nombreModulo)) {
+                                                nuevosPermisos = permisosSeleccionados.filter(filtroPermisos);
+                                            } else {
+                                                const permisoRead = permisosSeleccionados.find(permisoId => {
+                                                    const permiso = permisosModulo.find(p => p.id === permisoId);
+                                                    return permiso?.nombre.split('_')[0] === 'read';
+                                                });
+                                                nuevosPermisos = permisoRead ? [permisoRead, ...permisosSeleccionados.filter(filtroPermisos)] : permisosSeleccionados.filter(filtroPermisos);
+                                            }
+                                        } else {
+                                            nuevosPermisos = [...permisosSeleccionados, ...permisosIds.filter(permisoId => !permisosSeleccionados.includes(permisoId))];
+                                        }
 
                                         formik.setFieldValue('permisos', nuevosPermisos);
                                     }}
@@ -113,12 +134,15 @@ const TablaPermisos = ({ formik, permisosAgrupados }) => {
                             {['read', 'create', 'update', 'delete'].map((action) => {
                                 const permisoKey = permisosModulo.find((permiso) => permiso.nombre.includes(action))?.id;
                                 const hasPermiso = permisosModulo.some((permiso) => permiso.nombre.includes(action));
+                                const permisoName = permisosModulo.find((permiso) => permiso.nombre.includes(action))?.nombre.split('_')[1];
+
+                                const isSensitiveReadAction = action === 'read' && !['usuario', 'rol', 'rolesPermiso'].includes(permisoName);
 
                                 return (
                                     <TableCell key={action} className="text-sm !max-w-5" align="center">
                                         <Checkbox
                                             size="small"
-                                            disabled={formik.values.permisos.includes(1) || !hasPermiso}
+                                            disabled={isSensitiveReadAction || formik.values.permisos.includes(1) || !hasPermiso}
                                             checked={formik.values.permisos.includes(1) || formik.values.permisos.includes(permisoKey)}
                                             onChange={() => handlePermissionChange(permisoKey)}
                                         />

@@ -128,7 +128,7 @@ const PersonalBD = () => {
             <h1 className="text-xl font-bold text-gray-700 pb-4">Filtros</h1>
             <div className="flex flex-wrap justify-center max-w-[500px] max-h-[500px] overflow-y-auto overflow-x-hidden">
               {/* Subgerencia */}
-              <div className="w-full sm:w-1/2 md:w-1/2 px-2 pb-2">
+              <div className="w-full sm:w-1/2 md:w-1/2 px-2 py-2">
                 <label className="text-sm font-semibold text-gray-600" htmlFor="edad-label">Subgerencia</label>
                 <FiltroSelect
                   name="subgerencias"

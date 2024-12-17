@@ -45,7 +45,24 @@ const EditRol = ({ Selected, setSelected, refreshData, permisos, permisosAgrupad
         }
     }, [Selected])
 
-
+    useEffect(() => {
+            if (Open) {
+                const permisosArray = [];
+        
+                Object.entries(permisosAgrupados).forEach(([modulo, permisosModulo]) => {
+                    // Excluir módulos relacionados con datos sensibles
+                    if (!['usuario', 'rol', 'rolesPermiso'].includes(modulo)) {                    
+                        permisosModulo.forEach((permiso) => {
+                            if (permiso.nombre.split('_').includes('read')) {
+                                permisosArray.push(permiso.id);
+                            }
+                        });
+                    }
+                });
+        
+                formik.setFieldValue('permisos', permisosArray);
+            }
+        }, [permisosAgrupados, Open]);
 
     const handleClose = () => {
         setSelected(null);
@@ -100,7 +117,7 @@ const EditRol = ({ Selected, setSelected, refreshData, permisos, permisosAgrupad
 
             }).catch((err) => {
                 swalError(err.response?.data);
-                
+
                 console.error(err);
             }).finally(() => {
                 formik.setSubmitting(false);
@@ -110,7 +127,7 @@ const EditRol = ({ Selected, setSelected, refreshData, permisos, permisosAgrupad
 
     // Usar selected para sacar los datos del rol
     return (
-        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting}  className={'flex flex-col'}>
+        <CustomModal Open={Open} setOpen={setOpen} handleClose={handleClose} isLoading={isLoading || formik.isSubmitting} className={'flex flex-col'}>
             <div className="flex items-center mb-2">
                 <SecurityIcon className="w-6 h-6 mr-2" />
                 <h1 className='text-lg font-bold'>Editar un rol</h1>
