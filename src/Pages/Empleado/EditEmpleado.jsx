@@ -185,78 +185,81 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
             Object.entries(mappedValues).forEach(([key, value]) => {
                 formData.append(key, value);
             });
-
-            // Manejar la imagen (nueva o existente)
             if (foto && typeof foto !== 'string') {
-                formData.append('photo', foto); // Si hay una nueva imagen, adjúntala directamente
-            } else if (typeof foto === 'string') {
-                // Si la imagen es existente, conviértela a un archivo (blob)
-                fetch(`${import.meta.env.VITE_APP_ENDPOINT}/${foto}`, {
-                    headers: {
-                        Authorization: `Bearer___${token}`,
-                    },
-                })
-                    .then((response) => response.blob()) // Obtén la imagen como Blob
-                    .then((blob) => {
-                        const fileName = foto.split('/').pop(); // Extrae el nombre de la imagen
-                        const existingFile = new File([blob], fileName, { type: blob.type });
-                        formData.append('photo', existingFile); // Adjunta la imagen convertida como archivo
-
-                        // Llama al backend con el FormData que incluye la imagen
-                        return patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token);
-                    })
-                    .then((response) => {
-                        if (response?.status) {
-                            CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
-                            refreshData();
-                            handleClose();
-                        } else {
-                            swalError(response.error.response.data);
-                        }
-                    })
-                    .catch((err) => {
-                        console.error('Error al convertir la imagen existente en archivo:', err);
-                        swalError({
-                            message: 'No se pudo procesar la imagen existente',
-                            data: [err.message],
-                        });
-                    })
-                    .finally(() => {
-                        setIsLoading(false)
-                        formik.setSubmitting(false)
-                    }
-                );
+                formData.append('photo', foto);
             }
 
             // Si no hay que convertir una imagen existente, continúa con la llamada al backend
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token)
-                .then((response) => {
-                    if (response?.status) {
-                        CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
-                        refreshData();
-                        handleClose();
-                    } else {
-                        swalError(response.error.response.data);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error en la solicitud:', error);
-                    swalError({
-                        message: 'Error inesperado al modificar el empleado',
-                        data: [error.message],
-                    });
-                })
-                .finally(() => {
-                    setIsLoading(false)
-                    formik.setSubmitting(false);
+            .then((response) => {
+                if (response?.status) {
+                    CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
+                    refreshData();
+                    handleClose();
+                } else {
+                    swalError(response.error.response.data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error en la solicitud:', error);
+                swalError({
+                    message: 'Error inesperado al modificar el empleado',
+                    data: [error.message],
                 });
+            })
+            .finally(() => {
+                setIsLoading(false)
+                formik.setSubmitting(false);
+            });
+
+            // // Manejar la imagen (nueva o existente)
+            // if (foto && typeof foto !== 'string') {
+            //     formData.append('photo', foto); // Si hay una nueva imagen, adjúntala directamente
+            // } else if (typeof foto === 'string') {
+            //     // Si la imagen es existente, conviértela a un archivo (blob)
+            //     fetch(`${import.meta.env.VITE_APP_ENDPOINT}/${foto}`, {
+            //         headers: {
+            //             Authorization: `Bearer___${token}`,
+            //         },
+            //     })
+            //         .then((response) => response.blob()) // Obtén la imagen como Blob
+            //         .then((blob) => {
+            //             const fileName = foto.split('/').pop(); // Extrae el nombre de la imagen
+            //             const existingFile = new File([blob], fileName, { type: blob.type });
+            //             formData.append('photo', existingFile); // Adjunta la imagen convertida como archivo
+
+            //             // Llama al backend con el FormData que incluye la imagen
+            //             return patchData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${Selected.id}`, formData, token);
+            //         })
+            //         .then((response) => {
+            //             if (response?.status) {
+            //                 CustomSwal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
+            //                 refreshData();
+            //                 handleClose();
+            //             } else {
+            //                 swalError(response.error.response.data);
+            //             }
+            //         })
+            //         .catch((err) => {
+            //             console.error('Error al convertir la imagen existente en archivo:', err);
+            //             swalError({
+            //                 message: 'No se pudo procesar la imagen existente',
+            //                 data: [err.message],
+            //             });
+            //         })
+            //         .finally(() => {
+            //             setIsLoading(false)
+            //             formik.setSubmitting(false)
+            //         }
+            //     );
+            // }
         },
 
     });
 
     useEffect(() => {
         setOpen(Selected !== null);
-        if (Selected) {            
+        if (Selected) {
             setIsLoading(true); // Comienza cargando
             Promise.all([
                 fetchCargos(),
@@ -282,7 +285,7 @@ const EditEmpleado = ({ Selected, setSelected, refreshData }) => {
                         funciones: funcionesRes.data || [],
                     };
 
-                    setDataSets(fetchedDataSets);                    
+                    setDataSets(fetchedDataSets);
 
                     formik.setValues({
                         nombres: Selected.nombres || '',

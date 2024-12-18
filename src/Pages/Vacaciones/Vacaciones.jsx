@@ -30,13 +30,13 @@ const Vacaciones = ({moduleName}) => {
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
 
-  // useEffect(() => {
-  //   fetchData(location.search || undefined);
-  // }, [location.search, Update])
-
   useEffect(() => {
-    fetchData();
-  }, [Update])
+    fetchData(location.search || undefined);
+  }, [location.search, Update])
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [Update])
 
 
   const handleSearchChange = (event) => {
@@ -129,7 +129,7 @@ const Vacaciones = ({moduleName}) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
-              filter={true}
+              // filter={true}
             />
           </div >
         </main>

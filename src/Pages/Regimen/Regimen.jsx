@@ -31,14 +31,15 @@ const Regimen = ({ moduleName }) => {
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
 
-  // useEffect(() => {
-  //   if(location.search){
-  //     fetchData(location.search)
-  //   }
-  // }, [location.search, Update])
   useEffect(() => {
-      fetchData()
-  }, [Update])
+    if(location.search){
+      fetchData(location.search)
+    }
+  }, [location.search, Update])
+  
+  // useEffect(() => {
+  //     fetchData()
+  // }, [Update])
 
 
 
@@ -127,7 +128,7 @@ const Regimen = ({ moduleName }) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
-              filter={true}
+              // filter={true}
             />
           </div>
         </main>

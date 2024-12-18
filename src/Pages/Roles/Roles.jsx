@@ -13,6 +13,7 @@ import useFetch from '../../Components/hooks/useFetch';
 import { useSelector } from 'react-redux';
 import useFetchData from '../../Components/hooks/useFetchData';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import SearchInput from '../../Components/Inputs/SearchInput';
 
 
 
@@ -34,13 +35,9 @@ const Roles = ({ moduleName }) => {
   const [permisos, setPermisos] = useState([]);
   const [permisosAgrupados, setPermisosAgrupados] = useState([])
 
-  // useEffect(() => {
-  //   fetchData(location.search || '');
-  // }, [location.search, Update])
-
   useEffect(() => {
-    fetchData("");
-  }, [Update])
+    fetchData(location.search || '');
+  }, [location.search, Update])
 
   useEffect(() => {
     fetchPermisos().then((res) => {
@@ -147,21 +144,7 @@ const Roles = ({ moduleName }) => {
                   </Tooltip>
                   {canCreate && <AddRol refreshData={refreshData} permisosAgrupados={permisosAgrupados}/>}
                 </div>
-                <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
-                  <InputLabel htmlFor="input-with-icon-adornment">
-                    Buscar
-                  </InputLabel>
-                  <Input
-                    id="input-with-icon-adornment"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
+                <SearchInput/>
               </div>
             </div>
             <CRUDTable
@@ -170,7 +153,7 @@ const Roles = ({ moduleName }) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
-              filter={true}
+              // filter={true}
             />
           </div >
         </main>

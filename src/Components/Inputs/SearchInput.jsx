@@ -28,7 +28,7 @@ const SearchInput = () => {
                 const firstChar = value.trim().charAt(0);
                 const paramKey = /^[0-9]$/.test(firstChar) ? 'dni' : 'search';
                 const otherKey = /^[0-9]$/.test(firstChar) ? 'search' : 'dni';
-                addParams({ [paramKey]: value.trim(), [otherKey]: '' });
+                addParams({ [paramKey]: value.trim(), [otherKey]: '', page: 1, limit:20 });
             }
         }, 800);
     };

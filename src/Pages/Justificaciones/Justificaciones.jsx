@@ -34,13 +34,13 @@ const Justificaciones = ({ moduleName }) => {
   const [count, setCount] = useState(0);
   const [documentSelected, setdocumentSelected] = useState(null)
 
-  // useEffect(() => {
-  //   fetchData(location.search || undefined);
-  // }, [location.search, Update]);
-
   useEffect(() => {
-    fetchData();
-  }, [Update]);
+    fetchData(location.search || undefined);
+  }, [location.search, Update]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, [Update]);
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -145,7 +145,7 @@ const Justificaciones = ({ moduleName }) => {
               loading={Loading}
               onEdit={canEdit ? onEdit : null}
               count={count}
-              filter={true}
+              // filter={true}
             />
           </div>
         </main>

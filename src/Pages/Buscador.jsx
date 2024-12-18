@@ -301,27 +301,27 @@ const PersonalBD = () => {
                 <div className='w-full flex justify-center' key={item.id}>
                   <div className='w-full max-w-[300px]'>
                     <Link to={`/buscar/${item.id}`}>
-                      <Card sx={{ width: '100%' }} className='border'>
+                      <Card sx={{ width: '100%' }} className='border !rounded-lg'>
                         <CardActionArea >
                           <ImageComponent
-                            className="w-full h-48 min-h-48 object-cover"
+                            className="w-full aspect-[5/7] object-cover"
                             path={item.foto}
                             alt={`Imagen de ${item.nombres}`}
                           />
-                          <CardContent>
-                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="h5" component="div" style={{ margin: "0" }}>
+                          <CardContent className={`absolute bottom-0 !p-2 !pt-8 w-full bg-card-empleado`}>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap !font-[600] text-neutral-100' variant="h5" component="div" style={{ fontSizeAdjust: "0.5",marginBottom:"-8px"}}>
                               {`${item.apellidos}`}
                             </Typography>
-                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="h5" component="div">
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap text-neutral-100' variant="h5" component="div" style={{ fontSizeAdjust: "0.5" }}>
                               {`${item.nombres}`}
                             </Typography>
-                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap text-neutral-200' variant="body2" style={{ fontSizeAdjust: "0.45",marginBottom:"-4px" }}>
                               DNI: {item.dni}
                             </Typography>
-                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap text-neutral-200' variant="body2" style={{ fontSizeAdjust: "0.45",marginBottom:"-2px" }}>
                               subgerencia: {item.subgerencia.nombre}
                             </Typography>
-                            <Typography className='overflow-hidden !text-ellipsis text-nowrap' variant="body2" color="text.secondary" style={{ fontSizeAdjust: "0.6" }}>
+                            <Typography className='overflow-hidden !text-ellipsis text-nowrap text-neutral-200' variant="body2" style={{ fontSizeAdjust: "0.45",marginBottom:"-2px" }}>
                               Turno: {item.turno.nombre}
                             </Typography>
                           </CardContent>
