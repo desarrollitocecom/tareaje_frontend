@@ -129,7 +129,7 @@ const PersonalBD = () => {
     // Reconstruir el string de parámetros
     const updatedParams = `?${urlSearchParams.toString()}&page=0`;
 
-    getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/${updatedParams}`, token).then((response) => {
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/empleados/all/${updatedParams}`, token).then((response) => {
       const data = response.data.data.data.map((item) => ({
         'APELLIDOS': item.apellidos === "undefined" ? '-' : item.apellidos,
         'NOMBRES': item.nombres === "undefined" ? '-' : item.nombres,
