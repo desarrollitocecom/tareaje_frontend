@@ -75,6 +75,8 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                     swalError(response.error.response.data);
 
                 }
+            }).catch((error) => {
+                swalError("Error inesperado al actualizar la justificacion");
             })
                 .finally(() => {
                     formik.setSubmitting(false);
@@ -176,7 +178,7 @@ const UpdateAsistencia = ({ SelectedAsistencia, setRefreshData }) => {
                                     <MenuItem
                                         key={option}
                                         value={option}
-                                        // sx={option}
+                                    // sx={option}
                                     >
                                         {option}
                                     </MenuItem>

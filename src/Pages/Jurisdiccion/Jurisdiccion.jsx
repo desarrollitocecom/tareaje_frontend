@@ -35,13 +35,13 @@ const Jurisdiccion = (moduleName) => {
 
     const [count, setCount] = useState(0);
 
-    // useEffect(() => {
-    //     fetchData(location.search || undefined);
-    // }, [location.search, Update])
-
     useEffect(() => {
-        fetchData();
-    }, [Update])
+        fetchData(location.search || undefined);
+    }, [location.search, Update])
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, [Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
@@ -130,7 +130,7 @@ const Jurisdiccion = (moduleName) => {
                             onDelete={canDelete ? onDelete : null}
                             onEdit={canEdit ? onEdit : null}
                             count={count}
-                            filter={true}
+                            // filter={true}
                         />
                     </div >
                 </main>

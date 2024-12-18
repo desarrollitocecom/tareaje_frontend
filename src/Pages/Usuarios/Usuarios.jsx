@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import useFetch from '../../Components/hooks/useFetch';
 import UseUrlParamsManager from '../../Components/hooks/UseUrlParamsManager';
+import SearchInput from '../../Components/Inputs/SearchInput';
 
 
 const Usuarios = ({ moduleName }) => {
@@ -30,15 +31,15 @@ const Usuarios = ({ moduleName }) => {
   const timeoutRef = useRef(null);
   const [count, setCount] = useState(0);
 
-  // useEffect(() => {
-  //   if(location.search){
-  //     fetchData(location.search)
-  //   }
-  // }, [location.search, Update])
+  useEffect(() => {
+    if(location.search){
+      fetchData(location.search)
+    }
+  }, [location.search, Update])
 
   useEffect(() => {
     fetchData()
-  }, [Update])
+  }, [])
 
   const handleSearchChange = (event) => {
     const value = event.target.value;
@@ -119,21 +120,7 @@ const Usuarios = ({ moduleName }) => {
                   </Tooltip>
                   {canCreate && <AddUsuario refreshData={refreshData}/>}
                 </div>
-                <FormControl variant="standard" size='small' className='w-full max-w-full md:max-w-sm'>
-                  <InputLabel htmlFor="input-with-icon-adornment">
-                    Buscar
-                  </InputLabel>
-                  <Input
-                    id="input-with-icon-adornment"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
+                <SearchInput />
               </div>
             </div>
             <CRUDTable
@@ -142,7 +129,7 @@ const Usuarios = ({ moduleName }) => {
               onDelete={canDelete ? onDelete : null}
               onEdit={canEdit ? onEdit : null}
               count={count}
-              filter={true}
+              // filter={true}
             />
           </div >
         </main>

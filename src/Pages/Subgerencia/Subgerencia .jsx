@@ -35,8 +35,8 @@ const Subgerencia = (moduleName) => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        fetchData();
-    }, [Update])
+        fetchData(location.search || undefined);
+    }, [location.search, Update])
 
     const handleSearchChange = (event) => {
         const value = event.target.value;
@@ -49,7 +49,7 @@ const Subgerencia = (moduleName) => {
         timeoutRef.current = setTimeout(() => {
 
             addParams({ search: value.trim() });
-          }, 800);
+        }, 800);
 
     };
 
@@ -69,7 +69,7 @@ const Subgerencia = (moduleName) => {
                 return {
                     id: item.id,
                     nombres: item.nombre,
-                    
+
                 }
 
             })
@@ -117,7 +117,7 @@ const Subgerencia = (moduleName) => {
                                     </Tooltip>
                                     {canCreate && <AddSubgerencia refreshData={refreshData} />}
                                 </div>
-                                <SearchInput/>
+                                <SearchInput />
 
                             </div>
                         </div>
@@ -127,7 +127,7 @@ const Subgerencia = (moduleName) => {
                             onDelete={canDelete ? onDelete : null}
                             onEdit={canEdit ? onEdit : null}
                             count={count}
-                            filter={true}
+                        // filter={true}
                         />
                     </div >
                 </main>
