@@ -39,7 +39,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                         subgerencias: subgerenciasRes.data || [],
                         funciones: funcionesRes.data || [],
                     });
-                    
+
                     formik.setFieldValue('area', Selected.nombre)
                     formik.setFieldValue('inicio', dayjs(Selected.inicio, "HH:mm:ss"))
                     formik.setFieldValue('fin', dayjs(Selected.inicio, "HH:mm:ss"))
@@ -102,7 +102,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                 id_subgerencia: values.id_subgerencia,
                 ids_funcion: values.ids_funcion
             }
-            
+
             patchData(`${import.meta.env.VITE_APP_ENDPOINT}/rangohorarios/${Selected.id}`, data, token)
                 .then((response) => {
                     if (response.status) {
@@ -143,7 +143,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
             </div>
             <form onSubmit={formik.handleSubmit}>
                 <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                    <div>
+                    <div className='col-span-2 md:col-span-1'>
                         <TextField
                             fullWidth
                             type='text'
@@ -158,8 +158,9 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                             helperText={formik.touched.area && formik.errors.area || 'Ingrese el Area'}
                         />
                     </div>
-                    <div></div>
+                    <div className='hidden md:block'></div>
                     <TimePicker
+                        className='col-span-2 md:col-span-1'
                         slotProps={{
                             textField: {
                                 size: 'small',
@@ -174,6 +175,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                         label="Inicio"
                     />
                     <TimePicker
+                        className='col-span-2 md:col-span-1'
                         slotProps={{
                             textField: {
                                 size: 'small',
@@ -188,6 +190,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                         label="Fin"
                     />
                     <Autocomplete
+                        className='col-span-2 md:col-span-1'
                         id='id_turno'
                         value={dataSets.turnos.find(turno => turno.id === formik.values.id_turno)}
                         onChange={(e, value) => formik.setFieldValue('id_turno', value)}
@@ -206,6 +209,7 @@ const EditHorario = ({ Selected, setSelected, refreshData }) => {
                         getOptionLabel={(option) => option.nombre || ""}
                     />
                     <Autocomplete
+                        className='col-span-2 md:col-span-1'
                         id='id_subgerencia'
                         value={dataSets.subgerencias.find(subgerencia => subgerencia.id === formik.values.id_subgerencia)}
                         onChange={(e, value) => formik.setFieldValue('id_subgerencia', value)}
