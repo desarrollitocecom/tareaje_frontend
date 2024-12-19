@@ -300,9 +300,9 @@ const PersonalBD = () => {
               {Data.map((item) => (
                 <div className='w-full flex justify-center' key={item.id}>
                   <div className='w-full max-w-[300px]'>
-                    <Link to={`/buscar/${item.id}`}>
-                      <Card sx={{ width: '100%' }} className='border !rounded-lg'>
-                        <CardActionArea >
+                    <Link to={`/buscar/${item.id}`} className='"w-full h-auto aspect-[5/7]'>
+                      <Card sx={{ width: '100%' }} className='border !rounded-lg w-full h-auto aspect-[5/7]'>
+                        <CardActionArea className='"w-full h-auto aspect-[5/7]'>
                           <ImageComponent
                             className="w-full aspect-[5/7] object-cover"
                             path={item.foto}

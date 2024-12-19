@@ -31,7 +31,7 @@ const ImageComponent = ({ path, errorImage, alt, ...props }) => {
 
 
   return (
-    imageSrc ? <img src={imageSrc} alt={alt} {...props} /> : <Skeleton variant="rectangular" animation="wave" {...props} />
+    imageSrc ? <img src={imageSrc} alt={alt} {...props} /> : <Skeleton sx={{ height: '100%' }} variant="rectangular" animation="wave" {...props} />
   );
 };
 
