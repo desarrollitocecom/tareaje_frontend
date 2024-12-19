@@ -56,16 +56,16 @@ const AddHorario = ({ refreshData }) => {
             }
             if (!values.id_turno) {
                 errors.id_turno = 'Campo requerido';
-            } 
+            }
             if (!values.id_subgerencia) {
                 errors.id_subgerencia = 'Campo requerido';
             }
             if (values.ids_funcion && values.ids_funcion.length === 0) {
-                errors.ids_funcion = 'Debe seleccionar al menos una función';                
+                errors.ids_funcion = 'Debe seleccionar al menos una función';
             }
             return errors;
         },
-        onSubmit: (values) => {            
+        onSubmit: (values) => {
             const data = {
                 nombre: values.area,
                 inicio: dayjs(values.inicio).format('HH:mm:ss'),
@@ -75,36 +75,36 @@ const AddHorario = ({ refreshData }) => {
                 ids_funcion: values.ids_funcion
             }
             postData(`${import.meta.env.VITE_APP_ENDPOINT}/rangohorarios`, data, token)
-            .then((response) => {
-                if (response.status) {
-                    handleClose();
-                    CustomSwal.fire(
-                        'Agregado',
-                        'El horario ha sido agregado correctamente.',
-                        'success'
-                    );
-                    refreshData();
-                } else {
-                    swalError(response.error.response.data);
-                }
-            })
-            .catch((error) => {
-                console.error('Error en la solicitud:', error);
-                swalError({
-                    message:  'Error inesperado al agregar el horario',
-                    data: [error.message],
+                .then((response) => {
+                    if (response.status) {
+                        handleClose();
+                        CustomSwal.fire(
+                            'Agregado',
+                            'El horario ha sido agregado correctamente.',
+                            'success'
+                        );
+                        refreshData();
+                    } else {
+                        swalError(response.error.response.data);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error en la solicitud:', error);
+                    swalError({
+                        message: 'Error inesperado al agregar el horario',
+                        data: [error.message],
+                    });
+                })
+                .finally(() => {
+                    formik.setSubmitting(false);
                 });
-            })
-            .finally(() => {
-                formik.setSubmitting(false);
-            });
-            
+
         }
     });
 
 
     useEffect(() => {
-        if (Open) {            
+        if (Open) {
             setisLoading(true);
             Promise.all([
                 fetchTurnos(),
@@ -124,7 +124,7 @@ const AddHorario = ({ refreshData }) => {
                 .finally(() => setisLoading(false));
         }
     }, [Open]);
-    
+
     return (
         <>
             <Tooltip title="Añadir" placement='top' arrow>
@@ -139,7 +139,7 @@ const AddHorario = ({ refreshData }) => {
                 </div>
                 <form onSubmit={formik.handleSubmit}>
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                        <div>
+                        <div className='col-span-2 md:col-span-1'>
                             <TextField
                                 fullWidth
                                 type='text'
@@ -154,8 +154,9 @@ const AddHorario = ({ refreshData }) => {
                                 helperText={formik.touched.area && formik.errors.area || 'Ingrese el Area'}
                             />
                         </div>
-                        <div></div>
+                        <div className='hidden md:block'></div>
                         <TimePicker
+                            className='col-span-2 md:col-span-1'
                             slotProps={{
                                 textField: {
                                     size: 'small',
@@ -170,6 +171,7 @@ const AddHorario = ({ refreshData }) => {
                             label="Inicio"
                         />
                         <TimePicker
+                            className='col-span-2 md:col-span-1'
                             slotProps={{
                                 textField: {
                                     size: 'small',
@@ -184,6 +186,7 @@ const AddHorario = ({ refreshData }) => {
                             label="Fin"
                         />
                         <Autocomplete
+                            className='col-span-2 md:col-span-1'
                             id='id_turno'
                             value={dataSets.turnos.find(turno => turno.id === formik.values.id_turno)}
                             onChange={(e, value) => formik.setFieldValue('id_turno', value.id)}
@@ -202,6 +205,7 @@ const AddHorario = ({ refreshData }) => {
                             getOptionLabel={(option) => option.nombre || ""}
                         />
                         <Autocomplete
+                            className='col-span-2 md:col-span-1'
                             id='id_subgerencia'
                             value={dataSets.subgerencias.find(subgerencia => subgerencia.id === formik.values.id_subgerencia)}
                             onChange={(e, value) => formik.setFieldValue('id_subgerencia', value.id)}
@@ -227,7 +231,7 @@ const AddHorario = ({ refreshData }) => {
                             value={dataSets.funciones.filter(funcion => formik.values.ids_funcion.includes(funcion.id))}
                             onChange={(e, value) => {
                                 const ids = value.map(item => item.id);
-                                formik.setFieldValue('ids_funcion', ids); 
+                                formik.setFieldValue('ids_funcion', ids);
                             }}
                             onBlur={formik.handleBlur}
                             size='small'
