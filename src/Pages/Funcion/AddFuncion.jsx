@@ -91,7 +91,7 @@ const AddFuncion = ({refreshData}) => {
                                     helperText={touched.nombre && errors.nombre || 'Ingrese la funcion'}
                                 />
                                 <FormControl fullWidth size='small' error={touched.tipo && errors.tipo}>
-                                    <InputLabel id="select-helper-label">Tipo Función</InputLabel>
+                                    <InputLabel id="select-helper-label">Tipo Area</InputLabel>
                                     <Select
                                         labelId="select-helper-label"
                                         id="select-helper"

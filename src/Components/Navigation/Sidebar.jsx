@@ -32,31 +32,36 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import BrowseGalleryIcon from '@mui/icons-material/BrowseGallery';
 import MapIcon from '@mui/icons-material/Map';
 import { formatFirstNameLastName, hasPermissionFunction } from '../../helpers/GeneralFunctions';
 import CustomSwal from '../../helpers/swalConfig';
 import ImageComponent from '../Image/ImageComponent';
 import ImageZoom from '../Image/ImageZoom';
+import useFetch from '../hooks/useFetch';
 
 const Sidebar = ({ toggled, setToggled }) => {
   const dispatch = useDispatch();
+  const { getData } = useFetch();
   const [Collapsed, setCollapsed] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const { user } = useSelector((state) => state.auth);
+  const { user, token } = useSelector((state) => state.auth);
   const [imageZoomOpen, setImageZoomOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
 
 
   const LogOut = () => {
-    dispatch(logout());
-    CustomSwal.fire({
-      icon: "info",
-      title: 'Se ha cerrado la sesion',
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 4000,
-      timerProgressBar: true,
+    getData(`${import.meta.env.VITE_APP_ENDPOINT}/login/logout`, token).then((response) => {
+      dispatch(logout());
+      CustomSwal.fire({
+        icon: "info",
+        title: 'Se ha cerrado la sesion',
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+      })
     })
   };
 
@@ -147,11 +152,12 @@ const Sidebar = ({ toggled, setToggled }) => {
           icon: HourglassEmptyIcon,
           children: [
             { id: 1, label: 'Turno', icon: ScheduleIcon, link: '/turno', target: '_self', requiresPermission: "turno" },
-            { id: 2, label: 'Régimen Laboral', icon: GavelIcon, link: '/regimen-laboral', target: '_self', requiresPermission: "regimenLaboral" },
-            { id: 3, label: 'Vacaciones', icon: BeachAccessIcon, link: '/vacaciones', target: '_self', requiresPermission: "vacacion" },
-            { id: 4, label: 'Descansos', icon: WeekendIcon, link: '/descansos', target: '_self', requiresPermission: "descanso" },
-            { id: 5, label: 'Feriados', icon: EventIcon, link: '/feriados', target: '_self', requiresPermission: "feriado" },
-            { id: 6, label: 'Justificaciones', icon: AssignmentIcon, link: '/justificaciones', target: '_self', requiresPermission: "justificacion" },
+            { id: 2, label: 'Horarios', icon: BrowseGalleryIcon, link: '/horario', target: '_self', requiresPermission: "rangohorarios" },
+            { id: 3, label: 'Régimen Laboral', icon: GavelIcon, link: '/regimen-laboral', target: '_self', requiresPermission: "regimenLaboral" },
+            { id: 4, label: 'Vacaciones', icon: BeachAccessIcon, link: '/vacaciones', target: '_self', requiresPermission: "vacacion" },
+            { id: 5, label: 'Descansos', icon: WeekendIcon, link: '/descansos', target: '_self', requiresPermission: "descanso" },
+            { id: 6, label: 'Feriados', icon: EventIcon, link: '/feriados', target: '_self', requiresPermission: "feriado" },
+            { id: 7, label: 'Justificaciones', icon: AssignmentIcon, link: '/justificaciones', target: '_self', requiresPermission: "justificacion" },
           ]
         },
         {

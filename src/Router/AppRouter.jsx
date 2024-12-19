@@ -30,6 +30,7 @@ import Loader from '../Components/Loader/Loader';
 import SeguimientoAsistencia from '../Pages/SeguimientoAsistencia/SeguimientoAsitencia';
 import AsistenciaPersonal from '../Pages/AsistenciaPersonal/AsistenciaPersonal';
 import { setLoading } from '../Redux/Slices/AuthSlice';
+import Horarios from '../Pages/Horarios/Horarios';
 
 const AppRouter = () => {
   const future = {
@@ -144,6 +145,10 @@ const AppRouter = () => {
         {
           path: "/lugar-trabajo",
           element: <PrivateRouter element={<LugarTrabajo />} requiresPermission={"lugarDeTrabajo"} />,
+        },
+        {
+          path: '/horario',
+          element: <PrivateRouter element={<Horarios />} requiresPermission={"rangohorarios"} />,
         },
         {
           path: "/*",
